@@ -21,13 +21,11 @@ class Replace extends CI_Controller
     public function index()
     {
         $data['title'] = 'Replace';
-        $render=$this->Mmain->qRead("ganti");
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $render = $this->Mmain->qRead("ganti");
 		$data['Replace'] = $render->result();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('replace', $data);
-        $this->load->view('templates/footer');
+        $data['content'] = $this->load->view('replace', $data,true);
+		$this->load->view('layout/master_layout', $data);
     }
 
     public function tambah_data_replace()

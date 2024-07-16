@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
+<!-- <!DOCTYPE html>
+<html lang="en"> -->
 
 <head>
     <meta charset="UTF-8">
@@ -16,6 +16,6 @@
     <link href="<?= base_url('assets'); ?>/css/main.min.css" rel="stylesheet" />
     <!-- PAGE LEVEL STYLES-->
 </head>
-
+<!-- 
 <body class="fixed-navbar">
-    <div class="page-wrapper">
+    <div class="page-wrapper"> -->

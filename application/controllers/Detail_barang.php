@@ -12,11 +12,10 @@ class Detail_barang extends CI_Controller
         $this->load->model('m_detail_barang');
         $this->load->model('Mmain');
         $this->load->helper('url');
-    $this->load->library('form_validation');
+    	$this->load->library('form_validation');
 		if (!$this->session->userdata('email')){
-		redirect('auth');
-		
-    }
+			redirect('auth');
+    	}
 	}
 	
 	var $data="id_barang"; 
@@ -24,13 +23,10 @@ class Detail_barang extends CI_Controller
     public function index()
     {
         $data['title'] = 'Detail Barang';
-        //$data['Detail_Barang'] = $this->m_detail_barang->tampil_detail()->result();
-		$data['Detail_Barang'] = $this->Mmain->qRead('detail_barang')->result();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('detail_barang/detail_barang', $data);
-        $this->load->view('templates/footer');
+		$data['product'] = $this->Mmain->qRead('detail_barang')->result();
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data['content'] = $this->load->view('detail_barang/detail_barang', $data, true);
+        $this->load->view('layout/master_layout',$data);
     }
 	
 	public function init($id)
@@ -54,7 +50,7 @@ class Detail_barang extends CI_Controller
     public function tambah($id)
     {
         $data['title'] = 'Detail Barang';
-        //$data['Detail_Barang'] = $this->m_detail_barang->tampil_datadetail()->result();
+        $data['Detail_Barang'] = $this->m_detail_barang->tampil_datadetail()->result();
 		$render  = $this->Mmain->qRead("detail_barang det 
         INNER JOIN barang b ON det.id_barang = b.id_barang WHERE det.id_barang ",
         "det.id_detail_barang, b.nama_barang, det.item_description, det.serial_code, det.lokasi, det.qtty, det.keterangan");

@@ -10,24 +10,22 @@ class Jenis extends CI_Controller
         $this->load->model('m_jenis');
         $this->load->model('Mmain');
         $this->load->helper('url');
-    $this->load->library('form_validation');
+    	$this->load->library('form_validation');
 		if (!$this->session->userdata('email')){
-		redirect('auth');
-		
-    }
+			redirect('auth');
+    	}
 	}
 
     public function index()
     {
         $data['title'] = 'Jenis';
         $data['jenis'] = $this->m_jenis->tampil_jenis()->result();
-		//$render=$this->Mmain->qRead("jenis");
-		//$data['Jenis'] = $render->result();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('jenis', $data);
-        $this->load->view('templates/footer');
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+		$render=$this->Mmain->qRead("jenis");
+		$data['Jenis'] = $render->result();
+        $data['content'] = $this->load->view('jenis', $data, true);
+		$this->load->view('layout/master_layout', $data);
+
     }
 
     public function tambah_jenis()

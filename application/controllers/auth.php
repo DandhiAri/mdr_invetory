@@ -13,7 +13,7 @@ class auth extends CI_Controller
     public function index()
     {
 		if ($this->session->userdata('email')) {
-            redirect('user');
+            redirect('dashboard');
         }
         $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
         $this->form_validation->set_rules('password', 'Password', 'trim|required|required');
@@ -45,7 +45,7 @@ class auth extends CI_Controller
                         'role_id' => $user['role_id']
                     ];
                     $this->session->set_userdata($data);
-                    redirect('user');
+                    redirect('dashboard');
                 } else {
                     $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Password Salah!</div>');
                     redirect('auth');

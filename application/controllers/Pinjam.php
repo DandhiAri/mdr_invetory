@@ -22,14 +22,11 @@ class Pinjam extends CI_Controller
     public function index()
     {
         $data['title'] = 'Pinjam';
-        /* $data['Pinjam'] = $this->m_pinjam->pinjam()->result(); */
-		$render=$this->Mmain->qRead("pinjam");
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+		$render = $this->Mmain->qRead("pinjam");
 		$data['Pinjam'] = $render->result();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('pinjam/pinjam', $data);
-        $this->load->view('templates/footer');
+        $data['content'] = $this->load->view('pinjam/pinjam', $data,true);
+		$this->load->view('layout/master_layout', $data);
     }
     public function tambah_pinjam()
     {

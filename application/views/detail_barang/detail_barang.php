@@ -25,7 +25,7 @@
                 <?php
                 // var_dump($Detail_Barang); 
                 $no = 1;
-                foreach($Detail_Barang as $dbr){
+                foreach($product as $dbr){
                     // var_dump($Detail_Barang);
                     ?>
                     <tr>

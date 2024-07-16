@@ -21,34 +21,24 @@ class Barang extends CI_Controller
     public function index()
     {
         $data['title'] = 'Barang';
-        //$data['Barang'] = $this->m_data->tampil_data('barang')->result();
-		/* $render=$this->Mmain->qRead("barang a left outer join detail_barang b on a.id_barang = b.id_barang group by a.id_barang "
-		,"a.id_barang, a.nama_barang, a.id_jenis, a.id_satuan, 
-		case when sum(b.qtty) is not null 
-		then sum(b.qtty) else 0 end as qtty  "); */
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		$render=$this->Mmain->qRead("barang b LEFT OUTER JOIN detail_barang d ON d.id_barang =b.id_barang GROUP BY b.id_barang",
 									"b.id_barang, b.nama_barang, SUM(d.qtty) as stok, b.id_jenis, b.id_satuan ");
 		$data['Barang'] = $render->result();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('barang', $data);
-        $this->load->view('templates/footer');
+		$data['content'] = $this->load->view('barang', $data,true);
+		$this->load->view('layout/master_layout', $data);
     }
 
     public function tambah()
     {
         $data['title'] = 'Barang';
-        //$data['Barang'] = $this->m_data->tampil_databarang()->result();
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		$render=$this->Mmain->qRead("barang","");
 		$data['Barang'] = $render->result();
 		$data['jenis'] = $this->m_data->getJenis();
 		$data['satuan'] = $this->m_data->getSatuan();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('addbarang', $data);
-        $this->load->view('templates/footer');
+        $data['content'] = $this->load->view('addbarang', $data);
+		$this->load->view('layout/master_layout', $data);
     }
 
     public function proses_tambah()

@@ -20,15 +20,11 @@ class Satuan extends CI_Controller
 
     public function index()
     {
-        // $data['title'] = 'Satuan';
-        //$data['Satuan'] = $this->m_satuan->tampil_satuan()->result();
-		$data['Satuan']=$this->Mmain->qRead("satuan")->result();
-		// $data['Satuan'] = $render->result();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('satuan/satuan', $data);
-        $this->load->view('templates/footer');
+		$data['Satuan'] = $this->Mmain->qRead("satuan")->result();
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
+        $data['content'] = $this->load->view('satuan/satuan', $data, true);
+		$this->load->view('layout/master_layout', $data);
     }
     public function tambah()
     {

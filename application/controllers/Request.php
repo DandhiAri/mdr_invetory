@@ -21,15 +21,14 @@ class Request extends CI_Controller
     public function index()
     {
         $data['title'] = 'Request';
-        //$data['Request'] = $this->m_data->tampil_request()->result();
-		//$data['Request'] = $this->Mmain->getid();
-		$render=$this->Mmain->qRead("request");
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
+		$render = $this->Mmain->qRead("request");
 		$data['Request'] = $render->result();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('request', $data);
-        $this->load->view('templates/footer');
+        $data['content'] = $this->load->view('request', $data, true);
+
+		$this->load->view('layout/master_layout',$data);
+
     }
 
     public function tambah()
