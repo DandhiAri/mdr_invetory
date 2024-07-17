@@ -11,11 +11,11 @@ class Detail_request extends CI_Controller
 		$this->load->model('m_detail_barang');
         $this->load->model('Mmain');
         $this->load->helper('url');
-    $this->load->library('form_validation');
+        $this->user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    	$this->load->library('form_validation');
 		if (!$this->session->userdata('email')){
-		redirect('auth');
-		
-    }
+			redirect('auth');
+    	}
 	}
 	
     public function index()
@@ -26,11 +26,13 @@ class Detail_request extends CI_Controller
 		//$render  = $this->Mmain->qRead("detail_request det 
         //INNER JOIN barang b ON det.id_barang = b.id_barang WHERE det.id_barang  = '$id' ",
         //"det.id_detail_barang, det.nama_barang_request, det.jumlah_request, det.keterangan, det.id_barang, det.serial_code, det.jumlah, det.tanggal_waktu, det.status");
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('detail_request/detail_request', $data);
-        $this->load->view('templates/footer');
+        // $this->load->view('templates/header', $data);
+        // $this->load->view('templates/topbar', $data);
+        // $this->load->view('templates/sidebar', $data);
+        // $this->load->view('detail_request/detail_request', $data);
+        // $this->load->view('templates/footer');
+		$data['content'] = $this->load->view('detail_request/detail_request', $data, true);
+		$this->load->view('layout/master_layout',$data);
     }
 	
 	public function init($id)
@@ -65,14 +67,18 @@ class Detail_request extends CI_Controller
         "det.id_detail_request, det.id_request, det.keterangan, det.id_barang, det.serial_code, det.lokasi, det.jumlah, det.status, det.id_detail_barang, dbr.item_description");
         $data['Detail_Request'] = $render->result();
 		$data['id'] = $id;
+		$data['user'] = $this->user;
 		//$data['Detail_Request'] = $this->m_detail_req->tampil_datarequest()->result();
 		//$data['barang'] = $this->Mmain->qRead('barang'); 
 		#$data['detail_barang'] = $this->m_detail_req->getseri();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('detail_request/adddetail', $data);
-        $this->load->view('templates/footer');
+        // $this->load->view('templates/header', $data);
+        // $this->load->view('templates/topbar', $data);
+        // $this->load->view('templates/sidebar', $data);
+        // $this->load->view('detail_request/adddetail', $data);
+        // $this->load->view('templates/footer');
+
+		$data['content'] = $this->load->view('detail_request/adddetail', $data, true);
+		$this->load->view('layout/master_layout',$data);
     }
 
     public function proses_tambah()

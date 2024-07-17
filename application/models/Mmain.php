@@ -32,7 +32,11 @@ class mMain  extends CI_Model
 
         return $id1;
     }
-	
+
+	public function getIdBarang($id) {
+        return $this->db->get_where('barang', ['id_barang' => $id])->row_array();
+    }
+
 	function getDataPinjam($id)
     {
 		$query = $this->db->query("SELECT b.nama_barang,
@@ -87,7 +91,9 @@ class mMain  extends CI_Model
         }
 
         //echo implode(" ",$savVal);
-        $this->db->insert($tbq, $savVal);
+		$this->db->insert($tbq, $savVal);
+		// $this->db->insert($tbq, $valq);
+
     }
 
 

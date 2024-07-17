@@ -13,7 +13,7 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    
+                    <th>ID barang</th>
                     <th>Nama Barang</th>
 					<th>Jenis</th>
                     <th>Quantity</th>
@@ -26,7 +26,7 @@
                     ?>
                     <tr>
                         <td><?php echo $no++ ?></td>
-                        
+                        <td><?php echo $b->id_barang ?></td>
                         <td><?php echo $b->nama_barang ?></td>
 						<td><?php echo $b->id_jenis ?></td>
                         <td><?php echo $b->stok ?></td>

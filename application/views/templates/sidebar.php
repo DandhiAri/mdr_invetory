@@ -15,11 +15,6 @@
 			</li>
 			<li class="heading">FEATURES</li>
 			<li>
-				<a class="active" href=<?= base_url('detail_barang'); ?>><i class="sidebar-item-icon fa fa-briefcase"></i>
-					<span class="nav-label">Detail Barang</span>
-				</a>
-			</li>
-			<li>
 				<a href="#"><i class="sidebar-item-icon fa fa-bookmark"></i>
 					<span class="nav-label">Transaksi</span><i class="fa fa-angle-left arrow"></i></a>
 				<ul class="nav-2-level collapse">

@@ -13,78 +13,19 @@ class Profile extends CI_Controller
 		$email = $this->session->userdata('email');
         $data['user'] = $this->Auth_model->userdata($email);
 		$user = $this->db->get_where('user', ['email' => $email])->row_array(); */
-	$this->load->library('form_validation');
+		$this->load->library('form_validation');
 		if (!$this->session->userdata('email')){
-		redirect('auth');
-		
-    }   
+			redirect('auth');
+		}   
    }
 
     public function index()
     {
         $data['title'] = 'Profile';
-        
-		//$data['user'] = $this->Auth_model->tampil_data();
 		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-         //var_dump($data); 
-        // Load view
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('profile/user', $data);
-        $this->load->view('templates/footer');
+		$data['content'] = $this->load->view('profile/user', $data, true);
+		$this->load->view('layout/master_layout',$data);
     }
-	
-	/* public function edit()
-    {
-        $data['title'] = 'Edit Profile';
-		//$email = $this->session->userdata('email');
-        //$data['user'] = $this->Auth_model->userdata($email);
-		//$user = $this->db->get_where('user', ['email' => $email])->row_array();
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
-        $this->form_validation->set_rules('name', 'Full Name', 'required|trim');
-
-        if ($this->form_validation->run() == false) {
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('profile/edit', $data);
-        $this->load->view('templates/footer');
-        } else {
-            $name = $this->input->post('name');
-            $email = $this->input->post('email');
-
-            //cek jika ada gambar yang akan diupload
-            $upload_image = $_FILES['image']['name'];
-
-            if ($upload_image) {
-                $config['allowed_types'] = 'gif|jpg|png';
-                $config['max_size']      = '2048';
-                $config['upload_path'] = './assets/img/';
-
-                $this->load->library('upload', $config);
-
-                if ($this->upload->do_upload('image')) {
-                    $old_image = $data['user']['image'];
-                    if ($old_image != 'default.jpg') {
-                        unlink(FCPATH . 'assets/img/' . $old_image);
-                    }
-                    $new_image = $this->upload->data('file_name');
-                    $this->db->set('image', $new_image);
-                } else {
-                    echo $this->upload->dispay_errors();
-                } 
-            } 
-
-            $this->db->set('name', $name);
-            $this->db->where('email', $email);
-            $this->db->update('user');
-
-            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Your profile has been updated!</div>');
-            redirect('user');
-		}
-    } */
 
 	public function edit()
     {
@@ -94,11 +35,8 @@ class Profile extends CI_Controller
         $this->form_validation->set_rules('name', 'Full Name', 'required|trim');
 
         if ($this->form_validation->run() == false) {
-            $this->load->view('templates/header', $data);
-            $this->load->view('templates/sidebar', $data);
-            $this->load->view('templates/topbar', $data);
-            $this->load->view('profile/edit', $data);
-            $this->load->view('templates/footer');
+			$data['content'] = $this->load->view('profile/edit', $data, true);
+			$this->load->view('layout/master_layout',$data);
         } else {
             $name = $this->input->post('name');
             $email = $this->input->post('email');
@@ -115,7 +53,7 @@ class Profile extends CI_Controller
 
                 if ($this->upload->do_upload('image')) {
                     $old_image = $data['user']['image'];
-                    if ($old_image != 'default.jpg') {
+                    if ($old_image != 'default.png') {
                         unlink(FCPATH . 'assets/img/users/' . $old_image);
                     }
                     $new_image = $this->upload->data('file_name');
@@ -144,11 +82,8 @@ class Profile extends CI_Controller
         $this->form_validation->set_rules('new_password2', 'Confirm New Password', 'required|trim|min_length[3]|matches[new_password1]');
 
         if ($this->form_validation->run() == false) {
-            $this->load->view('templates/header', $data);
-            $this->load->view('templates/sidebar', $data);
-            $this->load->view('templates/topbar', $data);
-            $this->load->view('profile/changepassword', $data);
-            $this->load->view('templates/footer');
+			$data['content'] = $this->load->view('profile/changepassword', $data, true);
+			$this->load->view('layout/master_layout',$data);
         } else {
             $current_password = $this->input->post('current_password');
             $new_password = $this->input->post('new_password1');

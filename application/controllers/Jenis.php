@@ -11,6 +11,7 @@ class Jenis extends CI_Controller
         $this->load->model('Mmain');
         $this->load->helper('url');
     	$this->load->library('form_validation');
+		$this->user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		if (!$this->session->userdata('email')){
 			redirect('auth');
     	}
@@ -20,8 +21,8 @@ class Jenis extends CI_Controller
     {
         $data['title'] = 'Jenis';
         $data['jenis'] = $this->m_jenis->tampil_jenis()->result();
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-		$render=$this->Mmain->qRead("jenis");
+        $data['user'] = $this->user;
+		$render = $this->Mmain->qRead("jenis");
 		$data['Jenis'] = $render->result();
         $data['content'] = $this->load->view('jenis', $data, true);
 		$this->load->view('layout/master_layout', $data);
@@ -34,11 +35,14 @@ class Jenis extends CI_Controller
         //$data['Jenis'] = $this->m_jenis->tampil_datajenis()->result();
 		$render=$this->Mmain->qRead("jenis");
 		$data['Jenis'] = $render->result();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('tambah_jenis', $data);
-        $this->load->view('templates/footer');
+        $data['user'] = $this->user;
+		$data['content'] = $this->load->view('tambah_jenis', $data, true);
+		$this->load->view('layout/master_layout', $data);
+        // $this->load->view('templates/header', $data);
+        // $this->load->view('templates/topbar', $data);
+        // $this->load->view('templates/sidebar', $data);
+        // $this->load->view('tambah_jenis', $data);
+        // $this->load->view('templates/footer');
     }
     public function proses_tambah_jenis()
     {
@@ -63,7 +67,7 @@ class Jenis extends CI_Controller
             '',''
         ));
         $this->session->set_flashdata('success', 'Jenis Barang <strong>Berhasil</strong> Ditambahkan!');
-        redirect('jenis');
+        // redirect('jenis');
     }
     
 

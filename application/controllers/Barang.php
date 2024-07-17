@@ -37,7 +37,7 @@ class Barang extends CI_Controller
 		$data['Barang'] = $render->result();
 		$data['jenis'] = $this->m_data->getJenis();
 		$data['satuan'] = $this->m_data->getSatuan();
-        $data['content'] = $this->load->view('addbarang', $data);
+        $data['content'] = $this->load->view('addbarang', $data,true);
 		$this->load->view('layout/master_layout', $data);
     }
 

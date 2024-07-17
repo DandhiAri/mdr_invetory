@@ -10,23 +10,22 @@ class Request extends CI_Controller
         $this->load->model('m_data');
         $this->load->model('Mmain');
 		$this->load->model('m_detail_barang');
+        $this->user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
         $this->load->helper('url');
-    $this->load->library('form_validation');
+		$this->load->library('form_validation');
 		if (!$this->session->userdata('email')){
-		redirect('auth');
-		
-    }
+			redirect('auth');
+		}
 	}
 
     public function index()
     {
         $data['title'] = 'Request';
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
+        $data['user'] = $this->user;
 		$render = $this->Mmain->qRead("request");
 		$data['Request'] = $render->result();
         $data['content'] = $this->load->view('request', $data, true);
-
 		$this->load->view('layout/master_layout',$data);
 
     }
@@ -38,11 +37,9 @@ class Request extends CI_Controller
 		$render=$this->Mmain->qRead("request");
 		$data['Request'] = $render->result();
 		$data['barang'] = $this->m_detail_barang->getBarang();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('addrequest', $data);
-        $this->load->view('templates/footer');
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+		$data['content'] = $this->load->view('addrequest', $data, true);
+		$this->load->view('layout/master_layout',$data);
     }
 
     public function proses_tambah()

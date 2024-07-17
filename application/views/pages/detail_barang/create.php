@@ -56,7 +56,6 @@
                             <label for="qtty" class="form-label">Quantity</label>
                             <input type="number" class="form-control" name="qtty" id="qtty" min="1">
                         </div>
-						</div>
 					<div class="col-md-6">
                         <div class="mb-3">
                             <label for="keterangan" class="form-label">Keterangan</label>

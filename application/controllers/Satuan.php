@@ -12,16 +12,16 @@ class Satuan extends CI_Controller
         $this->load->model('Mmain');
         $this->load->helper('url');
     	$this->load->library('form_validation');
+		$this->user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		if (!$this->session->userdata('email')){
-		redirect('auth');
-		
-    }
+			redirect('auth');
+    	}
 	}
 
     public function index()
     {
 		$data['Satuan'] = $this->Mmain->qRead("satuan")->result();
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data['user'] = $this->user;
 
         $data['content'] = $this->load->view('satuan/satuan', $data, true);
 		$this->load->view('layout/master_layout', $data);
@@ -29,14 +29,12 @@ class Satuan extends CI_Controller
     public function tambah()
     {
         $data['title'] = 'Satuan';
+        $data['user'] = $this->user;
         //$data['Satuan'] = $this->m_satuan->tampil_datasatuan()->result();
 		$render=$this->Mmain->qRead("satuan");
 		$data['Satuan'] = $render->result();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('satuan/tambah_data', $data);
-        $this->load->view('templates/footer');
+		$data['content'] = $this->load->view('satuan/tambah_data', $data, true);
+		$this->load->view('layout/master_layout', $data);
     }
     public function proses_tambah()
     {

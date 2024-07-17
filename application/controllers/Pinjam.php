@@ -35,11 +35,10 @@ class Pinjam extends CI_Controller
 		$render=$this->Mmain->qRead("pinjam");
 		$data['Pinjam'] = $render->result();
 		$data['barang'] = $this->m_pinjam->getBarang();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('pinjam/tambah_data', $data);
-        $this->load->view('templates/footer');
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
+		$data['content'] = $this->load->view('pinjam/tambah_data', $data,true);
+		$this->load->view('layout/master_layout', $data);
     }
     public function proses_tambah()
     {
