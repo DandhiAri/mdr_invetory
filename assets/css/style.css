@@ -1,0 +1,18 @@
+.warn{
+	padding: 7px;
+	color: white;
+	font-weight: 600;
+	font-size: 15px;
+	display: grid;
+	border-radius: 10px;
+	align-items: center;
+	cursor: pointer;
+}
+.err{
+	background-color: rgb(255, 0, 0);
+
+}
+.succ{
+	background-color: rgb(0, 255, 0);
+	text-align: center;
+}

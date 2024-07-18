@@ -82,18 +82,7 @@ class mMain  extends CI_Model
     // ++++++++++++++++++++++++++++++++++++++++++ Create insert query
     function qIns($tbq, $valq)
     {
-
-        $tes = self::qCol($tbq);
-        $i = 0;
-        foreach ($tes as $row) {
-            $savVal[$row] = $valq[$i];
-            $i++;
-        }
-
-        //echo implode(" ",$savVal);
-		$this->db->insert($tbq, $savVal);
-		// $this->db->insert($tbq, $valq);
-
+		$this->db->insert($tbq, $valq);
     }
 
 

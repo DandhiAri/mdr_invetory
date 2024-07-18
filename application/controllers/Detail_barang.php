@@ -17,6 +17,12 @@ class Detail_barang extends CI_Controller
 		if (!$this->session->userdata('email')){
 			redirect('auth');
     	}
+		$this->form_validation->set_rules('id_barang', 'ID Barang', 'required');
+        $this->form_validation->set_rules('item_description', 'Item Description', 'required');
+        $this->form_validation->set_rules('serial_code', 'Serial Code', 'required|is_unique[detail_barang.serial_code]', array( 'is_unique'=> 'This %s already exists.'));
+        $this->form_validation->set_rules('lokasi', 'Lokasi', 'required');
+        $this->form_validation->set_rules('qtty', 'Quantity', 'required|integer');
+        $this->form_validation->set_rules('keterangan', 'Keterangan', 'required');
 	}
 	
 	var $data="id_barang"; 
@@ -60,50 +66,25 @@ class Detail_barang extends CI_Controller
         $this->load->view('layout/master_layout',$data);
     }
 
-    public function proses_tambah()
-    {
-        // $this->_validasi();
-        if ($this->session->login['role'] == 'admin') {
-            $this->session->set_flashdata('error', 'Tambah data hanya untuk admin!');
-            redirect('dashboard');
+	public function proses_tambah($id) {
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('failed', validation_errors());
+			redirect($_SERVER['HTTP_REFERER']);
+        } else {
+            $data = array(
+                'id_barang' => $this->input->post('id_barang'),
+                'item_description' => $this->input->post('item_description'),
+                'serial_code' => $this->input->post('serial_code'),
+                'lokasi' => $this->input->post('lokasi'),
+                'qtty' => $this->input->post('qtty'),
+                'keterangan' => $this->input->post('keterangan')
+            );
+			$this->Mmain->qIns('detail_barang', $data);
+
+            $this->session->set_flashdata('success', 'Detail Barang sudah ditambahkan');
+			redirect('detail_barang/init/'.$id);
         }
-        //$id = $this->Mmain->autoId("detail_barang","id_detail_barang","DB","DB"."001","001");
-
-        $id_barang = $this->input->post('id_barang');
-		$item_description = $this->input->post('item_description');
-        $serial_code = $this->input->post('serial_code');
-        $lokasi = $this->input->post('lokasi');
-        $qtty = $this->input->post('qtty');
-		$keterangan = $this->input->post('keterangan');
-	
-		// Check for duplicate serial code
-		$existing = $this->Mmain->qRead("detail_barang where serial_code = '".$serial_code."' ", "serial_code");
-		//dd($existing);
-		if ($existing->num_rows() > 0) {
-			// If a duplicate serial code is found
-			$this->session->set_flashdata('error', 'Serial code already exists!');
-			redirect('detail_barang/tambah/' . $id_barang);
-		} else {
-        // If no duplicate serial code is found, proceed with the insertion
-        // $id = $this->Mmain->autoId("detail_barang", "id_detail_barang", "DB", "DB001", "001");
-		// var_dump($id);
-		
-        $this->Mmain->qIns("detail_barang", array(
-			// $id,
-			// $id_detail_barang,
-            $id_barang,
-			$item_description,
-            $serial_code,
-            $lokasi,
-            $qtty,
-			$keterangan,
-        ));
-
-        $this->session->set_flashdata('success', 'Data <strong>Berhasil</strong> Ditambahkan!');
-        redirect("detail_barang/init/".$id_barang);
-		}
     }
-
 
     public function edit($id){
         $data['title'] = 'Detail Barang';
@@ -116,34 +97,32 @@ class Detail_barang extends CI_Controller
 	
 	public function proses_ubah($id)
 	{
-		if ($this->session->login['role'] == 'admin') {
-			$this->session->set_flashdata('error', 'Ubah data hanya untuk admin!');
-			redirect('dashboard');
+		$original_value = $this->db->query("SELECT serial_code FROM detail_barang WHERE id_detail_barang = ".$id)->row()->serial_code;
+		if($this->input->post('serial_code') != $original_value) {
+		   $is_unique =  '|is_unique[detail_barang.serial_code]';
+		} else {
+		   $is_unique =  '';
 		}
-		
-		// Mengambil nilai-nilai yang dikirimkan melalui form
-		$data = [
-			'id_detail_barang' => $id,
-			'id_barang' => $this->input->post('id_barang'),
-			'item_description' => $this->input->post('item_description'),
-			'serial_code' => $this->input->post('serial_code'),
-			'lokasi' => $this->input->post('lokasi'),
-			'qtty' => $this->input->post('qtty'),
-			'keterangan' => $this->input->post('keterangan'),
-		];
 
-		// Load database and model
-		$this->load->database();
-		$this->load->model('Mmain');
+		$this->form_validation->set_rules('serial_code', 'Serial Code', 'required'.$is_unique, array( 'is_unique'=> 'This %s already exists.'));
+		if ($this->form_validation->run() == FALSE) {
+			$this->session->set_flashdata('failed', validation_errors());
+			redirect($_SERVER['HTTP_REFERER']);
+		} else {
+			$data = [
+				'id_detail_barang' => $id,
+				'id_barang' => $this->input->post('id_barang'),
+				'item_description' => $this->input->post('item_description'),
+				'serial_code' => $this->input->post('serial_code'),
+				'lokasi' => $this->input->post('lokasi'),
+				'qtty' => $this->input->post('qtty'),
+				'keterangan' => $this->input->post('keterangan'),
+			];
+		}
 
-		// Menggunakan metode qUpdpart untuk mengubah data
-		//$this->Mmain->qUpdpart($this->mainTable, 'id_detail_barang', $data['id_detail_barang'], ['id_barang', 'serial_code', 'lokasi', 'qtty'], [$data['id_barang'], $data['serial_code'], $data['lokasi'], $data['qtty']]);
 		$this->Mmain->qUpdpart("detail_barang", 'id_detail_barang', $id, array_keys($data), array_values($data));
 
-		// Set flash data for success notification
-		$this->session->set_flashdata('success', 'Data Barang <strong>Berhasil</strong> Diubah!');
-		
-		// Redirect to the appropriate page
+		$this->session->set_flashdata('success', 'Detail Barang berhasil diedit');
 		redirect("detail_barang/init/".$data['id_barang']); 
 	}
 
@@ -152,11 +131,11 @@ class Detail_barang extends CI_Controller
 		   
 		   $result = $this->Mmain->qDel("detail_barang","id_detail_barang",$id);
    
-           if ($result) {
+           if (!$result) {
                $this->session->set_flashdata('success', 'Data <strong>Berhasil</strong> Dihapus!');
                redirect("detail_barang/init/".$idBarang);
            } else {
-               $this->session->set_flashdata('error', 'Data <strong>Gagal</strong> Dihapus!');
+               $this->session->set_flashdata('failed', 'Data <strong>Gagal</strong> Dihapus!');
                redirect("detail_barang/init/".$idBarang);
            }
        }  

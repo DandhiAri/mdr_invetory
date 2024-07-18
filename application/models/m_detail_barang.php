@@ -65,6 +65,10 @@ class M_detail_barang extends CI_Model{
     {
         $this->db->where('id_detail_barang', $id);
         return $this->db->delete('detail');
-    }  
-    
+    } 
+
+    public function is_serial_code_unique($serial_code) {
+        $query = $this->db->get_where('detail_barang', array('serial_code' => $serial_code));
+		return $query->num_rows() == 0;
+    }
 }

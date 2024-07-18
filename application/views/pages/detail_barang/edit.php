@@ -8,6 +8,13 @@
                 Form Edit Detail Barang
             </div>
         </div>
+		<?php if ($this->session->flashdata('failed')): ?>
+			<div class="warn err">
+				<div class="msg" onclick="warnError()">
+					<?php echo $this->session->flashdata('failed'); ?>
+				</div>
+			</div>
+		<?php endif; ?>
         <div class="ibox-body">
             <form action="<?= base_url('Detail_Barang/proses_ubah/') ?>" method="POST">
             <div class="row">
