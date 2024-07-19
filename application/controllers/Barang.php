@@ -10,6 +10,7 @@ class Barang extends CI_Controller
         $this->load->model('m_data');
         $this->load->model('Mmain');
         $this->load->helper('url');
+        $this->user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		
 		$this->load->library('form_validation');
 		if (!$this->session->userdata('email')){
@@ -21,75 +22,70 @@ class Barang extends CI_Controller
     public function index()
     {
         $data['title'] = 'Barang';
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+		$data['user'] = $this->user;
 		$render=$this->Mmain->qRead("barang b LEFT OUTER JOIN detail_barang d ON d.id_barang =b.id_barang GROUP BY b.id_barang",
 									"b.id_barang, b.nama_barang, SUM(d.qtty) as stok, b.id_jenis, b.id_satuan ");
 		$data['Barang'] = $render->result();
-		$data['content'] = $this->load->view('barang', $data,true);
+		$data['content'] = $this->load->view('pages/barang/barang', $data,true);
 		$this->load->view('layout/master_layout', $data);
     }
 
     public function tambah()
     {
         $data['title'] = 'Barang';
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+		$data['user'] = $this->user;
 		$render=$this->Mmain->qRead("barang","");
 		$data['Barang'] = $render->result();
 		$data['jenis'] = $this->m_data->getJenis();
 		$data['satuan'] = $this->m_data->getSatuan();
-        $data['content'] = $this->load->view('addbarang', $data,true);
+        $data['content'] = $this->load->view('pages/barang/addbarang', $data,true);
 		$this->load->view('layout/master_layout', $data);
     }
 
     public function proses_tambah()
     {
-        $this->load->model('Mmain');
+		$this->load->model('Mmain');
         if ($this->session->login['role'] == 'admin') {
             $this->session->set_flashdata('error', 'Tambah data hanya untuk admin!');
             redirect('dashboard');
         }
-        $id = $this->Mmain->autoId("barang","id_barang","BR","BR"."001","001");
-        
-        // $data = [
-        //     'id_barang' => $id,
-        //     'nama_barang' => $this->input->post('nama_barang'),
-        //     'stok' => $this->input->post('stok'),
-        //     'satuan_id' => $this->input->post('satuan_id'),
-        //     'jenis_id' => $this->input->post('jenis_id'),
 
-        // ];
+		$this->form_validation->set_rules('nama', 'Nama barang', 'required');
+        $this->form_validation->set_rules('stok', 'Stok barang', 'required');
+        $this->form_validation->set_rules('id_jenis', 'Jenis Barang', 'required');
+        $this->form_validation->set_rules('id_satuan', 'Satuan Barang', 'required');
 
-        $nama = $this->input->post('nama');
-        $stok = $this->input->post('stok');
-		$jenis = $this->input->post('id_jenis');
-        $satuan = $this->input->post('id_satuan');
-        
-        $this->Mmain->qIns("barang", array(
-            $id,
-            $nama,
-            $stok,
-            $jenis,
-			$satuan
+		if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('failed', validation_errors());
+			redirect($_SERVER['HTTP_REFERER']);
+        } else {
+            $data = array(
+                'nama' => $this->input->post('nama'),
+                'stok' => $this->input->post('stok'),
+                'id_jenis' => $this->input->post('id_jenis'),
+                'id_satuan' => $this->input->post('id_satuan'),
+            );
+			$id = $this->Mmain->autoId("barang","id_barang","BR","BR"."001","001");
+			$this->Mmain->qIns('barang', $data);
 
-        ));
-
+            $this->session->set_flashdata('success', 'Data Barang sudah ditambahkan');
+			redirect('detail_barang/tambah/'.$id);
+        }
         $this->session->set_flashdata('success', 'Data Barang <strong>Berhasil</strong> Ditambahkan!');
         redirect('detail_barang/tambah/'.$id.'');
+		
 
     }
     
     public function edit($id){
         $data['title'] = 'Barang';
-		/* $render=$this->Mmain->qRead("barang","");
-		$data['Barang'] = $render->result(); */
+		$data['user'] = $this->user;
         $data['Barang'] = $this->m_data->edit_data($id);
 		$data['jenis'] = $this->m_data->getJenis();
 		$data['satuan'] = $this->m_data->getSatuan();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('edit_barang',$data);
-        $this->load->view('templates/footer');
+		
+		$data['content'] = $this->load->view('pages/barang/edit_barang', $data,true);
+		$this->load->view('layout/master_layout', $data);
     }
 	
 	public function proses_ubah()

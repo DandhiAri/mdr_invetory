@@ -5,9 +5,16 @@
     <div class="ibox">
         <div class="ibox-head">
             <div class="ibox-title">
-                Form edit barang
+                Form edit satuan barang
             </div>
         </div>
+		<?php if ($this->session->flashdata('failed')): ?>
+			<div class="warn err">
+				<div class="msg" onclick="warnError()">
+					<?php echo $this->session->flashdata('failed'); ?>
+				</div>
+			</div>
+		<?php endif; ?>
         <div class="ibox-body">
             <form action="<?= base_url('Satuan/proses_ubah') ?>" method="POST">
                 <div class="row">
@@ -18,12 +25,6 @@
                             <input type="hidden" name="id_satuan" id="id_satuan" value="<?= $Satuan['id_satuan'] ?>">
                         </div>
                     </div>
-                    <!--<div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="nomer_seri" class="form-label">Nomer Seri</label>
-                            <input type="text" class="form-control" name="nomer_seri" id="nomer_seri" min="1" value="<?= $Satuan['nomer_seri'] ?>">
-                        </div>
-                    </div>-->
                 </div>
         </div>
     </div>

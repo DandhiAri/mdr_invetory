@@ -18,7 +18,6 @@ class M_detail_barang extends CI_Model{
     public function getBarang()
     {
         $query = $this->db->query("SELECT * FROM barang ORDER BY nama_barang ASC");
-        // $query = $this->db->query("SELECT id_barang, nama_barang, COALESCE(stok, 0) AS stok FROM barang WHERE stok <> 0");
 
         if ($query->num_rows() == 0) {
             $query = [];
@@ -33,8 +32,6 @@ class M_detail_barang extends CI_Model{
     { 
 		
         $query = $this->db->query("SELECT * FROM detail_barang WHERE id_detail_barang = '$id'");
-		//$query = $this->db->query("SELECT det.id_detail_barang, b.nama_barang, det.serial_code, det.lokasi, det.qtty FROM detail_barang det INNER JOIN barang b ON det.id_barang = b.id_barang");
-		//$query = $this->db->qRead("SELECT detail_barang a INNER JOIN barang b on a.id_barang = b.id_barang  where a.id_detail_barang = '".$id."'", "a.id_detail_barang, a.id_barang, b.nama_barang, a.serial_code, a.lokasi,a.qtty");
         if ($query->num_rows() == 0) {
             $query = [];
 			

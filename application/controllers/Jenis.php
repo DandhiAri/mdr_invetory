@@ -24,7 +24,7 @@ class Jenis extends CI_Controller
         $data['user'] = $this->user;
 		$render = $this->Mmain->qRead("jenis");
 		$data['Jenis'] = $render->result();
-        $data['content'] = $this->load->view('jenis', $data, true);
+        $data['content'] = $this->load->view('pages/jenis_barang/jenis', $data, true);
 		$this->load->view('layout/master_layout', $data);
 
     }
@@ -36,51 +36,38 @@ class Jenis extends CI_Controller
 		$render=$this->Mmain->qRead("jenis");
 		$data['Jenis'] = $render->result();
         $data['user'] = $this->user;
-		$data['content'] = $this->load->view('tambah_jenis', $data, true);
+		$data['content'] = $this->load->view('pages/jenis_barang/tambah_jenis', $data, true);
 		$this->load->view('layout/master_layout', $data);
-        // $this->load->view('templates/header', $data);
-        // $this->load->view('templates/topbar', $data);
-        // $this->load->view('templates/sidebar', $data);
-        // $this->load->view('tambah_jenis', $data);
-        // $this->load->view('templates/footer');
     }
+
     public function proses_tambah_jenis()
     {
-        if ($this->session->login['role'] == 'admin') {
-            $this->session->set_flashdata('error', 'Tambah data hanya untuk admin!');
-            redirect('dashboard');
-        }
-        $id = $this->Mmain->autoId("jenis","id_jenis","JS","JS"."001","001");
+		$this->form_validation->set_rules('nama_jenis', 'Nama Jenis', 'required');
 
-        /* $data = [
-            'id_jenis' => $this->input->post('id_jenis'),
-            'nama_jenis' => $this->input->post('nama_jenis'),
-            'nomor_seri' => $this->input->post('nomor_seri'),
+		if ($this->form_validation->run() == FALSE) {
+			$this->session->set_flashdata('failed', validation_errors());
+			redirect($_SERVER['HTTP_REFERER']);
+		}else{
+			$data = array(
+				'nama_jenis' => $this->input->post('nama_jenis')
+			);
 
-        ]; */
-        $nama = $this->input->post('nama');
-        $nomor = $this->input->post('nomor');
-
-        $this->Mmain->qIns("jenis", array(
-            $id,
-            $nama,
-            '',''
-        ));
-        $this->session->set_flashdata('success', 'Jenis Barang <strong>Berhasil</strong> Ditambahkan!');
-        // redirect('jenis');
+			$this->Mmain->qIns('jenis', $data);
+			$this->session->set_flashdata('success', 'Jenis Barang <strong>Berhasil</strong> Ditambahkan!');
+			redirect('jenis');
+		}
     }
     
 
     public function edit_data($id)
     {
+		
         $data['title'] = 'Jenis';
         $data['Jenis'] = $this->m_jenis->edit_data($id);
+        $data['user'] = $this->user;
 
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('edit_data', $data);
-        $this->load->view('templates/footer');
+		$data['content'] = $this->load->view('pages/jenis_barang/edit_data', $data, true);
+		$this->load->view('layout/master_layout', $data);
     }
  
     public function proses_ubah()
@@ -89,21 +76,22 @@ class Jenis extends CI_Controller
             $this->session->set_flashdata('error', 'Ubah data hanya untuk admin!');
             redirect('dashboard');
         }
+		
+		$this->form_validation->set_rules('nama_jenis', 'Nama Jenis', 'required');
 
-        $data = [
-            'id_jenis' => $this->input->post('id_jenis'),
-            'nama_jenis' => $this->input->post('nama_jenis'),
-            //'nomor_seri' => $this->input->post('nomor_seri'),
+		if ($this->form_validation->run() == FALSE) {
+			$this->session->set_flashdata('failed', validation_errors());
+			redirect($_SERVER['HTTP_REFERER']);
+		}else{
+			$data = array(
+				'id_jenis' => $this->input->post('id_jenis'),
+				'nama_jenis' => $this->input->post('nama_jenis')
+			);
 
-        ];
-
-        if ($this->m_jenis->ubah($data)) {
-            $this->session->set_flashdata('success', 'Jenis Barang <strong>Berhasil</strong> Diubah!');
-            redirect('jenis');
-        } else {
-            $this->session->set_flashdata('error', 'Jenis Barang <strong>Gagal</strong> Diubah!');
-            redirect('jenis');
-        }
+			$this->m_jenis->ubah($data);
+			$this->session->set_flashdata('success', 'Jenis Barang <strong>Berhasil</strong> Ditambahkan!');
+			redirect('jenis');
+		}
     }
 
     public function hapus_data($id)

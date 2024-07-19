@@ -5,6 +5,7 @@
     <div class="ibox">
         <div class="ibox-head">
             <div class="ibox-title">
+				<a href="<?= base_url('barang')?>" class="btn btn-danger"><i class="fa fa-arrow-circle-left"></i> Kembali </a>
                 <a href="<?= base_url('detail_barang/tambah/'). $id  ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah </a>
             </div>
         </div>
@@ -37,10 +38,8 @@
 						<th>Aksi</th>
 					</tr>
 					<?php
-					$no = 1;
-					foreach($Detail_Barang as $dbr){
-						// var_dump($Detail_Barang); 
-
+						$no = 1;
+						foreach($Detail_Barang as $dbr){
 					?>
 						<tr>
 							<td><?php echo $no++ ?></td>

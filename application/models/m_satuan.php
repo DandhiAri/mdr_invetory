@@ -36,7 +36,6 @@ class M_satuan extends CI_Model
     public function ubah($data)
     {
         $this->db->set('nama_satuan', $data['nama_satuan']);
-        $this->db->set('nomer_seri', $data['nomer_seri']);
         $this->db->where('id_satuan', $data['id_satuan']);
 
         return $this->db->update('satuan');

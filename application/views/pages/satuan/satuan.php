@@ -1,5 +1,5 @@
 <div class="page-heading">
-    <h1 class="page-title">Data Satuan</h1>
+    <h1 class="page-title">Data Satuan Barang</h1>
 </div>
 <div class="page-content fade-in-up">
     <div class="ibox">
@@ -8,6 +8,19 @@
                 <a href="<?= base_url('Satuan/tambah') ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah satuan</a>
             </div>
         </div>
+		<?php if ($this->session->flashdata('failed')): ?>
+			<div class="warn err">
+				<div class="msg" onclick="warnError()">
+					<?php echo $this->session->flashdata('failed'); ?>
+				</div>
+			</div>
+		<?php elseif($this->session->flashdata('success')): ?>
+			<div class="warn succ">
+				<div class="msg" onclick="warnError()">
+					<?php echo $this->session->flashdata('success'); ?>
+				</div>
+			</div>
+		<?php endif; ?>
         <div class="ibox-body">
             <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
                 <thead>

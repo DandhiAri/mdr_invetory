@@ -6,8 +6,7 @@ class Satuan extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        // cek_login();
-
+		
         $this->load->model('m_satuan');
         $this->load->model('Mmain');
         $this->load->helper('url');
@@ -23,57 +22,51 @@ class Satuan extends CI_Controller
 		$data['Satuan'] = $this->Mmain->qRead("satuan")->result();
         $data['user'] = $this->user;
 
-        $data['content'] = $this->load->view('satuan/satuan', $data, true);
+        $data['content'] = $this->load->view('pages/satuan/satuan', $data, true);
 		$this->load->view('layout/master_layout', $data);
     }
+
     public function tambah()
     {
         $data['title'] = 'Satuan';
         $data['user'] = $this->user;
-        //$data['Satuan'] = $this->m_satuan->tampil_datasatuan()->result();
 		$render=$this->Mmain->qRead("satuan");
 		$data['Satuan'] = $render->result();
-		$data['content'] = $this->load->view('satuan/tambah_data', $data, true);
+		$data['content'] = $this->load->view('pages/satuan/tambah_data', $data, true);
 		$this->load->view('layout/master_layout', $data);
     }
+
     public function proses_tambah()
     {
-        if ($this->session->login['role'] == 'admin') {
+		if ($this->session->login['role'] == 'admin') {
             $this->session->set_flashdata('error', 'Tambah data hanya untuk admin!');
             redirect('dashboard');
         }
 
-        /* $data = [
-            'id_satuan' => $this->input->post('id_satuan'),
-            'nama_satuan' => $this->input->post('nama_satuan'),
-            'nomer_seri' => $this->input->post('nomer_seri'),
+		$this->form_validation->set_rules('nama_satuan', 'Nama satuan', 'required');
 
-        ]; */
+		if ($this->form_validation->run() == FALSE) {
+			$this->session->set_flashdata('failed', validation_errors());
+			redirect($_SERVER['HTTP_REFERER']);
+		}else{
+			$data = array(
+				'nama_satuan' => $this->input->post('nama_satuan')
+			);
 
-        $nama = $this->input->post('nama');
-        $nomer = $this->input->post('nomer');
-
-        $this->Mmain->qIns("satuan", array(
-            0,
-            $nama,
-            '',''
-
-        ));
-
-        $this->session->set_flashdata('success', 'Data Barang <strong>Berhasil</strong> Ditambahkan!');
-        redirect('satuan');
+			$this->Mmain->qIns('satuan', $data);
+			$this->session->set_flashdata('success', 'Satuan <strong>Berhasil</strong> Ditambahkan!');
+			redirect('satuan');
+		}
     }
 
     public function edit_data($id)
     {
         $data['title'] = 'Satuan';
         $data['Satuan'] = $this->m_satuan->edit_data($id);
+        $data['user'] = $this->user;
 
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('satuan/edit_data', $data);
-        $this->load->view('templates/footer');
+		$data['content'] = $this->load->view('pages/satuan/edit_data', $data, true);
+		$this->load->view('layout/master_layout', $data);
     }
 
     public function proses_ubah()
@@ -83,20 +76,21 @@ class Satuan extends CI_Controller
             redirect('dashboard');
         }
 
-        $data = [
-            'id_satuan' => $this->input->post('id_satuan'),
-            'nama_satuan' => $this->input->post('nama_satuan'),
-            //'nomer_seri' => $this->input->post('nomer_seri'),
+		$this->form_validation->set_rules('nama_satuan', 'Nama satuan', 'required');
 
-        ];
+		if ($this->form_validation->run() == FALSE) {
+			$this->session->set_flashdata('failed', validation_errors());
+			redirect($_SERVER['HTTP_REFERER']);
+		}else{
+			$data = array(
+				'id_satuan' => $this->input->post('id_satuan'),
+				'nama_satuan' => $this->input->post('nama_satuan')
+			);
 
-        if ($this->m_satuan->ubah($data)) {
-            $this->session->set_flashdata('success', 'Data Barang <strong>Berhasil</strong> Diubah!');
-            redirect('satuan');
-        } else {
-            $this->session->set_flashdata('error', 'Data Barang <strong>Gagal</strong> Diubah!');
-            redirect('satuan');
-        }
+			$this->m_satuan->ubah($data);
+			$this->session->set_flashdata('success', 'Satuan <strong>Berhasil</strong> Diubah!');
+			redirect('satuan');
+		}
     }
 
     public function hapus_data($id)
@@ -104,10 +98,10 @@ class Satuan extends CI_Controller
         $result = $this->m_satuan->hapus($id);
 
         if ($result) {
-            $this->session->set_flashdata('success', 'Data Barang <strong>Berhasil</strong> Dihapus!');
+            $this->session->set_flashdata('success', 'Satuan <strong>Berhasil</strong> Dihapus!');
             redirect('satuan');
         } else {
-            $this->session->set_flashdata('error', 'Data Barang <strong>Gagal</strong> Dihapus!');
+            $this->session->set_flashdata('failed', 'Satuan <strong>Gagal</strong> Dihapus!');
             redirect('satuan');
         }
     }

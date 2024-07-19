@@ -22,10 +22,10 @@
 <body class="fixed-navbar">
     <div class="page-wrapper">
         <!-- START HEADER-->
-        <?php echo $this->load->view('templates/nav_header', [], true); ?>
+        <?php echo $this->load->view('layout/templates/nav_header', [], true); ?>
         <!-- END HEADER-->
         <!-- START SIDEBAR-->
-        <?php echo $this->load->view('templates/sidebar', [], true); ?>
+        <?php echo $this->load->view('layout/templates/sidebar', [], true); ?>
         <!-- END SIDEBAR-->
         <div class="content-wrapper">
             <!-- START PAGE CONTENT-->
@@ -33,7 +33,7 @@
 				<?php echo isset($content) ? $content : ''; ?>
 			</div>
             <!-- END PAGE CONTENT-->
-        	<?php echo $this->load->view('templates/footer', [], true); ?>
+        	<?php echo $this->load->view('layout/templates/footer', [], true); ?>
         </div>
     </div>
     

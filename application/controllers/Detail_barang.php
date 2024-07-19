@@ -48,7 +48,6 @@ class Detail_barang extends CI_Controller
         $data['Detail_Barang'] = $render->result();
 		$data['content'] = $this->load->view('pages/detail_barang/index', $data, true);
         $this->load->view('layout/master_layout',$data);
-		// var_dump($id);
     }
 
     public function tambah($id)
@@ -58,6 +57,7 @@ class Detail_barang extends CI_Controller
 		$render  = $this->Mmain->qRead("detail_barang det 
         INNER JOIN barang b ON det.id_barang = b.id_barang WHERE det.id_barang ",
         "det.id_detail_barang, b.nama_barang, det.item_description, det.serial_code, det.lokasi, det.qtty, det.keterangan");
+
 		$data['id'] = $id;
         $data['user'] = $this->user;
 		$data['Detail_Barang'] = $render->result();

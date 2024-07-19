@@ -25,7 +25,7 @@ class Pinjam extends CI_Controller
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		$render = $this->Mmain->qRead("pinjam");
 		$data['Pinjam'] = $render->result();
-        $data['content'] = $this->load->view('pinjam/pinjam', $data,true);
+        $data['content'] = $this->load->view('pages/pinjam/pinjam', $data,true);
 		$this->load->view('layout/master_layout', $data);
     }
     public function tambah_pinjam()
@@ -37,7 +37,7 @@ class Pinjam extends CI_Controller
 		$data['barang'] = $this->m_pinjam->getBarang();
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 
-		$data['content'] = $this->load->view('pinjam/tambah_data', $data,true);
+		$data['content'] = $this->load->view('pages/pinjam/tambah_data', $data,true);
 		$this->load->view('layout/master_layout', $data);
     }
     public function proses_tambah()
@@ -95,11 +95,9 @@ class Pinjam extends CI_Controller
         $data['title'] = 'Pinjam';
         $data['Pinjam'] = $this->m_pinjam->edit_data($id);
 		$data['barang'] = $this->m_pinjam->getBarang();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('pinjam/edit_data', $data);
-        $this->load->view('templates/footer');
+		
+		$data['content'] = $this->load->view('pages/pinjam/edit_data', $data,true);
+		$this->load->view('layout/master_layout', $data);
     }
 
     public function proses_ubah()
