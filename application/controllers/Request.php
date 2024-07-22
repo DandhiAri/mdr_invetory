@@ -25,7 +25,7 @@ class Request extends CI_Controller
         $data['user'] = $this->user;
 		$render = $this->Mmain->qRead("request");
 		$data['Request'] = $render->result();
-        $data['content'] = $this->load->view('request', $data, true);
+        $data['content'] = $this->load->view('pages/request/request', $data, true);
 		$this->load->view('layout/master_layout',$data);
 
     }
@@ -38,7 +38,8 @@ class Request extends CI_Controller
 		$data['Request'] = $render->result();
 		$data['barang'] = $this->m_detail_barang->getBarang();
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-		$data['content'] = $this->load->view('addrequest', $data, true);
+
+		$data['content'] = $this->load->view('pages/request/addrequest', $data, true);
 		$this->load->view('layout/master_layout',$data);
     }
 
@@ -48,40 +49,39 @@ class Request extends CI_Controller
             $this->session->set_flashdata('error', 'Tambah data hanya untuk admin!');
             redirect('dashboard');
         }
-        $id = $this->Mmain->autoId("request","id_request","RQ","RQ"."001","001");
+		
+		$this->form_validation->set_rules('nama', 'Nama PIC', 'required');
+        $this->form_validation->set_rules('tgl_request', 'Tanggal Request', 'required');
+        $this->form_validation->set_rules('keterangan', 'Keterangan', 'required');
+        $this->form_validation->set_rules('status', 'Status', 'required');
 
-        $nama = $this->input->post('nama');
-        $tgl_request = $this->input->post('tgl_request');
-        //$barang_request = $this->input->post('barang_request');
-        //$jumlah = $this->input->post('jumlah');
-        $keterangan = $this->input->post('keterangan');
-		$status = $this->input->post('status');
-        
-        $this->Mmain->qIns("request", array(
-            $id,
-            $nama,
-            $tgl_request,
-            //$barang_request,
-            //$jumlah,
-            $keterangan,
-			$status
+		if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('failed', validation_errors());
+			redirect($_SERVER['HTTP_REFERER']);
+        } else {
+            $data = array(
+                'nama' => $this->input->post('nama'),
+                'tgl_request' => $this->input->post('tgl_request'),
+                'keterangan' => $this->input->post('keterangan'),
+                'status' => $this->input->post('status'),
+            );
+			$id = $this->Mmain->autoId("request","id_request","RQ","RQ"."001","001");
+			$data['id_request'] = $id;
+			$this->Mmain->qIns('request', $data);
 
-        ));
-
-        $this->session->set_flashdata('success', 'Data <strong>Berhasil</strong> Ditambahkan!');
-        redirect('detail_request/tambah/'.$id.'');
-
+            $this->session->set_flashdata('success', 'Data Barang sudah ditambahkan');
+			redirect('detail_request/tambah/'.$id);
+        }
     }
 
     public function edit($id){
         $data['title'] = 'Request';
         $data['Request'] = $this->m_data->edit_request($id);
 		$data['barang'] = $this->m_detail_barang->getBarang();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('edit_request',$data);
-        $this->load->view('templates/footer');
+        $data['user'] = $this->user;
+
+		$data['content'] = $this->load->view('pages/request/edit_request', $data, true);
+		$this->load->view('layout/master_layout',$data);
     }
 	
 	public function proses_ubah()
@@ -96,18 +96,12 @@ class Request extends CI_Controller
 
 		// Data untuk diubah
 		$data = [
-			'id_request' => $this->input->post('id_request'),
+			'id_request' => $id,
             'nama' => $this->input->post('nama'),
             'tgl_request' => $this->input->post('tgl_request'),
-            //'barang_request' => $this->input->post('barang_request'),
-            //'jumlah' => $this->input->post('jumlah'),
             'keterangan' => $this->input->post('keterangan'),
 			'status' => $this->input->post('status'),
 		];
-
-		// Memuat database dan model
-		$this->load->database();
-		$this->load->model('Mmain');
 
 		// Menggunakan metode qUpdpart untuk mengubah data
 		$this->Mmain->qUpdpart("request", 'id_request', $id, array_keys($data), array_values($data));

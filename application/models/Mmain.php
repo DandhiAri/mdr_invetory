@@ -85,7 +85,31 @@ class mMain  extends CI_Model
 		$this->db->insert($tbq, $valq);
     }
 
+	public function getBarang() {
+        $this->db->select('barang.*, jenis.nama_jenis, satuan.nama_satuan');
+        $this->db->from('barang');
+        $this->db->join('jenis', 'barang.id_jenis = jenis.id_jenis');
+        $this->db->join('satuan', 'barang.id_satuan = satuan.id_satuan');
+        $query = $this->db->get();
+        return $query->result();
+    }
 
+	public function get_serial_codes($id_barang) {
+        $this->db->select('serial_code');
+        $this->db->from('detail_barang');
+        $this->db->where('id_barang', $id_barang);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+	public function get_detail_id()
+	{
+		$serial_code = $this->input->post('serial_code');
+		$this->db->select('id_detail_barang');
+		$this->db->from('detail_barang');
+		$this->db->where('serial_code', $serial_code);
+		$query = $this->db->get();
+		echo json_encode($query->row_array());
+	}
     // ++++++++++++++++++++++++++++++++++++++++++ Create delete query
 
     function qDel($tbq, $idq, $valq) //Delete query declaration
@@ -183,4 +207,5 @@ class mMain  extends CI_Model
         $query = $this->db->query($sqlq);
         return $query;
     }
+	
 }

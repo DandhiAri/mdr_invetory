@@ -5,6 +5,7 @@
     <div class="ibox">
         <div class="ibox-head">
             <div class="ibox-title">
+			<a href="<?= base_url('request') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
                 <a href="<?= base_url('detail_request/tambah/'.$id.'') ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah </a>
             </div>
         </div>
@@ -40,11 +41,10 @@
                         <td><?php echo $dr->jumlah ?></td>
                         <td><?php echo $dr->status ?></td>
                         <td>
-                        
-                        <a onclick=return href="<?= base_url('detail_request/edit/') . $dr->id_detail_request ?>" class="btn btn-warning" title="Edit"><i class="ti ti-pencil"></i></a>
-                        <a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('detail_request/hapus_data/') . $dr->id_detail_request.'/'.$dr->id_request ?>"class="btn btn-danger" id="deleterequest" title="Hapus" style="cursor: pointer;"><i class="ti ti-trash"></i></button>
-                </td>
-                </tr>
+							<a onclick=return href="<?= base_url('detail_request/edit/') . $dr->id_detail_request ?>" class="btn btn-warning" title="Edit"><i class="ti ti-pencil"></i></a>
+							<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('detail_request/hapus_data/') . $dr->id_detail_request.'/'.$dr->id_request ?>"class="btn btn-danger" id="deleterequest" title="Hapus" style="cursor: pointer;"><i class="ti ti-trash"></i>
+                		</td>
+                	</tr>
                 <?php } ?>
             </thead>
         </table>

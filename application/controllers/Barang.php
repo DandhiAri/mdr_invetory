@@ -14,19 +14,17 @@ class Barang extends CI_Controller
 		
 		$this->load->library('form_validation');
 		if (!$this->session->userdata('email')){
-		redirect('auth');
-		
-    }
+			redirect('auth');
+    	}
     }
 
     public function index()
     {
         $data['title'] = 'Barang';
 		$data['user'] = $this->user;
-		$render=$this->Mmain->qRead("barang b LEFT OUTER JOIN detail_barang d ON d.id_barang =b.id_barang GROUP BY b.id_barang",
-									"b.id_barang, b.nama_barang, SUM(d.qtty) as stok, b.id_jenis, b.id_satuan ");
-		$data['Barang'] = $render->result();
-		$data['content'] = $this->load->view('pages/barang/barang', $data,true);
+
+		$data['Barang']=$this->Mmain->getBarang();
+		$data['content'] = $this->load->view('pages/barang/barang', $data, true);
 		$this->load->view('layout/master_layout', $data);
     }
 
@@ -44,13 +42,12 @@ class Barang extends CI_Controller
 
     public function proses_tambah()
     {
-		$this->load->model('Mmain');
         if ($this->session->login['role'] == 'admin') {
             $this->session->set_flashdata('error', 'Tambah data hanya untuk admin!');
             redirect('dashboard');
         }
 
-		$this->form_validation->set_rules('nama', 'Nama barang', 'required');
+		$this->form_validation->set_rules('nama_barang', 'Nama barang', 'required');
         $this->form_validation->set_rules('stok', 'Stok barang', 'required');
         $this->form_validation->set_rules('id_jenis', 'Jenis Barang', 'required');
         $this->form_validation->set_rules('id_satuan', 'Satuan Barang', 'required');
@@ -60,21 +57,19 @@ class Barang extends CI_Controller
 			redirect($_SERVER['HTTP_REFERER']);
         } else {
             $data = array(
-                'nama' => $this->input->post('nama'),
+                'nama_barang' => $this->input->post('nama_barang'),
                 'stok' => $this->input->post('stok'),
                 'id_jenis' => $this->input->post('id_jenis'),
                 'id_satuan' => $this->input->post('id_satuan'),
             );
+
 			$id = $this->Mmain->autoId("barang","id_barang","BR","BR"."001","001");
+			$data['id_barang'] = $id;
 			$this->Mmain->qIns('barang', $data);
 
             $this->session->set_flashdata('success', 'Data Barang sudah ditambahkan');
 			redirect('detail_barang/tambah/'.$id);
         }
-        $this->session->set_flashdata('success', 'Data Barang <strong>Berhasil</strong> Ditambahkan!');
-        redirect('detail_barang/tambah/'.$id.'');
-		
-
     }
     
     public function edit($id){
@@ -106,10 +101,6 @@ class Barang extends CI_Controller
             'id_satuan' => $this->input->post('id_satuan'),
             'id_jenis' => $this->input->post('id_jenis')
 		];
-
-		// Memuat database dan model
-		$this->load->database();
-		$this->load->model('Mmain');
 
 		// Menggunakan metode qUpdpart untuk mengubah data
 		$this->Mmain->qUpdpart("barang", 'id_barang', $id, array_keys($data), array_values($data));

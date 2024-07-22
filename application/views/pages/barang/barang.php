@@ -16,7 +16,7 @@
                     <th>ID barang</th>
                     <th>Nama Barang</th>
 					<th>Jenis</th>
-                    <th>Quantity</th>
+                    <th>Stok</th>
                     <th>Satuan</th>
                     <th>Aksi</th>
                 </tr>
@@ -28,9 +28,9 @@
                         <td><?php echo $no++ ?></td>
                         <td><?php echo $b->id_barang ?></td>
                         <td><?php echo $b->nama_barang ?></td>
-						<td><?php echo $b->id_jenis ?></td>
+						<td><?php echo $b->nama_jenis ?></td>
                         <td><?php echo $b->stok ?></td>
-                        <td><?php echo $b->id_satuan ?></td>
+                        <td><?php echo $b->nama_satuan ?></td>
                         
                         <td>
                         <a onclick=return href="<?= base_url('detail_barang/init/') . $b->id_barang ?>" class="btn btn-warning" title="Detail"><i class="fa fa-edit"></i></a>

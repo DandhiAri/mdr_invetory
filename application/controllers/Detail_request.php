@@ -22,16 +22,8 @@ class Detail_request extends CI_Controller
     {
         $data['title'] = 'Detail Request';
         $data['Detail_Request'] = $this->m_detail_req->tampil_datarequest()->result();
-		//$data['Detail_Request'] = $this->Mmain->qRead('detail_request');
-		//$render  = $this->Mmain->qRead("detail_request det 
-        //INNER JOIN barang b ON det.id_barang = b.id_barang WHERE det.id_barang  = '$id' ",
-        //"det.id_detail_barang, det.nama_barang_request, det.jumlah_request, det.keterangan, det.id_barang, det.serial_code, det.jumlah, det.tanggal_waktu, det.status");
-        // $this->load->view('templates/header', $data);
-        // $this->load->view('templates/topbar', $data);
-        // $this->load->view('templates/sidebar', $data);
-        // $this->load->view('detail_request/detail_request', $data);
-        // $this->load->view('templates/footer');
-		$data['content'] = $this->load->view('detail_request/detail_request', $data, true);
+
+		$data['content'] = $this->load->view('pages/detail_request/detail_request', $data, true);
 		$this->load->view('layout/master_layout',$data);
     }
 	
@@ -39,109 +31,93 @@ class Detail_request extends CI_Controller
     {
         $data['title'] = 'Detail Request';
 		$data['id'] = $id;
-		/* $render  = $this->Mmain->qRead("detail_request det 
-        INNER JOIN request r ON det.id_request = r.id_request WHERE det.id_request  = '$id' ",
-        "det.id_detail_request, det.id_request, det.barang_request, det.jumlah_request, det.keterangan, det.id_barang, det.serial_code, det.lokasi, det.jumlah, det.tanggal_waktu, det.status");  */
-		$render  = $this->Mmain->qRead("request r 
-        INNER JOIN detail_request det ON det.id_request = r.id_request 
-		LEFT JOIN detail_barang dbr ON dbr.id_detail_barang = det.id_detail_barang WHERE det.id_request  = '$id' ",
-        "det.id_detail_request, det.id_request, det.keterangan, det.id_barang, det.serial_code, det.lokasi, det.jumlah, det.status, det.id_detail_barang, dbr.item_description"); 
-		
-        $data['Detail_Request'] = $render->result();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('detail_request/detail_request', $data);
-        $this->load->view('templates/footer');
+		$data['user'] = $this->user;
+        $data['Detail_Request'] = $this->Mmain->qRead("detail_request")->result();
+
+		$data['content'] = $this->load->view('pages/detail_request/detail_request', $data, true);
+		$this->load->view('layout/master_layout',$data);
+    }
+
+	public function get_serial_codes() {
+        $id_barang = $this->input->post('id_barang');
+        $this->load->model('Mmain');
+        $serial_codes = $this->Mmain->get_serial_codes($id_barang);
+        echo json_encode($serial_codes);
     }
 
     public function tambah($id)
     {
         $data['title'] = 'Detail Request';
-		/* $render  = $this->Mmain->qRead("detail_request det 
-        INNER JOIN barang b ON det.id_barang = b.id_barang WHERE det.id_barang",
-        "det.id_detail_request, det.id_request, det.barang_request, det.jumlah_request, det.keterangan, det.id_barang, det.serial_code, det.lokasi, det.jumlah, det.tanggal_waktu, det.status"); */
-		$render  = $this->Mmain->qRead("request r 
-        INNER JOIN detail_request det ON det.id_request = r.id_request 
-		LEFT JOIN detail_barang dbr ON dbr.id_detail_barang = det.id_detail_barang WHERE det.id_request  = '$id' ",
-        "det.id_detail_request, det.id_request, det.keterangan, det.id_barang, det.serial_code, det.lokasi, det.jumlah, det.status, det.id_detail_barang, dbr.item_description");
-        $data['Detail_Request'] = $render->result();
 		$data['id'] = $id;
 		$data['user'] = $this->user;
-		//$data['Detail_Request'] = $this->m_detail_req->tampil_datarequest()->result();
-		//$data['barang'] = $this->Mmain->qRead('barang'); 
-		#$data['detail_barang'] = $this->m_detail_req->getseri();
-        // $this->load->view('templates/header', $data);
-        // $this->load->view('templates/topbar', $data);
-        // $this->load->view('templates/sidebar', $data);
-        // $this->load->view('detail_request/adddetail', $data);
-        // $this->load->view('templates/footer');
+		$data['Barang'] = $this->Mmain->qRead("barang")->result();
+		$data['detail_barang'] = $this->Mmain->qRead("detail_barang")->result();
 
-		$data['content'] = $this->load->view('detail_request/adddetail', $data, true);
+		$data['content'] = $this->load->view('pages/detail_request/adddetail', $data, true);
 		$this->load->view('layout/master_layout',$data);
     }
-
     public function proses_tambah()
     {
         if ($this->session->login['role'] == 'admin') {
             $this->session->set_flashdata('error', 'Tambah data hanya untuk admin!');
             redirect('dashboard');
         }
-        $id = $this->Mmain->autoId("detail_request","id_detail_request","DRQ","DRQ"."001","001");
 
-		$id_request = $this->input->post('id_request');
-        //$barang_request = $this->input->post('barang_request');
-		$id_detail_barang = $this->input->post('id_detail_barang');
-        //$jumlah_request = $this->input->post('jumlah_request');
-        $keterangan = $this->input->post('keterangan');
-        $id_barang = $this->input->post('id_barang');
-        $serial_code = $this->input->post('serial_code');
-		$item_description 	= $this->input->post('item_description');
-        $lokasi = $this->input->post('lokasi');
-		$jumlah = $this->input->post('jumlah');
-        //$tanggal_waktu = $this->input->post('tanggal_waktu');
-        $status = $this->input->post('status');
-        
-		if ($status == 'Finished') {
-		$renQty = $this->Mmain->qRead("detail_barang where serial_code = '".$serial_code."' ","qtty, id_detail_barang");
-		
-		 if ($renQty->num_rows() > 0) {
-            foreach ($renQty->result() as $row) {
-                $qty = $row->qtty;
-                $idDetailBarang = $row->id_detail_barang;
-            }
-        }		
-		
-		$valStok = $qty - $jumlah;
-		
-		$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $idDetailBarang, Array("qtty"), Array($valStok) );
-		}
-		
-		$detail_barang_data = $this->Mmain->qRead("detail_barang where serial_code = '$serial_code' ", "id_detail_barang");
-		
-		if ($detail_barang_data->num_rows()>0 ) {
-        $idDetailBarang = $detail_barang_data->row()->id_detail_barang;
-		
-		$this->Mmain->qIns("detail_request", array(
-            $id,
-			$id_request,
-            //$barang_request,
-			$idDetailBarang, // ini value hasil dari qRead diatas.
-            //$jumlah_request,
-            $keterangan,
-            $id_barang,
-            $serial_code,
-			$lokasi,
-            $jumlah,
-            //$tanggal_waktu,
-            $status,
+		$this->form_validation->set_rules('id_request', 'ID Request', 'required');
+		// $this->form_validation->set_rules('id_detail_barang', 'ID Detail Barang', 'required');
+		$this->form_validation->set_rules('id_barang', 'ID Barang', 'required');
+		$this->form_validation->set_rules('serial_code', 'Serial Code', 'required');
+		// $this->form_validation->set_rules('item_description', 'Item Description', 'required');
+		$this->form_validation->set_rules('lokasi', 'Lokasi', 'required');
+		$this->form_validation->set_rules('jumlah', 'Jumlah', 'required|integer');
+		$this->form_validation->set_rules('status', 'Status', 'required');
 
-        ));
-		}
+		if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('failed', validation_errors());
+			redirect($_SERVER['HTTP_REFERER']);
+        } else {
+            $data = array(
+                "id_request" => $this->input->post('id_request'),
+				"id_detail_barang" => $this->input->post('id_detail_barang'),
+				"keterangan" => $this->input->post('keterangan'),
+				"id_barang" => $this->input->post('id_barang'),
+				"serial_code" => $this->input->post('serial_code'),
+				"lokasi" => $this->input->post('lokasi'),
+				"jumlah" => $this->input->post('jumlah'),
+				"status" => $this->input->post('status'),
+            );
 
-        $this->session->set_flashdata('success', 'Data <strong>Berhasil</strong> Ditambahkan!');
-        redirect("detail_request/init/".$id_request);
+			$id_request = $this->Mmain->autoId("detail_request","id_detail_request","DRQ","DRQ"."001","001");
 
+			$data['id_detail_request'] = $id_request;
+
+			if ($status == 'Finished') {
+				$renQty = $this->Mmain->qRead("detail_barang where serial_code = '".$serial_code."' ","qtty, id_detail_barang");
+			
+			 	if ($renQty->num_rows() > 0) {
+					foreach ($renQty->result() as $row) {
+						$qty = $row->qtty;
+						$idDetailBarang = $row->id_detail_barang;
+					}
+				}		
+
+				$valStok = $qty - $jumlah;
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $idDetailBarang, Array("qtty"), Array($valStok) );
+			}
+			
+			$detail_barang_data = $this->Mmain->qRead("detail_barang where serial_code = '$serial_code' ", "id_detail_barang");
+			
+			if ($detail_barang_data->num_rows()>0 ) {
+				$idDetailBarang = $detail_barang_data->row()->id_detail_barang;
+			
+				$this->Mmain->qIns('detail_request', $data);
+				$this->session->set_flashdata('success', 'Data <strong>Berhasil</strong> Ditambahkan!');
+				redirect("detail_request/init/".$id_request);
+			} else {
+				$this->session->set_flashdata('failed', "error if num rows");
+				redirect($_SERVER['HTTP_REFERER']);
+			}
+        }
     }
 
     public function edit($id){
@@ -149,16 +125,9 @@ class Detail_request extends CI_Controller
         $data['Detail_Request'] = $this->m_detail_req->edit_request($id);
 		$data['barang'] = $this->m_detail_barang->getBarang();
 		$data['detail_barang'] = $this->m_detail_req->getseri();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('detail_request/editdetail',$data);
-        $this->load->view('templates/footer');
-		
-		/* $isAll = $this->Mmain->qRead(
-										"tb_accfrm AS a INNER JOIN tb_frm AS b ON a.code_frm = b.code_frm 
-										WHERE a.id_acc ='".$this->session->userdata['accUser']."' AND b.id_frm='".$this->viewLink."'",
-										"a.is_add as isadd,a.is_edt as isedt,a.is_del as isdel,a.is_spec1 as acc1,a.is_spec2 as acc2","")->row(); */
+
+		$data['content'] = $this->load->view('pages/detail_request/editdetail', $data, true);
+		$this->load->view('layout/master_layout',$data);
     }
 
    public function proses_ubah()

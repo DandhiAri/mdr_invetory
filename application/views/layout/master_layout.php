@@ -51,6 +51,41 @@
 			errorElement.style.display = 'none';
 		}
 	</script>
+	<?php  if ($title == "Detail Request"): ?>
+		<script>
+			$(document).ready(function() {
+				$('#getIdBarang').change(function() {
+					var id_barang = $(this).val();
+					$.ajax({
+						url: '<?= base_url('Detail_request/get_serial_codes') ?>',
+						method: 'POST',
+						data: {id_barang: id_barang},
+						dataType: 'json',
+						success: function(response) {
+							var options = '<option value="">Pilih Nomor Seri</option>';
+							$.each(response, function(index, value) {
+								options += '<option value="' + value.serial_code + '">' + value.serial_code + '</option>';
+							});
+							$('#showSerialCode').html(options);
+						}
+					});
+				});
+				$('#showSerialCode').change(function() {
+					var serial_code = $(this).val();
+					$.ajax({
+						url: '<?= base_url('Detail_request/get_detail_id') ?>',
+						method: 'POST',
+						data: {serial_code: serial_code},
+						dataType: 'json',
+						success: function(response) {
+							$('#id_detail_barang').val(response.id_detail_barang);
+						}
+					});
+				});
+			});
+		</script>
+		<script src="<?= base_url('assets/js/ajax.js') ?>"></script>
+	<?php endif; ?>
     <script src="<?= base_url('assets'); ?>/js/script.js"></script>
     <!-- CORE PLUGINS-->
     <script src="<?= base_url('assets'); ?>./vendors/jquery/dist/jquery.min.js" type="text/javascript"></script>

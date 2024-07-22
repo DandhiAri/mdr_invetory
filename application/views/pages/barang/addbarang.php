@@ -14,7 +14,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="nama_barang" class="form-label">Nama Barang</label>
-                            <input type="text" class="form-control" name="nama" id="nama_barang" placeholder="Masukkan nama barang..."> 
+                            <input type="text" class="form-control" name="nama_barang" id="nama_barang" placeholder="Masukkan nama barang..."> 
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -29,7 +29,7 @@
                             <select class="form-control" name="id_jenis" id="id_jenis">
                                 <option value="">Pilih Jenis</option>
                                 <?php foreach ($jenis as $data) { ?>
-                                    <option value="<?= $data['nama_jenis'] ?>"><?= $data['nama_jenis'] ?></option>
+                                    <option value="<?= $data['id_jenis'] ?>"><?= $data['nama_jenis'] ?></option>
                                 <?php } ?>
                                 <!-- tambahkan opsi barang lainnya sesuai kebutuhan -->
                             </select>
@@ -41,7 +41,7 @@
                             <select class="form-control" name="id_satuan" id="id_satuan">
                                 <option value="">Pilih Satuan</option>
                                 <?php foreach ($satuan as $data) { ?>
-                                    <option value="<?= $data['nama_satuan'] ?>"><?= $data['nama_satuan'] ?></option>
+                                    <option value="<?= $data['id_satuan'] ?>"><?= $data['nama_satuan'] ?></option>
                                 <?php } ?>
                                 <!-- tambahkan opsi barang lainnya sesuai kebutuhan -->
                             </select>
@@ -49,8 +49,8 @@
                     </div>
                         <div class="row">
                             <div class="row float-right">
-                                <div class="col-md-12">
-								<a href="<?= base_url('Barang') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
+                                <div class="col-md-12" style="margin-left:3em;">
+									<a href="<?= base_url('Barang') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
                                     <button type="submit" formaction="<?= base_url('Barang/proses_tambah') ?>" class="btn btn-success" id="simpanbarang" style="cursor: pointer;"><i class="ti ti-save"></i> Simpan</button>
                                 </div>
                             </div>
