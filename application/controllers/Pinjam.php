@@ -12,11 +12,9 @@ class Pinjam extends CI_Controller
         $this->load->model('Mmain');
         $this->load->helper('url');
 		
-		
 		if (!$this->session->userdata('email')){
-		redirect('auth');
-		
-    }
+			redirect('auth');
+    	}
 	}
 
     public function index()
@@ -25,13 +23,13 @@ class Pinjam extends CI_Controller
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		$render = $this->Mmain->qRead("pinjam");
 		$data['Pinjam'] = $render->result();
+
         $data['content'] = $this->load->view('pages/pinjam/pinjam', $data,true);
 		$this->load->view('layout/master_layout', $data);
     }
     public function tambah_pinjam()
     {
         $data['title'] = 'TambahPinjam';
-       /*   $data['Pinjam'] = $this->m_pinjam->tambah_pinjam()->result();  */
 		$render=$this->Mmain->qRead("pinjam");
 		$data['Pinjam'] = $render->result();
 		$data['barang'] = $this->m_pinjam->getBarang();
@@ -47,54 +45,40 @@ class Pinjam extends CI_Controller
             redirect('dashboard');
         }
 
-        $id = $this->Mmain->autoId("pinjam", "id_pinjam", "PJ", "PJ" . "001", "001");
+		$this->form_validation->set_rules('nama_peminjam', 'Nama Peminjam', 'required');
+		$this->form_validation->set_rules('nama_penerima', 'Nama Penerima', 'required');
+		$this->form_validation->set_rules('nama_pemberi', 'Nama Pemberi', 'required');
+		$this->form_validation->set_rules('tgl_pinjam', 'Tanggal Pinjam', 'required');
+		$this->form_validation->set_rules('jam_pinjam', 'Jam Pinjam', 'required');
+		$this->form_validation->set_rules('keterangan', 'Keterangan', 'required');
 
+		if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('failed', validation_errors());
+			redirect($_SERVER['HTTP_REFERER']);
+        } else {
+            $data = [
+				'nama_peminjam' => $this->input->post('nama_peminjam'),
+				'nama_penerima' => $this->input->post('nama_penerima'),
+				'nama_pemberi' => $this->input->post('nama_pemberi'),
+				'tgl_pinjam' => $this->input->post('tgl_pinjam'),
+				'jam_pinjam' => $this->input->post('jam_pinjam'),
+				'keterangan' => $this->input->post('keterangan'),
+			];
 
-        $data = [
-            'id_pinjam' => $this->input->post('id_pinjam'),
-            'nama_peminjam' => $this->input->post('nama_peminjam'),
-            'nama_penerima' => $this->input->post('nama_penerima'),
-            'nama_pemberi' => $this->input->post('nama_pemberi'),
-            /* 'nama_barang' => $this->input->post('nama_barang'), */
-            'tgl_pinjam' => $this->input->post('tgl_pinjam'),
-            'jam_pinjam' => $this->input->post('jam_pinjam'),
-            'keterangan' => $this->input->post('keterangan'),
+			$data['id_pinjam'] = $this->Mmain->autoId("pinjam", "id_pinjam", "PJ", "PJ" . "001", "001");
+			$this->Mmain->qIns("pinjam", $data);
 
-        ];
-
-        $nama_peminjam = $this->input->post('nama_peminjam');
-        $nama_penerima = $this->input->post('nama_penerima');
-        $nama_pemberi = $this->input->post('nama_pemberi');
-        //$nama_barang = $this->input->post('nama_barang');
-        $tgl_pinjam = $this->input->post('tgl_pinjam');
-        $jam_pinjam = $this->input->post('jam_pinjam');
-        $keterangan = $this->input->post('keterangan');
-
-        // var_dump($nama_peminjam, $nama_penerima, $nama_pemberi,);
-        // die;
-		
-		
-        $this->Mmain->qIns("pinjam", array(
-
-            $id,
-            $nama_peminjam,
-            $nama_penerima,
-            $nama_pemberi,
-            /* $nama_barang, */
-            $tgl_pinjam,
-            $jam_pinjam,
-            $keterangan
-
-        ));
-
-        $this->session->set_flashdata('success', 'Data Barang <strong>Berhasil</strong> Ditambahkan!');
-        redirect('Detail_pinjam/tambah_detail/'.$id.'');
+			$this->session->set_flashdata('success', 'Data Barang <strong>Berhasil</strong> Ditambahkan!');
+			redirect('Pinjam/tambah_pinjam');
+        }
     }
     public function edit_data($id)
     {
         $data['title'] = 'Pinjam';
         $data['Pinjam'] = $this->m_pinjam->edit_data($id);
 		$data['barang'] = $this->m_pinjam->getBarang();
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
 		
 		$data['content'] = $this->load->view('pages/pinjam/edit_data', $data,true);
 		$this->load->view('layout/master_layout', $data);

@@ -12,62 +12,44 @@ class Detail_Replace extends CI_Controller
 		$this->load->database();
         $this->load->model('Mmain');
         $this->load->helper('url');
-    $this->load->library('form_validation');
+		$this->user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
+		$this->load->library('form_validation');
 		if (!$this->session->userdata('email')){
-		redirect('auth');
-		
-    }
+			redirect('auth');
+   		}
 	}
 	
     public function index()
     {
         $data['title'] = 'Detail Replace';
         $data['Detail_Replace'] = $this->Mmain->qRead('detail_ganti');
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('detail_replace', $data);
-        $this->load->view('templates/footer');
+		$data['user'] = $this->user;
+
+		$data['content'] = $this->load->view('detail_replace', $data,true);
+		$this->load->view('layout/master_layout', $data);
     }
 	
 public function init($id="")
  {
         $data['title'] = 'Detail Replace';
 		$data['id'] = $id;
-		
-        //$data['Detail_Barang'] = $this->m_detail_barang->tampil_detail()->result();
-		/* $render  = $this->Mmain->qRead("detail_ganti det
-        INNER JOIN barang b ON det.id_barang = b.id_barang WHERE det.id_barang  = '$id' ",
-        "det.id_detail_replace, det.nama_replace, det.tgl_replace, det.id_barang, det.jml_replace, det.qty_replace, det.serial_code, det.lokasi, det.status, det.keterangan"); */
-		/* $render  = $this->Mmain->qRead("barang b
-        INNER JOIN detail_ganti det ON det.id_barang = b.id_barang 
-		LEFT JOIN detail_barang db ON db.id_detail_barang = det.id_detail_barang WHERE det.id_barang  = '$id' ", 
-		"det.id_detail_replace, det.tgl_replace, det.id_barang, det.jml_replace, det.qty_replace, det.serial_code, det.lokasi, det.status, det.keterangan, det.id_detail_barang, db.item_description, det.id_replace");  */
+		$data['user'] = $this->user;
 		
 		$render  = $this->Mmain->qRead("ganti r
         INNER JOIN detail_ganti det ON det.id_replace = r.id_replace 
 		LEFT JOIN detail_barang db ON db.id_detail_barang = det.id_detail_barang WHERE det.id_replace  = '$id' ", 
 		"det.id_detail_replace, det.tgl_replace, det.id_barang, det.qty_replace, det.serial_code, det.lokasi, det.status, det.keterangan, det.id_detail_barang, db.item_description, det.id_replace"); 
         $data['Detail_Replace'] = $render->result();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('detail_replace', $data);
-        $this->load->view('templates/footer');
+
+		$data['content'] = $this->load->view('detail_replace', $data,true);
+		$this->load->view('layout/master_layout', $data);
     }
     
 	public function tambah_data_detail($id)
 	 {
         $data['title'] = 'Detail Replace';
-		
-        //$data['Detail_Replace'] = $this->M_detail_replace->tampil_data_detail()->result();
-		/* $render  = $this->Mmain->qRead("detail_ganti det
-        INNER JOIN barang b ON det.id_barang = b.id_barang WHERE det.id_barang",
-        "det.id_detail_replace, det.nama_replace, det.tgl_replace, det.id_barang, det.jml_replace, det.qty_replace, det.serial_code, det.lokasi, det.status, det.keterangan"); */
-		/* $render  = $this->Mmain->qRead("barang b
-        INNER JOIN detail_ganti det ON det.id_barang = b.id_barang 
-		LEFT JOIN detail_barang db ON db.id_detail_barang = det.id_detail_barang WHERE det.id_barang", 
-		"det.id_detail_replace, det.tgl_replace, det.id_barang, det.jml_replace, det.qty_replace, det.serial_code, det.lokasi, det.status, det.keterangan, det.id_detail_barang, db.item_description, det.id_replace"); */
+
 		$render  = $this->Mmain->qRead("ganti r
         INNER JOIN detail_ganti det ON det.id_replace = r.id_replace 
 		LEFT JOIN detail_barang db ON db.id_detail_barang = det.id_detail_barang WHERE det.id_replace  = '$id' ", 
@@ -76,11 +58,10 @@ public function init($id="")
 		$data['id'] = $id;
 		$data['barang'] = $this->M_detail_replace->getBarang();
 		#$data['detail_barang'] = $this->m_detail_req->getseri();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('tambah_data_detail', $data);
-        $this->load->view('templates/footer');
+		$data['user'] = $this->user;
+
+		$data['content'] = $this->load->view('tambah_data_detail', $data,true);
+		$this->load->view('layout/master_layout', $data);
     }
    
     public function proses_tambah_detail()
@@ -147,6 +128,8 @@ public function init($id="")
         $data['Detail_Replace'] = $this->M_detail_replace->edit_detail($id);
 		$data['barang'] = $this->M_detail_replace->getBarang();
 		$data['detail_barang'] = $this->M_detail_replace->getseri();
+		$data['user'] = $this->user;
+
         $this->load->view('templates/header', $data);
         $this->load->view('templates/topbar', $data);
         $this->load->view('templates/sidebar', $data);

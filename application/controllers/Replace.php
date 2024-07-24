@@ -44,29 +44,18 @@ class Replace extends CI_Controller
             $this->session->set_flashdata('error', 'Tambah data hanya untuk admin!');
             redirect('dashboard');
         }
-        $id = $this->Mmain->autoId("ganti","id_replace","R","R"."001","001");
-        $nama = $this->input->post('nama');
-        $date = $this->input->post('tgl_replace');
-        /* $id_barang = $this->input->post('id_barang');
-		$serial_code = $this->input->post('serial_code');
-        $jumlah = $this->input->post('jumlah');
-        $qty = $this->input->post('qty'); */
-		$status = $this->input->post('status');
-        $keterangan = $this->input->post('keterangan');
+		$data = array(
+			"nama" => $this->input->post('nama'),
+			"tgl_replace" => $this->input->post('tgl_replace'),
+			"status" => $this->input->post('status'),
+			"keterangan" => $this->input->post('keterangan'),
+		);
+        
+		$id = $this->Mmain->autoId("ganti","id_replace","R","R"."001","001");
 
+		$data['id_replace'] = $id;
 
-        $this->Mmain->qIns("ganti", array(
-            $id,
-            $nama,
-            $date,
-           /*  $id_barang,
-			$serial_code,
-            $jumlah,
-            $qty, */
-			$status,
-            $keterangan
-
-        ));
+        $this->Mmain->qIns("ganti", $data);
         $this->session->set_flashdata('success', 'Data Replace <strong>Berhasil</strong> Ditambahkan!');
         redirect('Detail_Replace/tambah_data_detail/'.$id.'');
     }
@@ -78,11 +67,11 @@ class Replace extends CI_Controller
         $data['Replace'] = $this->m_replace->edit_replace($id);
 		$data['barang'] = $this->m_replace->getid();
 		$data['detail_barang'] = $this->m_replace->getseri();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('edit_replace', $data);
-        $this->load->view('templates/footer');
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
+
+		$data['content'] = $this->load->view('edit_replace', $data,true);
+		$this->load->view('layout/master_layout', $data);
     }
 
 	public function proses_edit_replace()

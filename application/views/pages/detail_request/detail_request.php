@@ -19,7 +19,6 @@
                     <th>Keterangan</th>
                     <th>ID Barang</th>
                     <th>Serial Code</th>
-					<th>Item Description</th>
                     <th>Lokasi</th>
 					<th>Jumlah</th>
                     <th>Status</th>
@@ -36,7 +35,6 @@
                         <td><?php echo $dr->keterangan?></td>
                         <td><?php echo $dr->id_barang ?></td>
                         <td><?php echo $dr->serial_code ?></td>
-						<td><?php echo $dr->item_description ?></td>
 						<td><?php echo $dr->lokasi ?></td>
                         <td><?php echo $dr->jumlah ?></td>
                         <td><?php echo $dr->status ?></td>

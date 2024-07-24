@@ -70,18 +70,6 @@
 						}
 					});
 				});
-				$('#showSerialCode').change(function() {
-					var serial_code = $(this).val();
-					$.ajax({
-						url: '<?= base_url('Detail_request/get_detail_id') ?>',
-						method: 'POST',
-						data: {serial_code: serial_code},
-						dataType: 'json',
-						success: function(response) {
-							$('#id_detail_barang').val(response.id_detail_barang);
-						}
-					});
-				});
 			});
 		</script>
 		<script src="<?= base_url('assets/js/ajax.js') ?>"></script>
