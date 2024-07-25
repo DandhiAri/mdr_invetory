@@ -37,18 +37,8 @@
                         </div>
 					</div>
 					<div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="status" class="form-label">Status</label>
-                            <select class="form-control" name="status" id="status" placeholder="Pilih Status...">
-                                <option value="">Pilih Status</option>
-                                <option value="Requested">Requested</option>
-                                <option value="Finished">Finished</option>
-                                <option value="Rejected">Rejected</option>
-                                <!-- tambahkan opsi barang lainnya sesuai kebutuhan -->
-                            </select>
-                        </div>
-                        <!-- </div> -->
                         <div class="row">
+							<!-- <div><br></div> -->
                             <div class="row float-right">
                                 <div class="col-md-12">
 									<a href="<?= base_url('request') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>

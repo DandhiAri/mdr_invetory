@@ -51,7 +51,7 @@
 			errorElement.style.display = 'none';
 		}
 	</script>
-	<?php  if ($title == "Detail Request"): ?>
+	<?php  if ($title == "Detail Request" || $title == "Detail Replace" || $title == "Detail Pinjam"): ?>
 		<script>
 			$(document).ready(function() {
 				$('#getIdBarang').change(function() {

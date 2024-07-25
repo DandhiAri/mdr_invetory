@@ -18,8 +18,6 @@
 				</div>
 			<?php endif; ?>
 			<div class="ibox-body">
-				<a href="<?= base_url('Detail_barang/init/'.$id) ?>" class="btn btn-danger"><i class="fa fa-arrow-circle-left"></i> Kembali</a>
-
 				<form action="<?= base_url('Detail_barang/proses_tambah') ?>" method="POST">
 						<div class="col-md-6">
 							<div class="mb-3">
@@ -56,12 +54,12 @@
 								<label for="keterangan" class="form-label">Keterangan</label>
 								<input type="text" class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan keterangan..." >
 							</div>
-							<!-- </div> -->
-							<div class="row">
-								<div class="row float-right">
-									<div class="col-md-12">
-										<button type="submit" formaction="<?= base_url('Detail_barang/proses_tambah/'.$id) ?>" class="btn btn-success" id="simpan" style="cursor: pointer;"><i class="ti ti-save"></i> Simpan</button>
-									</div>
+						</div>
+						<div class="row">
+							<div class="row float-right">
+								<div class="col-md-12">
+									<a href="<?= base_url('Detail_barang/init/'.$id) ?>" class="btn btn-danger"><i class="fa fa-arrow-circle-left"></i> Kembali</a>
+									<button type="submit" formaction="<?= base_url('Detail_barang/proses_tambah/'.$id) ?>" class="btn btn-success" id="simpan" style="cursor: pointer;"><i class="ti ti-save"></i> Simpan</button>
 								</div>
 							</div>
 						</div>

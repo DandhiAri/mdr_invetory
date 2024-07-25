@@ -18,7 +18,7 @@
 			</div>
 		<?php endif; ?>
         <div class="ibox-body">
-            <form action="<?= base_url('Detail_request/proses_tambah') ?>" method="POST">
+            <form action="<?= base_url('Detail_request/proses_tambah/'.$id) ?>" method="POST">
                 <div class="row">
 					<div class="col-md-6">
                         <div class="mb-3">
@@ -63,16 +63,15 @@
 					<div class="col-md-6">
                         <div class="mb-3">
                             <label for="jumlah" class="form-label">Jumlah</label>
-                            <input type="number" class="form-control" name="jumlah" id="jumlah" min="1">
+                            <input type="number" class="form-control" min="0" name="jumlah" id="jumlah" min="1">
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <!-- </div> -->
                         <div class="row">
                             <div class="row float-right">
                                 <div class="col-md-12" style="margin-left:1em;">
-							<a href="<?= base_url('Request') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
-                                    <button type="submit" formaction="<?= base_url('Detail_Request/proses_tambah') ?>" class="btn btn-success" id="simpan" style="cursor: pointer;"><i class="ti ti-save"></i> Simpan</button>
+									<a href="<?= base_url('Request') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
+                                    <button type="submit" class="btn btn-success" id="simpan" style="cursor: pointer;"><i class="ti ti-save"></i> Simpan</button>
                                 </div>
                             </div>
                         </div>

@@ -6,19 +6,15 @@ class User extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        //tidak_login();
-        //check_admin();
-		//$this->load->model('Auth_model');
 		if (!$this->session->userdata('email')) {
             redirect('auth');
         } 
 		$this->load->library('form_validation');
         $this->load->model('m_user');
-    $this->load->library('form_validation');
+    	$this->load->library('form_validation');
 		if (!$this->session->userdata('email')){
-		redirect('auth');
-		
-    }
+			redirect('auth');
+    	}
 	}
     public function index()
     {

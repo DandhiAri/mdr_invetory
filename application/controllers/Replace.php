@@ -12,19 +12,19 @@ class Replace extends CI_Controller
         $this->load->model('Mmain');
         $this->load->helper('url');
 		$this->load->library('form_validation');
+		$this->user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		if (!$this->session->userdata('email')){
-		redirect('auth');
-		
-    }
+			redirect('auth');
+    	}
 	}
 
     public function index()
     {
         $data['title'] = 'Replace';
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data['user'] = $this->user;
         $render = $this->Mmain->qRead("ganti");
 		$data['Replace'] = $render->result();
-        $data['content'] = $this->load->view('replace', $data,true);
+        $data['content'] = $this->load->view('pages/replace/replace', $data,true);
 		$this->load->view('layout/master_layout', $data);
     }
 
@@ -34,8 +34,9 @@ class Replace extends CI_Controller
         $render=$this->Mmain->qRead("ganti");
 		$data['Replace'] = $render->result();
         $data['barang'] = $this->m_replace->getid();
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-        $data['content'] = $this->load->view('tambah_data_replace', $data,true);
+        $data['user'] = $this->user;
+
+        $data['content'] = $this->load->view('pages/replace/add_replace', $data,true);
 		$this->load->view('layout/master_layout', $data);
     }
     public function proses_tambah_replace()
@@ -44,6 +45,7 @@ class Replace extends CI_Controller
             $this->session->set_flashdata('error', 'Tambah data hanya untuk admin!');
             redirect('dashboard');
         }
+
 		$data = array(
 			"nama" => $this->input->post('nama'),
 			"tgl_replace" => $this->input->post('tgl_replace'),
@@ -67,10 +69,9 @@ class Replace extends CI_Controller
         $data['Replace'] = $this->m_replace->edit_replace($id);
 		$data['barang'] = $this->m_replace->getid();
 		$data['detail_barang'] = $this->m_replace->getseri();
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+		$data['user'] = $this->user;
 
-
-		$data['content'] = $this->load->view('edit_replace', $data,true);
+		$data['content'] = $this->load->view('pages/replace/edit_replace', $data,true);
 		$this->load->view('layout/master_layout', $data);
     }
 

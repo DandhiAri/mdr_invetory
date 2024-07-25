@@ -2,10 +2,13 @@
  
 class M_detail_req extends CI_Model{
 
-    /* function tampil_request()
-    {
-        return $this->db->get('detail_request');
-    } */
+	
+	public function __construct()
+	{
+		parent::__construct();
+		//Do your magic here
+	}
+	
 
 	function tampil_request()
     {
@@ -22,23 +25,14 @@ class M_detail_req extends CI_Model{
         return $query;
     }
 	
-	function tampil_datarequest(){
-       return $this->db->get('detail_request');
-       $query = $this->db->query("SELECT det.id_detail_request, det.nama_barang_request, det.jumlah_request, det.keterangan, det.id_barang, det.serial_code, det.jumlah, det.tanggal_waktu, det.status 
-        FROM detail_request det INNER JOIN barang b ON det.id_barang = b.id_barang");
-        
-        if ($query->num_rows() == 0) {
-            $query = [];
-        } else {
-            $query = $query->result_array();
-        }
-
+	function tampil_datarequest($id_request){
+		$this->db->select('detail_request.*, barang.nama_barang');
+        $this->db->from('detail_request');
+        $this->db->join('barang', 'detail_request.id_barang = barang.id_barang');
+        $this->db->where('detail_request.id_request', $id_request);
+        $query = $this->db->get();
         return $query;
     }
-	
-    /* function tampil_datarequest(){
-        return $this->db->get('detail_request');
-    } */
 
 	public function getseri()
 	{

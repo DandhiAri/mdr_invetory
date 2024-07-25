@@ -53,7 +53,6 @@ class Request extends CI_Controller
 		$this->form_validation->set_rules('nama', 'Nama PIC', 'required');
         $this->form_validation->set_rules('tgl_request', 'Tanggal Request', 'required');
         $this->form_validation->set_rules('keterangan', 'Keterangan', 'required');
-        $this->form_validation->set_rules('status', 'Status', 'required');
 
 		if ($this->form_validation->run() == FALSE) {
             $this->session->set_flashdata('failed', validation_errors());
@@ -63,7 +62,6 @@ class Request extends CI_Controller
                 'nama' => $this->input->post('nama'),
                 'tgl_request' => $this->input->post('tgl_request'),
                 'keterangan' => $this->input->post('keterangan'),
-                'status' => $this->input->post('status'),
             );
 			$id = $this->Mmain->autoId("request","id_request","RQ","RQ"."001","001");
 			$data['id_request'] = $id;

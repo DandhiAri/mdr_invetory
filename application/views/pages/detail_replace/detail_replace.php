@@ -4,14 +4,15 @@
 <div class="page-content fade-in-up">
     <div class="ibox">
         <div class="ibox-head">
-           <a href="<?= base_url('Detail_Replace/tambah_data_detail/'.$id.'') ?>" class="btn btn-sm btn-primary btn-icon-split">
-                    <span class="icon">
-                        <i class="fa fa-plus"></i>
-                    </span>
-                    <span class="text">
-                        Tambah Data Replace
-                    </span>
-					</a>
+			<a href="<?= base_url('replace') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
+           	<a href="<?= base_url('Detail_Replace/tambah_data_detail/'.$id.'') ?>" class="btn btn-sm btn-primary btn-icon-split">
+			<span class="icon">
+				<i class="fa fa-plus"></i>
+			</span>
+			<span class="text">
+				Tambah Data Replace
+			</span>
+			</a>
         </div>
     <div class="ibox-body">
         <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">

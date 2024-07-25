@@ -101,6 +101,7 @@ class mMain  extends CI_Model
         $query = $this->db->get();
         return $query->result_array();
     }
+	
 	public function get_detail_id()
 	{
 		$serial_code = $this->input->post('serial_code');

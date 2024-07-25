@@ -18,6 +18,13 @@ class Barang extends CI_Controller
     	}
     }
 
+	public function get_serial_codes() {
+        $id_barang = $this->input->post('id_barang');
+        $this->load->model('Mmain');
+        $serial_codes = $this->Mmain->get_serial_codes($id_barang);
+        echo json_encode($serial_codes);
+    }
+	
     public function index()
     {
         $data['title'] = 'Barang';

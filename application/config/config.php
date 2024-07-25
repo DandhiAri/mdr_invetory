@@ -23,8 +23,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://10.10.10.143/mdr/';
-// $config['base_url'] = 'http://localhost/mdr/';
+$config['base_url'] = 'http://10.10.10.144/mdr/';
 
 /*
 |--------------------------------------------------------------------------

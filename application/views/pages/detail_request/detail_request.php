@@ -10,6 +10,19 @@
             </div>
         </div>
     <div class="ibox-body">
+		<?php if ($this->session->flashdata('success')): ?>
+			<div class="warn succ">
+				<div class="msg" onclick="warnError()">
+					<?php echo $this->session->flashdata('success'); ?>
+				</div>
+			</div>
+		<?php elseif ($this->session->flashdata('failed')):?>
+			<div class="warn err">
+				<div class="msg" onclick="warnError()">
+					<?php echo $this->session->flashdata('failed'); ?>
+				</div>
+			</div>
+		<?php endif;?>
         <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
             <thead>
                 <tr>

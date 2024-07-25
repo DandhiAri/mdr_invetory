@@ -8,12 +8,19 @@
                 Form Edit Request
             </div>
         </div>
+		<?php if ($this->session->flashdata('failed')): ?>
+			<div class="warn err">
+				<div class="msg" onclick="warnError()">
+					<?php echo $this->session->flashdata('failed'); ?>
+				</div>
+			</div>
+		<?php endif; ?>
         <div class="ibox-body">
             <form action="<?= base_url('Request/proses_ubah') ?>" method="POST">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="nama" class="form-label"></label>
+                            <label for="nama" class="form-label">Nama PIC</label>
                             <input type="text" class="form-control" name="nama" id="nama" placeholder="Masukkan nama barang..." value="<?= $Request['nama'] ?>"> 
                             <input type="hidden" name="id_request" id="id_request" value="<?= $Request['id_request'] ?>">
                         </div>

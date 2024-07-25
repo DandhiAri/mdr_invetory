@@ -2,7 +2,7 @@
 
 class M_detail_pinjam extends CI_Model
 {
-	  public function getBarang()
+	public function getBarang()
     {
         $query = $this->db->query("SELECT * FROM detail_barang ORDER BY id_detail_barang ASC");
 
@@ -39,19 +39,13 @@ class M_detail_pinjam extends CI_Model
         return $query;
     }
 
-    function tampil_detail()
+    function tampil_detail($id)
     {
-        //return $this->db->get('detail_pinjam');
-		$query = $this->db->query("SELECT * 
-									FROM detail_pinjam dpm 
-									INNER JOIN pinjam p ON dpm.id_pinjam = p.id_pinjam 
-									INNER JOIN detail_barang b ON dpm.id_detail_barang=b.id_detail_barang " );
-		if ($query->num_rows() == 0) {
-            $query = [];
-        } else {
-            $query = $query->result_array();
-        }
-
+		$this->db->select('detail_pinjam.*, barang.nama_barang');
+        $this->db->from('detail_pinjam');
+        $this->db->join('barang', 'detail_pinjam.id_barang = barang.id_barang');
+        $this->db->where('detail_pinjam.id_pinjam', $id);
+        $query = $this->db->get();
         return $query;
     }
     function tambah_detail($id)

@@ -12,14 +12,6 @@
         <div class="ibox-body">
             <form action="<?= base_url('Detail_Replace/proses_edit_detail')?>" method="POST">
             <div class="row">
-                <!--<div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="nama_replace" class="form-label">Nama Barang Replace</label>
-                        <input type="text" class="form-control" name="nama_replace" id="nama" placeholder="Masukkan Nama..."
-						value="<?= $Detail_Replace['nama_replace'] ?>">
-                      
-                    </div>
-                </div>-->
 				  <input type="hidden" name="id_detail_replace" id="id_detail_replace"
 						value="<?= $Detail_Replace['id_detail_replace'] ?>">
 						

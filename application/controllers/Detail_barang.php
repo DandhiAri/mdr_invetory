@@ -22,7 +22,6 @@ class Detail_barang extends CI_Controller
         $this->form_validation->set_rules('serial_code', 'Serial Code', 'required|is_unique[detail_barang.serial_code]', array( 'is_unique'=> 'This %s already exists.'));
         $this->form_validation->set_rules('lokasi', 'Lokasi', 'required');
         $this->form_validation->set_rules('qtty', 'Quantity', 'required|integer');
-        $this->form_validation->set_rules('keterangan', 'Keterangan', 'required');
 	}
 	
 	var $data="id_barang"; 

@@ -5,17 +5,30 @@
     <div class="ibox">
         <div class="ibox-head">
             <div class="ibox-title">
+				<a href="<?= base_url('pinjam') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
                 <a href="<?= base_url('Detail_pinjam/tambah_detail/'.$id.'') ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Detail Pinjam</a>
             </div>
         </div>
         <div class="ibox-body">
+			<?php if ($this->session->flashdata('success')): ?>
+				<div class="warn succ">
+					<div class="msg" onclick="warnError()">
+						<?php echo $this->session->flashdata('success'); ?>
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('failed')):?>
+				<div class="warn err">
+					<div class="msg" onclick="warnError()">
+						<?php echo $this->session->flashdata('failed'); ?>
+					</div>
+				</div>
+			<?php endif;?>
             <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th>No</th>
 						<th>Nama Barang</th>
 						<th>Serial Code</th>
-						<th>Item Description</th>
 						<th>Quantity</th>
 						<th>Lokasi</th>
 						<th>Tanggal Kembali</th>
@@ -29,11 +42,9 @@
                     foreach ($Detail_pinjam as $dp) {
                     ?>
                         <tr>
-							<td><?php echo $no++ ?></td>
-							
+							<td><?php echo $no++ ?></td>		
 							<td><?php echo $dp->nama_barang ?></td>
 							<td><?php echo $dp->serial_code ?></td>
-							<td><?php echo $dp->item_description ?></td>
 							<td><?php echo $dp->qtty ?></td>
 							<td><?php echo $dp->lokasi ?></td>
 							<td><?php echo $dp->tgl_kembali ?></td>
