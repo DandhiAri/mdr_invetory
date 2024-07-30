@@ -2,17 +2,14 @@
  
 class M_detail_barang extends CI_Model{
 
-    function tampil_datadetail(){
-       return $this->db->get('detail_barang');
-       $query = $this->db->query("SELECT det.id_detail_barang, b.nama_barang, det.serial_code, det.lokasi, det.qtty FROM detail_barang det INNER JOIN barang b ON det.id_barang = b.id_barang");
-        
-        if ($query->num_rows() == 0) {
-            $query = [];
-        } else {
-            $query = $query->result_array();
-        }
-
-        return $query;
+	function tampil_datadetail($id, $limit, $start){
+		$this->db->select('detail_barang.*, barang.nama_barang');
+		$this->db->from('detail_barang');
+		$this->db->join('barang', 'detail_barang.id_barang = barang.id_barang');
+		$this->db->where('detail_barang.id_barang', $id);
+		$this->db->limit($limit, $start);
+		$query = $this->db->get();
+		return $query;
     } 
 
     public function getBarang()

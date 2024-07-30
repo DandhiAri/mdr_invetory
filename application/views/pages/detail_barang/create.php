@@ -27,12 +27,6 @@
 						</div>
 						<div class="col-md-6">
 							<div class="mb-3">
-								<label for="item_description" class="form-label">Item Description</label>
-								<input type="text" class="form-control" name="item_description" id="item_description" placeholder="masukkan item description ...">
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="mb-3">
 								<label for="serial_code" class="form-label">Serial Code</label>
 								<input type="text" class="form-control" name="serial_code" id="serial_code" placeholder="Masukkan serial code..." >
 								<!-- <input type="hidden" name="id" id="id" value="<?= $Detail_Barang['id'] ?>"> -->

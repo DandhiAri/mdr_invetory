@@ -39,15 +39,17 @@ class M_detail_pinjam extends CI_Model
         return $query;
     }
 
-    function tampil_detail($id)
+    function tampil_detail($id, $limit, $start)
     {
 		$this->db->select('detail_pinjam.*, barang.nama_barang');
         $this->db->from('detail_pinjam');
         $this->db->join('barang', 'detail_pinjam.id_barang = barang.id_barang');
         $this->db->where('detail_pinjam.id_pinjam', $id);
+		$this->db->limit($limit, $start);
         $query = $this->db->get();
         return $query;
     }
+
     function tambah_detail($id)
     {
         return $this->db->get('detail_pinjam');

@@ -11,7 +11,7 @@ class Barang extends CI_Controller
         $this->load->model('Mmain');
         $this->load->helper('url');
         $this->user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-		
+		$this->load->library('pagination');
 		$this->load->library('form_validation');
 		if (!$this->session->userdata('email')){
 			redirect('auth');
@@ -30,7 +30,46 @@ class Barang extends CI_Controller
         $data['title'] = 'Barang';
 		$data['user'] = $this->user;
 
-		$data['Barang']=$this->Mmain->getBarang();
+		$config['base_url'] = base_url('barang/index'); 
+		$config['total_rows'] = $this->db->get('barang')->num_rows();
+		$config['per_page'] = 5;
+		$config['uri_segment'] = 3;
+
+		//PAGINATION STYLES
+		$config['full_tag_open'] = '<div class="pagination-container"><ul class="pagination">';
+		$config['full_tag_close'] = '</ul></div>';
+
+		$config['first_link'] = 'FIRST';
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+
+		$config['last_link'] = 'LAST';
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+
+		$config['next_link'] = '&raquo';
+		$config['next_tag_open'] = '<li>';
+		$config['next_tag_close'] = '</li>';
+
+		$config['prev_link'] = '&laquo';
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_tag_close'] = '</li>';
+
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+
+		$this->pagination->initialize($config);
+		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$data['pagination'] = $this->pagination->create_links();
+
+		$data['Barang'] = $this->Mmain->getBarang($config['per_page'], $data['page']);
+
+		
+   		$data['DetailBarang'] = $this->Mmain->qRead('detail_barang')->result();
+
 		$data['content'] = $this->load->view('pages/barang/barang', $data, true);
 		$this->load->view('layout/master_layout', $data);
     }
@@ -39,8 +78,7 @@ class Barang extends CI_Controller
     {
         $data['title'] = 'Barang';
 		$data['user'] = $this->user;
-		$render=$this->Mmain->qRead("barang","");
-		$data['Barang'] = $render->result();
+		$data['Barang'] = $this->Mmain->qRead("barang")->result();
 		$data['jenis'] = $this->m_data->getJenis();
 		$data['satuan'] = $this->m_data->getSatuan();
         $data['content'] = $this->load->view('pages/barang/addbarang', $data,true);

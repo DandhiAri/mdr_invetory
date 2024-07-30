@@ -1,4 +1,62 @@
-.warn{
+/* Define colors and border-radius */
+:root {
+	--border-color: #3d315b; /* Border color */
+	--background-color: #266dd3; /* Background color */
+	--list-background-color: #444b6e; /* Background color for list items */
+	--active-list-background-color: #9ab87a; /* Background color for active list item */
+	--border-radius: 5px; /* Border radius */
+}
+
+/* Pagination container */
+.pagination-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+/* Unordered list for pagination items */
+.pagination {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+}
+
+.pagination li {
+	color: #fff;
+	display: flex;
+}
+
+.pagination li a {
+	background-color: var(--list-background-color);
+	padding: 5px 10px;
+	border: 2px solid var(--border-color);
+	border-right: 0;
+	text-decoration: none;
+	display: block;
+	transition: background-color 0.3s, border-color 0.3s;
+}
+
+.pagination li a:hover {
+	background-color: var(--hover-background-color);
+	border-color: var(--hover-background-color);
+}
+
+.pagination li.active a {
+	background-color: var(--active-list-background-color);
+}
+
+.pagination li:first-child a {
+	border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+.pagination li:last-child a {
+	border-radius: 0 var(--border-radius) var(--border-radius) 0;
+	border-right: 2px solid var(--border-color);
+}
+
+.warn {
 	padding: 7px;
 	color: white;
 	font-weight: 600;
@@ -8,11 +66,14 @@
 	align-items: center;
 	cursor: pointer;
 }
-.err{
+.err {
 	background-color: rgb(255, 0, 0);
-
 }
-.succ{
+.succ {
 	background-color: rgb(0, 255, 0);
 	text-align: center;
+}
+#dropdownMenuButton1 {
+	background-color: aqua;
+	font-weight: 900;
 }

@@ -24,12 +24,6 @@
 							<input type="text" class="form-control" name="id_barang" id="id_barang" placeholder="id ..." value="<?= $Detail_Barang['id_barang'] ?>" readonly>
                         </div>
                     </div>
-					<div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="item_description" class="form-label">Item Description</label>
-							<input type="text" class="form-control" name="item_description" id="item_description" placeholder="masukkan item description ..." value="<?= $Detail_Barang['item_description'] ?>">
-                        </div>
-                    </div>
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="serial_code" class="form-label">Serial Code</label>

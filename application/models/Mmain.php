@@ -85,11 +85,12 @@ class mMain  extends CI_Model
 		$this->db->insert($tbq, $valq);
     }
 
-	public function getBarang() {
+	public function getBarang($limit, $start) {
         $this->db->select('barang.*, jenis.nama_jenis, satuan.nama_satuan');
         $this->db->from('barang');
         $this->db->join('jenis', 'barang.id_jenis = jenis.id_jenis');
         $this->db->join('satuan', 'barang.id_satuan = satuan.id_satuan');
+        $this->db->limit($limit, $start); 
         $query = $this->db->get();
         return $query->result();
     }

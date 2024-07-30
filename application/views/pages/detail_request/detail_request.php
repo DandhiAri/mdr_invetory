@@ -5,7 +5,7 @@
     <div class="ibox">
         <div class="ibox-head">
             <div class="ibox-title">
-			<a href="<?= base_url('request') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
+				<a href="<?= base_url('request') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
                 <a href="<?= base_url('detail_request/tambah/'.$id.'') ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah </a>
             </div>
         </div>

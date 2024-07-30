@@ -14,11 +14,11 @@ class Detail_barang extends CI_Controller
         $this->load->helper('url');
 		$this->user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
     	$this->load->library('form_validation');
+		$this->load->library('pagination');
 		if (!$this->session->userdata('email')){
 			redirect('auth');
     	}
 		$this->form_validation->set_rules('id_barang', 'ID Barang', 'required');
-        $this->form_validation->set_rules('item_description', 'Item Description', 'required');
         $this->form_validation->set_rules('serial_code', 'Serial Code', 'required|is_unique[detail_barang.serial_code]', array( 'is_unique'=> 'This %s already exists.'));
         $this->form_validation->set_rules('lokasi', 'Lokasi', 'required');
         $this->form_validation->set_rules('qtty', 'Quantity', 'required|integer');
@@ -38,13 +38,20 @@ class Detail_barang extends CI_Controller
 	public function init($id)
     {
         $data['title'] = 'Detail Barang';
-		$render  = $this->Mmain->qRead("detail_barang det 
-        INNER JOIN barang b ON det.id_barang = b.id_barang WHERE det.id_barang  = '$id' ",
-        "det.id_detail_barang, b.nama_barang, det.id_barang, det.item_description, det.serial_code, det.lokasi, det.qtty, det.keterangan");
         $data['user'] = $this->user;
 		$data['id'] = $id;
-		$data['product'] = $this->Mmain->qRead('detail_barang')->result();
-        $data['Detail_Barang'] = $render->result();
+		$config['base_url'] = base_url('controller/detail/'.$id);
+		$config['total_rows'] = $this->db->where('id_barang', $id)->count_all_results('detail_barang');
+		$config['per_page'] = 10; 
+		$config['uri_segment'] = 4;
+		
+		$this->pagination->initialize($config);
+	
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+		$data['detail_barang'] = $this->YourModel->tampil_datadetail($id, $config['per_page'], $page);
+		$data['pagination'] = $this->pagination->create_links();
+
+        $data['Detail_Barang'] = $this->m_detail_barang->tampil_datadetail($id,$config['per_page'],$config['uri_segment'])->result();
 		$data['content'] = $this->load->view('pages/detail_barang/index', $data, true);
         $this->load->view('layout/master_layout',$data);
     }
@@ -72,12 +79,12 @@ class Detail_barang extends CI_Controller
         } else {
             $data = array(
                 'id_barang' => $this->input->post('id_barang'),
-                'item_description' => $this->input->post('item_description'),
                 'serial_code' => $this->input->post('serial_code'),
                 'lokasi' => $this->input->post('lokasi'),
                 'qtty' => $this->input->post('qtty'),
                 'keterangan' => $this->input->post('keterangan')
             );
+			$data['id_detail_barang'] = $this->Mmain->autoId("detail_barang", "id_detail_barang", "DBR", "DBR" . "001", "001");
 			$this->Mmain->qIns('detail_barang', $data);
 
             $this->session->set_flashdata('success', 'Detail Barang sudah ditambahkan');
