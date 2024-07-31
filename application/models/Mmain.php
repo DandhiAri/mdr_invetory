@@ -85,16 +85,21 @@ class mMain  extends CI_Model
 		$this->db->insert($tbq, $valq);
     }
 
-	public function getBarang($limit, $start) {
-        $this->db->select('barang.*, jenis.nama_jenis, satuan.nama_satuan');
+	public function getBarang($keyword=null, $limit, $start) {
+        $this->db->select('barang.*, jenis.nama_jenis, satuan.nama_satuan, COUNT(detail_barang.id_barang) AS detail_count');
         $this->db->from('barang');
         $this->db->join('jenis', 'barang.id_jenis = jenis.id_jenis');
         $this->db->join('satuan', 'barang.id_satuan = satuan.id_satuan');
+		$this->db->join('detail_barang', 'barang.id_barang = detail_barang.id_barang', 'left');
+		if ($keyword) {
+			$this->db->like('barang.nama_barang', $keyword);
+		}
+		$this->db->group_by('barang.id_barang');
         $this->db->limit($limit, $start); 
         $query = $this->db->get();
         return $query->result();
     }
-
+	
 	public function get_serial_codes($id_barang) {
         $this->db->select('serial_code');
         $this->db->from('detail_barang');

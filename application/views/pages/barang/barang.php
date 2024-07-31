@@ -6,8 +6,17 @@
         <div class="ibox-head">
             <div class="ibox-title">
                 <a href="<?= base_url('barang/tambah') ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Barang</a>
-            </div>
+				
+			</div>
+			<div class="col-md-5">
+				<form action="<?= base_url('barang'); ?>" style="display:flex;" method="post">
+					<input type="text" class="form-control" name="keyword" placeholder="Nama Barang, Serial Code, ID Pengajuan.....">
+					<button type="submit" name="submit" class="btn btn-primary" style="cursor: pointer;"><i class="ti ti-search"></i></button>
+					<button type="submit" style="cursor: pointer;" class="btn btn-danger" name="reset" value="1"><i class="fa fa-refresh"></i></button>
+				</form>
+			</div> 
         </div>
+		<?= $keyword ?>
 		<div class="ibox-body">
 			<table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
 				<thead>
@@ -48,11 +57,10 @@
 								</script>
 							</div>
 						</td>
-						
 						<td><?php echo $b->id_barang ?></td>
 						<td><?php echo $b->nama_barang ?></td>
 						<td><?php echo $b->nama_jenis ?></td>
-						<td><?php echo $b->stok ?></td>
+						<td><?php echo $b->detail_count; ?></td>
 						<td><?php echo $b->nama_satuan ?></td>
 						
 						<td>

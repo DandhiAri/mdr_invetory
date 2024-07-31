@@ -30,46 +30,29 @@ class Barang extends CI_Controller
         $data['title'] = 'Barang';
 		$data['user'] = $this->user;
 
-		$config['base_url'] = base_url('barang/index'); 
-		$config['total_rows'] = $this->db->get('barang')->num_rows();
+		$config['base_url'] = base_url('barang/index/'); 
 		$config['per_page'] = 5;
 		$config['uri_segment'] = 3;
+		if ($this->input->post('keyword')){
+			$data['keyword'] = $this->input->post('keyword');
+			$this->session->set_userdata('keyword',$data['keyword']);
+		} elseif ($this->input->post('reset')){
+			$data['keyword'] = null;
+			$this->session->unset_userdata('keyword');
+		} else {
+			$data['keyword'] = $this->session->userdata('keyword');
+		}
 
-		//PAGINATION STYLES
-		$config['full_tag_open'] = '<div class="pagination-container"><ul class="pagination">';
-		$config['full_tag_close'] = '</ul></div>';
+		$this->db->like('barang.nama_barang', $data['keyword']);
+		$config['total_rows'] = $this->db->count_all_results('barang');
 
-		$config['first_link'] = 'FIRST';
-		$config['first_tag_open'] = '<li>';
-		$config['first_tag_close'] = '</li>';
-
-		$config['last_link'] = 'LAST';
-		$config['last_tag_open'] = '<li>';
-		$config['last_tag_close'] = '</li>';
-
-		$config['next_link'] = '&raquo';
-		$config['next_tag_open'] = '<li>';
-		$config['next_tag_close'] = '</li>';
-
-		$config['prev_link'] = '&laquo';
-		$config['prev_tag_open'] = '<li>';
-		$config['prev_tag_close'] = '</li>';
-
-		$config['cur_tag_open'] = '<li class="active"><a href="#">';
-		$config['cur_tag_close'] = '</a></li>';
-
-		$config['num_tag_open'] = '<li>';
-		$config['num_tag_close'] = '</li>';
-
-		$this->pagination->initialize($config);
 		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-		$data['pagination'] = $this->pagination->create_links();
+		$this->pagination->initialize($config);
 
-		$data['Barang'] = $this->Mmain->getBarang($config['per_page'], $data['page']);
-
-		
+		$data['Barang'] = $this->Mmain->getBarang($data['keyword'], $config['per_page'], $data['page']);
    		$data['DetailBarang'] = $this->Mmain->qRead('detail_barang')->result();
-
+		
+		$data['pagination'] = $this->pagination->create_links();
 		$data['content'] = $this->load->view('pages/barang/barang', $data, true);
 		$this->load->view('layout/master_layout', $data);
     }

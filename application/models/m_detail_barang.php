@@ -10,8 +10,20 @@ class M_detail_barang extends CI_Model{
 		$this->db->limit($limit, $start);
 		$query = $this->db->get();
 		return $query;
-    } 
+    }
 
+	public function count_all_detail_barang($id_barang) {
+        $this->db->where('id_barang', $id_barang);
+        return $this->db->count_all_results('detail_barang');
+    }
+
+    public function get_detail_barang_paginated($id_barang, $page, $limit) {
+        $this->db->where('id_barang', $id_barang);
+        $this->db->limit($limit, $page);
+        $query = $this->db->get('detail_barang');
+        return $query->result();
+    }
+	
     public function getBarang()
     {
         $query = $this->db->query("SELECT * FROM barang ORDER BY nama_barang ASC");
