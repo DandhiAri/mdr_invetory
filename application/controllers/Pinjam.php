@@ -12,6 +12,7 @@ class Pinjam extends CI_Controller
         $this->load->model('Mmain');
         $this->load->helper('url');
 		
+		$this->load->library('pagination');
 		if (!$this->session->userdata('email')){
 			redirect('auth');
     	}
@@ -21,19 +22,61 @@ class Pinjam extends CI_Controller
     {
         $data['title'] = 'Pinjam';
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-		$render = $this->Mmain->qRead("pinjam");
-		$data['Pinjam'] = $render->result();
+		
+		$config['base_url'] = base_url('pinjam/index/'); 
+		$config['per_page'] = 5;
+		$config['uri_segment'] = 3;
+		
+		if ($this->input->post('keywordPin')){
+			$data['keywordPin'] = $this->input->post('keywordPin');
+			$this->session->set_userdata('keywordPin',$data['keywordPin']);
+		} elseif ($this->input->post('reset')){
+			$data['keywordPin'] = null;
+			$this->session->unset_userdata('keywordPin');
+		} else {
+			$data['keywordPin'] = $this->session->userdata('keywordPin');
+		}
+
+		$key = $data['keywordPin'];
+
+		$this->db->from('pinjam');
+		$config['total_rows'] = $this->db->count_all_results();
+		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$this->pagination->initialize($config);
+
+		$data['Pinjam'] = $this->Mmain->getPinjam($data['keywordPin'], $config['per_page'], $data['page']);
+		
+		if (!empty($key)) {
+			$res = $this->Mmain->qRead(
+				"detail_pinjam WHERE serial_code LIKE '%$key%'"
+			)->result();
+			if(!$res==null){
+				$data['Detail_pinjam'] = $res;
+			} else {
+				$data['Detail_pinjam'] = $this->Mmain->qRead(
+					"detail_pinjam"
+				)->result();
+			}
+		} else {
+			$data['Detail_pinjam'] = $this->Mmain->qRead(
+				"detail_pinjam"
+			)->result();
+		}
+
+		$data['pagination'] = $this->pagination->create_links();
 
         $data['content'] = $this->load->view('pages/pinjam/pinjam', $data,true);
 		$this->load->view('layout/master_layout', $data);
     }
+	
     public function tambah_pinjam()
     {
         $data['title'] = 'TambahPinjam';
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
 		$render=$this->Mmain->qRead("pinjam");
 		$data['Pinjam'] = $render->result();
 		$data['barang'] = $this->m_pinjam->getBarang();
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 
 		$data['content'] = $this->load->view('pages/pinjam/tambah_data', $data,true);
 		$this->load->view('layout/master_layout', $data);

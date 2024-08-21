@@ -92,31 +92,56 @@ class mMain  extends CI_Model
         $this->db->join('satuan', 'barang.id_satuan = satuan.id_satuan');
 		$this->db->join('detail_barang', 'barang.id_barang = detail_barang.id_barang', 'left');
 		if ($keyword) {
-			$this->db->like('barang.nama_barang', $keyword);
+			$this->db->like('detail_barang.serial_code', $keyword);
+			$this->db->or_like('barang.nama_barang', $keyword);
+			$this->db->or_like('barang.id_barang', $keyword);
 		}
-		$this->db->group_by('barang.id_barang');
+		$this->db->group_by('barang.id_barang, detail_barang.id_barang');
         $this->db->limit($limit, $start); 
         $query = $this->db->get();
         return $query->result();
     }
-	
-	public function get_serial_codes($id_barang) {
-        $this->db->select('serial_code');
-        $this->db->from('detail_barang');
-        $this->db->where('id_barang', $id_barang);
+
+	public function getRequest($keyword=null, $limit, $start) {
+        $this->db->select('request.*');
+        $this->db->from('request');
+		$this->db->join('detail_request', 'request.id_request = detail_request.id_request', 'left');
+		if ($keyword) {
+			$this->db->like('detail_request.serial_code', $keyword);
+			$this->db->or_like('request.nama', $keyword);
+		}
+		$this->db->group_by('request.id_request, detail_request.id_request');
+        $this->db->limit($limit, $start); 
         $query = $this->db->get();
-        return $query->result_array();
+        return $query->result();
     }
-	
-	public function get_detail_id()
-	{
-		$serial_code = $this->input->post('serial_code');
-		$this->db->select('id_detail_barang');
-		$this->db->from('detail_barang');
-		$this->db->where('serial_code', $serial_code);
-		$query = $this->db->get();
-		echo json_encode($query->row_array());
-	}
+
+	public function getReplace($keyword=null, $limit, $start) {
+        $this->db->select('ganti.*');
+        $this->db->from('ganti');
+		$this->db->join('detail_ganti', 'ganti.id_replace = detail_ganti.id_replace', 'left');
+		if ($keyword) {
+			$this->db->like('detail_ganti.serial_code', $keyword);
+			$this->db->or_like('ganti.nama', $keyword);
+		}
+		$this->db->group_by('ganti.id_replace, detail_ganti.id_replace');
+        $this->db->limit($limit, $start); 
+        $query = $this->db->get();
+        return $query->result();
+    }
+	public function getPinjam($keyword=null, $limit, $start) {
+        $this->db->select('pinjam.*');
+        $this->db->from('pinjam');
+		$this->db->join('detail_pinjam', 'pinjam.id_pinjam = detail_pinjam.id_pinjam', 'left');
+		if ($keyword) {
+			$this->db->like('detail_pinjam.serial_code', $keyword);
+			$this->db->or_like('pinjam.nama', $keyword);
+		}
+		$this->db->group_by('pinjam.id_pinjam, detail_pinjam.id_pinjam');
+        $this->db->limit($limit, $start); 
+        $query = $this->db->get();
+        return $query->result();
+    }
     // ++++++++++++++++++++++++++++++++++++++++++ Create delete query
 
     function qDel($tbq, $idq, $valq) //Delete query declaration

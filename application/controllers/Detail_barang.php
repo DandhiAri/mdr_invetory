@@ -48,8 +48,14 @@ class Detail_barang extends CI_Controller
 		$this->pagination->initialize($config);
 	
 		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
-		$data['detail_barang'] = $this->YourModel->tampil_datadetail($id, $config['per_page'], $page);
+		$data['detail_barang'] = $this->m_detail_barang->tampil_datadetail($id, $config['per_page'], $page);
 		$data['pagination'] = $this->pagination->create_links();
+		
+		$render  = $this->Mmain->qRead("ganti r
+        INNER JOIN detail_ganti det ON det.id_replace = r.id_replace 
+		LEFT JOIN detail_barang db ON db.id_detail_barang = det.id_detail_barang WHERE det.id_replace  = '$id' ", 
+		"det.id_detail_replace, det.tgl_replace, det.id_barang, det.qty_replace, det.serial_code, det.lokasi, det.status, det.keterangan, det.id_detail_barang, db.item_description, det.id_replace"); 
+        $data['Detail_Replace'] = $render->result();
 
         $data['Detail_Barang'] = $this->m_detail_barang->tampil_datadetail($id,$config['per_page'],$config['uri_segment'])->result();
 		$data['content'] = $this->load->view('pages/detail_barang/index', $data, true);
@@ -59,15 +65,14 @@ class Detail_barang extends CI_Controller
     public function tambah($id)
     {
         $data['title'] = 'Detail Barang';
-        $data['Detail_Barang'] = $this->m_detail_barang->tampil_datadetail()->result();
 		$render  = $this->Mmain->qRead("detail_barang det 
         INNER JOIN barang b ON det.id_barang = b.id_barang WHERE det.id_barang ",
-        "det.id_detail_barang, b.nama_barang, det.item_description, det.serial_code, det.lokasi, det.qtty, det.keterangan");
+        "det.id_detail_barang, b.nama_barang, det.serial_code, det.lokasi, det.qtty, det.keterangan");
 
 		$data['id'] = $id;
         $data['user'] = $this->user;
 		$data['Detail_Barang'] = $render->result();
-        $data['barang'] = $this->m_detail_barang->getBarang();
+        // $data['barang'] = $this->m_detail_barang->getBarang();
 		$data['content'] = $this->load->view('pages/detail_barang/create', $data, true);
         $this->load->view('layout/master_layout',$data);
     }
@@ -88,7 +93,7 @@ class Detail_barang extends CI_Controller
 			$this->Mmain->qIns('detail_barang', $data);
 
             $this->session->set_flashdata('success', 'Detail Barang sudah ditambahkan');
-			redirect('detail_barang/init/'.$id);
+			redirect('barang');
         }
     }
 
@@ -103,7 +108,7 @@ class Detail_barang extends CI_Controller
 	
 	public function proses_ubah($id)
 	{
-		$original_value = $this->db->query("SELECT serial_code FROM detail_barang WHERE id_detail_barang = ".$id)->row()->serial_code;
+		$original_value = $this->db->query("SELECT serial_code FROM detail_barang WHERE id_detail_barang ='$id'")->row()->serial_code;
 		if($this->input->post('serial_code') != $original_value) {
 		   $is_unique =  '|is_unique[detail_barang.serial_code]';
 		} else {
@@ -118,7 +123,7 @@ class Detail_barang extends CI_Controller
 			$data = [
 				'id_detail_barang' => $id,
 				'id_barang' => $this->input->post('id_barang'),
-				'item_description' => $this->input->post('item_description'),
+				// 'item_description' => $this->input->post('item_description'),
 				'serial_code' => $this->input->post('serial_code'),
 				'lokasi' => $this->input->post('lokasi'),
 				'qtty' => $this->input->post('qtty'),
@@ -129,7 +134,7 @@ class Detail_barang extends CI_Controller
 		$this->Mmain->qUpdpart("detail_barang", 'id_detail_barang', $id, array_keys($data), array_values($data));
 
 		$this->session->set_flashdata('success', 'Detail Barang berhasil diedit');
-		redirect("detail_barang/init/".$data['id_barang']); 
+		redirect("barang"); 
 	}
 
     public function hapus_data($id,$idBarang)
@@ -142,7 +147,7 @@ class Detail_barang extends CI_Controller
                redirect("detail_barang/init/".$idBarang);
            } else {
                $this->session->set_flashdata('failed', 'Data <strong>Gagal</strong> Dihapus!');
-               redirect("detail_barang/init/".$idBarang);
+               redirect("barang");
            }
        }  
 	   

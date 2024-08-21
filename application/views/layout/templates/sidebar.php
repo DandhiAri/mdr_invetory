@@ -27,6 +27,9 @@
 					<li>
 						<a href="<?= base_url('pinjam'); ?>">Pinjam</a>
 					</li>
+					<li>
+						<a href="<?= base_url('pengajuan'); ?>">Pengajuan</a>
+					</li>
 				</ul>
 			</li>
 			<li>

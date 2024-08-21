@@ -6,7 +6,6 @@
         <div class="ibox-head">
             <div class="ibox-title">
                 <a href="<?= base_url('barang/tambah') ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Barang</a>
-				
 			</div>
 			<div class="col-md-5">
 				<form action="<?= base_url('barang'); ?>" style="display:flex;" method="post">
@@ -16,7 +15,13 @@
 				</form>
 			</div> 
         </div>
-		<?= $keyword ?>
+		<?php
+			if($keyword){
+		?>
+			<p>Keyword yang sedang dicari : <?= $keyword ?></p>
+		<?php
+			}
+		?>
 		<div class="ibox-body">
 			<table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
 				<thead>
@@ -38,7 +43,7 @@
 						<td>
 							<div class="dropdown">
 								<button onclick='toggleDiv(<?= $id ?>)' style="cursor:pointer" class='btn btn-primary font-weight-bold btn dropdown-toggle' type="button" id='dropdownMenuButton-<?php echo $b->id_barang ?>' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									Dropdown
+									Dropdown Detail
 								</button>
 								<script>
 									function toggleDiv(id) {
@@ -57,18 +62,18 @@
 								</script>
 							</div>
 						</td>
-						<td><?php echo $b->id_barang ?></td>
-						<td><?php echo $b->nama_barang ?></td>
-						<td><?php echo $b->nama_jenis ?></td>
-						<td><?php echo $b->detail_count; ?></td>
-						<td><?php echo $b->nama_satuan ?></td>
+						<td><?= $b->id_barang ?></td>
+						<td><?= $b->nama_barang ?></td>
+						<td><?= $b->nama_jenis ?></td>
+						<td><?= $b->detail_count; ?></td>
+						<td><?= $b->nama_satuan ?></td>
 						
 						<td>
 							<a onclick=return href="<?= base_url('barang/edit/') . $b->id_barang ?>" class="btn btn-warning" title="Edit"><i class="ti ti-pencil"></i></a>
 							<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('barang/hapus_data/') . $b->id_barang ?>"class="btn btn-danger" id="deletebarang" title="Hapus" style="cursor: pointer;"><i class="ti ti-trash"></i></button>
 						</td>
 					</tr>
-					<tr style="display:none;" id="toggleDiv-<?php echo $b->id_barang ?>" class=" nested-table-container" width="100%">
+					<tr style="display:none;" id="toggleDiv-<?= $b->id_barang ?>" class=" nested-table-container" width="100%">
 						<td colspan='8'>
 							<p style="text-align:center;">
 								<a href="<?= base_url('detail_barang/tambah/'). $b->id_barang  ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Detail Barang <?= $b->id_barang ?> </a>
@@ -93,12 +98,12 @@
 										if($detail->id_barang === $b->id_barang){
 									?>
 										<tr>
-											<td><?php echo $nom++ ?></td>
-											<td><?php echo $b->id_barang ?></td>
-											<td><?php echo $detail->id_detail_barang ?></td>
-											<td><?php echo $detail->serial_code?></td>
-											<td><?php echo $detail->lokasi?></td>
-											<td><?php echo $detail->keterangan?></td>
+											<td><?= $nom++ ?></td>
+											<td><?= $detail->id_barang ?></td>
+											<td><?= $detail->id_detail_barang ?></td>
+											<td><?= $detail->serial_code?></td>
+											<td><?= $detail->lokasi?></td>
+											<td><?= $detail->keterangan?></td>
 											<td>
 											
 											<a onclick=return href="<?= base_url('detail_barang/edit/') . $detail->id_detail_barang ?>" class="btn btn-warning" title="Edit"><i class="ti ti-pencil"></i></a>

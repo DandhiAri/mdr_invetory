@@ -2,7 +2,7 @@
  
 class M_detail_barang extends CI_Model{
 
-	function tampil_datadetail($id, $limit, $start){
+	function tampil_datadetail($id, $limit=null, $start=null){
 		$this->db->select('detail_barang.*, barang.nama_barang');
 		$this->db->from('detail_barang');
 		$this->db->join('barang', 'detail_barang.id_barang = barang.id_barang');

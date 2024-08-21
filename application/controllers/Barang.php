@@ -33,29 +33,56 @@ class Barang extends CI_Controller
 		$config['base_url'] = base_url('barang/index/'); 
 		$config['per_page'] = 5;
 		$config['uri_segment'] = 3;
+
 		if ($this->input->post('keyword')){
 			$data['keyword'] = $this->input->post('keyword');
 			$this->session->set_userdata('keyword',$data['keyword']);
 		} elseif ($this->input->post('reset')){
-			$data['keyword'] = null;
+			$data['keyword'] = null;	
 			$this->session->unset_userdata('keyword');
 		} else {
 			$data['keyword'] = $this->session->userdata('keyword');
 		}
 
-		$this->db->like('barang.nama_barang', $data['keyword']);
-		$config['total_rows'] = $this->db->count_all_results('barang');
+		$key = $data['keyword'];
 
+		$this->db->from('barang');
+		$this->db->join('detail_barang', 'barang.id_barang = detail_barang.id_barang', 'left');
+
+		if(!empty($key)){
+			$this->db->like('detail_barang.serial_code', $key);
+			$this->db->or_like('barang.nama_barang', $key);
+			$this->db->or_like('barang.id_barang', $key);
+		}
+		$config['total_rows'] = $this->db->count_all_results();
 		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 		$this->pagination->initialize($config);
 
-		$data['Barang'] = $this->Mmain->getBarang($data['keyword'], $config['per_page'], $data['page']);
-   		$data['DetailBarang'] = $this->Mmain->qRead('detail_barang')->result();
+		$data['Barang'] = $this->Mmain->getBarang($key, $config['per_page'], $data['page']);
 		
+		if (!empty($key)) {
+			$res = $this->Mmain->qRead(
+				"detail_barang WHERE serial_code LIKE '%$key%'"
+			)->result();
+			if(!$res==null){
+				$data['DetailBarang'] = $res;
+			} else{
+				$data['DetailBarang'] = $this->Mmain->qRead(
+					"detail_barang"
+				)->result();
+			}
+		} else {
+			$data['DetailBarang'] = $this->Mmain->qRead(
+				"detail_barang"
+			)->result();
+		}
+
 		$data['pagination'] = $this->pagination->create_links();
 		$data['content'] = $this->load->view('pages/barang/barang', $data, true);
 		$this->load->view('layout/master_layout', $data);
     }
+
+
 
     public function tambah()
     {
@@ -118,26 +145,27 @@ class Barang extends CI_Controller
 			redirect('dashboard');
 		}
 
-		// Mendapatkan ID dari inputan POST
-		$id = $this->input->post('id_barang');
+		$this->form_validation->set_rules('nama_barang', 'Nama barang', 'required');
+        $this->form_validation->set_rules('stok', 'Stok barang', 'required');
+        $this->form_validation->set_rules('id_jenis', 'Jenis Barang', 'required');
+        $this->form_validation->set_rules('id_satuan', 'Satuan Barang', 'required');
 
-		// Data untuk diubah
-		$data = [
-			'id_barang' => $this->input->post('id_barang'),
-            'nama_barang' => $this->input->post('nama_barang'),
-            'stok' => $this->input->post('stok'),
-            'id_satuan' => $this->input->post('id_satuan'),
-            'id_jenis' => $this->input->post('id_jenis')
-		];
+		if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('failed', validation_errors());
+			redirect($_SERVER['HTTP_REFERER']);
+        } else {
+            $data = array(
+				'id_barang' => $this->input->post('id_barang'),
+				'nama_barang' => $this->input->post('nama_barang'),
+				'stok' => $this->input->post('stok'),
+				'id_satuan' => $this->input->post('id_satuan'),
+				'id_jenis' => $this->input->post('id_jenis')
+            );
+			$this->Mmain->qUpdpart("barang", 'id_barang', $id, array_keys($data), array_values($data));
+			$this->session->set_flashdata('success', 'Data <strong>Berhasil</strong> Diubah!');
+			redirect('barang');
 
-		// Menggunakan metode qUpdpart untuk mengubah data
-		$this->Mmain->qUpdpart("barang", 'id_barang', $id, array_keys($data), array_values($data));
-
-		// Set flash data untuk notifikasi keberhasilan
-		$this->session->set_flashdata('success', 'Data <strong>Berhasil</strong> Diubah!');
-
-		// Redirect ke halaman Barang
-		redirect('barang');
+		}
 	}
 
 

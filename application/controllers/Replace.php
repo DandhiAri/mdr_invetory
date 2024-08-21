@@ -12,6 +12,8 @@ class Replace extends CI_Controller
         $this->load->model('Mmain');
         $this->load->helper('url');
 		$this->load->library('form_validation');
+		$this->load->library('pagination');
+
 		$this->user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		if (!$this->session->userdata('email')){
 			redirect('auth');
@@ -22,8 +24,40 @@ class Replace extends CI_Controller
     {
         $data['title'] = 'Replace';
         $data['user'] = $this->user;
-        $render = $this->Mmain->qRead("ganti");
-		$data['Replace'] = $render->result();
+
+		$config['base_url'] = base_url('replace/index/'); 
+		$config['per_page'] = 5;
+		$config['uri_segment'] = 3;
+		
+		if ($this->input->post('keywordRep')){
+			$data['keywordRep'] = $this->input->post('keywordRep');
+			$this->session->set_userdata('keywordRep',$data['keywordRep']);
+		} elseif ($this->input->post('reset')){
+			$data['keywordRep'] = null;
+			$this->session->unset_userdata('keywordRep');
+		} else {
+			$data['keywordRep'] = $this->session->userdata('keywordRep');
+		}
+
+		$key = $data['keywordRep'];
+
+		$this->db->from('ganti');
+		$config['total_rows'] = $this->db->count_all_results();
+		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$this->pagination->initialize($config);
+
+		$data['Replace'] = $this->Mmain->getReplace($data['keywordRep'], $config['per_page'], $data['page']);
+		
+		if (!empty($key)) {
+			$data['Detail_Replace'] = $this->Mmain->qRead(
+				"detail_ganti WHERE serial_code LIKE '%$key%'"
+			)->result();
+		} else {
+			$data['Detail_Replace'] = $this->Mmain->qRead(
+				"detail_ganti"
+			)->result();
+		}
+		$data['pagination'] = $this->pagination->create_links();
         $data['content'] = $this->load->view('pages/replace/replace', $data,true);
 		$this->load->view('layout/master_layout', $data);
     }
@@ -31,7 +65,7 @@ class Replace extends CI_Controller
     public function tambah_data_replace()
     {
         $data['title'] = 'Replace';
-        $render=$this->Mmain->qRead("ganti");
+        $render = $this->Mmain->qRead("ganti");
 		$data['Replace'] = $render->result();
         $data['barang'] = $this->m_replace->getid();
         $data['user'] = $this->user;

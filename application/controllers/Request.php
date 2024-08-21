@@ -14,6 +14,8 @@ class Request extends CI_Controller
 
         $this->load->helper('url');
 		$this->load->library('form_validation');
+		$this->load->library('pagination');
+
 		if (!$this->session->userdata('email')){
 			redirect('auth');
 		}
@@ -23,11 +25,58 @@ class Request extends CI_Controller
     {
         $data['title'] = 'Request';
         $data['user'] = $this->user;
-		$render = $this->Mmain->qRead("request");
-		$data['Request'] = $render->result();
+		
+		$config['base_url'] = base_url('request/index/'); 
+		$config['per_page'] = 5;
+		$config['uri_segment'] = 3;
+		
+		if ($this->input->post('keywordReq')){
+			$data['keywordReq'] = $this->input->post('keywordReq');
+			$this->session->set_userdata('keywordReq',$data['keywordReq']);
+		} elseif ($this->input->post('reset')){
+			$data['keywordReq'] = null;
+			$this->session->unset_userdata('keywordReq');
+		} else {
+			$data['keywordReq'] = $this->session->userdata('keywordReq');
+		}
+		$key = $data['keywordReq'];
+
+
+		if (!empty($data['keywordReq'])) {
+            $this->db->like('request.nama', $data['keywordReq']);
+			$serial = $this->db->or_like('detail_request.serial_code', $data['keywordReq']);
+        }
+		
+		$this->db->from('request');
+		$config['total_rows'] = $this->db->count_all_results();
+
+		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$this->pagination->initialize($config);
+		$limit = $config['per_page'];
+		$start = $data['page'];
+
+		$data['Request'] = $this->Mmain->getRequest($data['keywordReq'], $config['per_page'], $data['page']);
+		
+		if (!empty($key)) {
+			$res = $this->Mmain->qRead(
+				"detail_request WHERE serial_code LIKE '%$key%'"
+			)->result();
+			if(!$res==null){
+				$data['Detail_Request'] = $res;
+			} else {
+				$data['Detail_Request'] = $this->Mmain->qRead(
+					"detail_request"
+				)->result();
+			}
+		} else {
+			$data['Detail_Request'] = $this->Mmain->qRead(
+				"detail_request"
+			)->result();
+		}
+		$data['pagination'] = $this->pagination->create_links();
+
         $data['content'] = $this->load->view('pages/request/request', $data, true);
 		$this->load->view('layout/master_layout',$data);
-
     }
 
     public function tambah()
