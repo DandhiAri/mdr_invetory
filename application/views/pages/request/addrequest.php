@@ -27,7 +27,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="tgl_request" class="form-label">Tanggal</label>
-                            <input type="datetime-local" class="form-control" name="tgl_request" id="tgl_request" >
+                            <input type="date" class="form-control" name="tgl_request" id="tgl_request" >
                         </div>
                     </div>
                     <div class="col-md-6">

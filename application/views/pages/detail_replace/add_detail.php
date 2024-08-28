@@ -37,7 +37,7 @@
 							<select class="form-control" name="id_barang" id="getIdBarang" required>
 								<option value="" >Pilih Barang</option>
 								<?php foreach ($Barang as $b){ ?>
-									<option value="<?= $b->id_barang ?>"><?= $b->id_barang ?></option>
+									<option value="<?= $b->id_barang ?>"><?= $b->nama_barang ?></option>
 								<?php } ?>
 							</select>
 						</div>

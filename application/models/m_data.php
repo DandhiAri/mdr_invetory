@@ -18,6 +18,19 @@ class M_data extends CI_Model{
 
         return $query;
     }
+	public function getPengajuan()
+    {
+        $query = $this->db->query("SELECT * FROM pengajuan ORDER BY id_pengajuan ASC");
+
+        if ($query->num_rows() == 0) {
+            $query = [];
+        } else {
+            $query = $query->result_array();
+        }
+
+
+        return $query;
+    }
 	public function getSatuan()
     {
         $query = $this->db->query("SELECT * FROM satuan ORDER BY nama_satuan ASC");
@@ -27,7 +40,6 @@ class M_data extends CI_Model{
         } else {
             $query = $query->result_array();
         }
-
 
         return $query;
     }
@@ -89,6 +101,18 @@ class M_data extends CI_Model{
     function edit_request($id)
     { 
         $query = $this->db->query("SELECT * FROM request WHERE id_request = '$id'");
+
+        if ($query->num_rows() == 0) {
+            $query = [];
+        } else {
+            $query = $query->row_array();
+        }
+
+        return $query;
+    }
+	function edit_pengajuan($id)
+    { 
+        $query = $this->db->query("SELECT * FROM pengajuan WHERE id_pengajuan = '$id'");
 
         if ($query->num_rows() == 0) {
             $query = [];

@@ -7,6 +7,13 @@
             <div class="ibox-title">
 				<a href="<?= base_url('jenis/tambah_jenis') ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Jenis</a>
 			</div>
+			<div class="col-md-5">
+				<form action="<?= base_url('jenis'); ?>" style="display:flex;" method="post">
+					<input type="text" class="form-control" name="keywordJEN" placeholder="Nama Jenis Barang. . . . . . .">
+					<button type="submit" name="submit" class="btn btn-primary" style="cursor: pointer;"><i class="ti ti-search"></i></button>
+					<button type="submit" style="cursor: pointer;" class="btn btn-danger" name="reset" value="1"><i class="fa fa-refresh"></i></button>
+				</form>
+			</div> 
         </div>
 		<?php if ($this->session->flashdata('failed')): ?>
 				<div class="warn err">
@@ -35,17 +42,18 @@
 					foreach($jenis as $j){
 						?>
 						<tr>
-							<td><?php echo $no++ ?></td>
+							<td><?php echo ++$page ?></td>
 							<td><?php echo $j->id_jenis ?></td>
 							<td><?php echo $j->nama_jenis ?></td>
 							<td>
-							<a href="<?= base_url('Jenis/edit_data/') . $j->id_jenis ?>" class="btn btn-warning btn-circle btn-sm"><i class="ti ti-pencil"></i></a>
-							<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('Jenis/hapus_data/') . $j->id_jenis ?>" class="btn btn-danger btn-circle btn-sm"><i class="fa fa-trash"></i></a>
-					</td>
-					</tr>
+								<a href="<?= base_url('Jenis/edit_data/') . $j->id_jenis ?>" class="btn btn-warning btn-circle btn-sm"><i class="ti ti-pencil"></i></a>
+								<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('Jenis/hapus_data/') . $j->id_jenis ?>" class="btn btn-danger btn-circle btn-sm"><i class="fa fa-trash"></i></a>
+							</td>
+						</tr>
 					<?php } ?>
 				</thead>
 			</table>
+			<?= $pagination ?>
 		</div>
 	</div>
 </div>

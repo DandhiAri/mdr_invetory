@@ -98,7 +98,7 @@ class Detail_pinjam extends CI_Controller
 			
 			$this->Mmain->qIns('detail_pinjam', $data);
 			$this->session->set_flashdata('success', 'Data Barang <strong>Berhasil</strong> Ditambahkan!');
-			redirect("detail_pinjam/init/".$id_pinjam);
+			redirect("pinjam");
         }
     }
 
@@ -143,7 +143,7 @@ class Detail_pinjam extends CI_Controller
 			$this->Mmain->qUpdpart("detail_pinjam", 'id_detail_pinjam', $id, array_keys($data), array_values($data)); // Menambahkan argumen terakhir
 
 			$this->session->set_flashdata('success', 'Data Barang <strong>Berhasil</strong> Diubah!');
-			redirect("detail_pinjam/init/".$id_pinjam);
+			redirect("pinjam");
         }
 	}
 
@@ -151,14 +151,13 @@ class Detail_pinjam extends CI_Controller
     public function hapus($id,$idPinjam) 
 	{
 		$result = $this->Mmain->qDel("detail_pinjam", "id_detail_pinjam", $id);
-		//$result = $this->Mmain->delDetail($id);
 		
 		if ($result) {
 			$this->session->set_flashdata('success', 'Data Barang <strong>Berhasil</strong> Dihapus!');
-			redirect("detail_pinjam/init/".$idPinjam);
+			redirect("pinjam");
 		} else {
 			$this->session->set_flashdata('error', 'Data Barang <strong>Gagal</strong> Dihapus!');
-			redirect("detail_pinjam/init/".$idPinjam);
+			redirect("pinjam");
 		}
 	}
 }

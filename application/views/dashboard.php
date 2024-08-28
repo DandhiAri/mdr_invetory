@@ -22,7 +22,14 @@
 			<div class="ibox-body">
 				<h2 class="m-b-5 font-strong"><?= $replace ?></h2>
 				<div class="m-b-5">REPLACE</div><i class="ti-bar-chart widget-stat-icon"></i>
-				
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-3 col-md-6">
+		<div class="ibox bg-primary color-white widget-stat">
+			<div class="ibox-body">
+				<h2 class="m-b-5 font-strong"><?= $pengajuan ?></h2>
+				<div class="m-b-5">PENGAJUAN</div><i class="ti-bar-chart widget-stat-icon"></i>
 			</div>
 		</div>
 	</div>

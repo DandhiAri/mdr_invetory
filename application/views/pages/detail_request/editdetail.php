@@ -26,27 +26,35 @@
 								<input type="text" class="form-control" name="id_request" id="id_request" placeholder="ID Request..." value="<?= $Detail_Request['id_request'] ?>" readonly>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<div class="mb-3">
-								<label for="lokasi" class="form-label">Lokasi</label>
-								<input type="text" class="form-control" name="lokasi" id="lokasi" min="1" value="<?= $Detail_Request['lokasi'] ?>">
-							</div>
+					<div class="col-md-6">
+						<div class="mb-3">
+							<label for="lokasi" class="form-label">Lokasi</label>
+							<input type="text" class="form-control" name="lokasi" id="lokasi" min="1" value="<?= $Detail_Request['lokasi'] ?>">
 						</div>
-						<div class="col-md-6">
-							<div class="mb-3">
-								<label  class="form-label">ID Barang</label>
+					</div>
+					<div class="col-md-6">
+						<div class="mb-3">
+							<label  class="form-label">ID Barang</label>
 							<div class="input-group">
 								<select class="form-control" name="id_barang" id="getIdBarang" required>
 									<option value="" >Pilih Barang</option>
-									<?php 
-									//foreach ($barang as $data) { 
-									$itembarang = mysqli_query($koneksi,"select * from barang");
-									while($b = mysqli_fetch_array($itembarang)){
-									?>
-										<option value="<?= $b['id_barang'] ?>"<?= $b['id_barang'] == $Detail_Request['id_barang'] ? "selected":""?>><?= $b['nama_barang'] ?></option>
+									<?php foreach($barang as $b){ ?>
+										<option value="<?= $b->id_barang ?>"<?= $b->id_barang == $Detail_Request['id_barang'] ? "selected":""?>>
+											<?= $b->nama_barang ?>
+										</option>
 									<?php } ?>
 								</select>
 							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<div class="mb-3">
+							<label for="showSerialCode" class="form-label">Serial Number</label>
+							<select class="form-control" name="serial_code" id="showSerialCode">
+								<option value="">Pilih Nomor Seri</option>
+								
+							</select>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -55,29 +63,6 @@
 							<input type="text" class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan keterangan..." value="<?= $Detail_Request['keterangan'] ?>">
 						</div>
 					</div>
-					
-					<div class="col-md-6">
-						<div class="mb-3">
-							<label for="serial_code" class="form-label">Serial Number</label>
-							<select class="form-control" name="serial_code" id="serial_code">
-								<option value="">Pilih Nomor Seri</option>
-								<?php foreach ($detail_barang as $data) { ?>
-									<!--<option value="<?= $data['serial_code'] ?>"<?= $data['serial_code'] == $Detail_Request['id_barang'] ? "selected":""?>><?= $data['serial_code'] ?></option>-->
-									<option value="<?= $data['serial_code'] ?>" <?= $data['serial_code'] == $Detail_Request['serial_code'] ? "selected" : "" ?>>
-									<?= $data['serial_code'] ?>
-								</option>
-								<?php } ?>
-							</select>
-						</div>
-					</div>
-					
-					<div class="col-md-6">
-						<div class="mb-3">
-							<label for="jumlah" class="form-label">Jumlah</label>
-							<input type="number" class="form-control" name="jumlah" id="jumlah" min="1" value="<?= $Detail_Request['jumlah'] ?>">
-						</div>
-					</div>
-					
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="status" class="form-label">Status</label>
@@ -92,10 +77,10 @@
 							</select>
 						</div>
 					</div>
-					<div class="row float-right">
-						<div class="col-md-12">
-							<button type="submit" class="btn btn-success" id="btn-save-mtact" style="cursor: pointer;"><i class="ti ti-save"></i> Simpan</button>
-						</div>
+				</div>
+				<div class="row float-right">
+					<div class="col-md-12">
+						<button type="submit" class="btn btn-success" id="btn-save-mtact" style="cursor: pointer;"><i class="ti ti-save"></i> Simpan</button>
 					</div>
 				</div>
             </form>

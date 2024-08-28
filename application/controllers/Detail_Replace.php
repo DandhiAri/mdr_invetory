@@ -70,7 +70,6 @@ class Detail_Replace extends CI_Controller
 		$this->form_validation->set_rules('tgl_replace', 'Tanggal Replace', 'required');
 		$this->form_validation->set_rules('id_barang', 'ID Barang', 'required');
 		$this->form_validation->set_rules('qty_replace', 'Quantity Replace', 'required|integer');
-		$this->form_validation->set_rules('serial_code', 'Serial Code', 'required');
 		$this->form_validation->set_rules('lokasi', 'Lokasi', 'required');
 
 		if ($this->form_validation->run() == FALSE) {
@@ -91,7 +90,7 @@ class Detail_Replace extends CI_Controller
 			
 			$this->Mmain->qIns('detail_ganti', $data);
 			$this->session->set_flashdata('success', 'Data Detail Replace <strong>Berhasil</strong> Ditambahkan!');
-			redirect("detail_replace/init/".$id);
+			redirect("replace");
         }
     }
 
@@ -179,10 +178,10 @@ class Detail_Replace extends CI_Controller
 
     if ($this->db->affected_rows() > 0) {
         $this->session->set_flashdata('success', 'Jenis Barang <strong>Berhasil</strong> Diubah!');
-        redirect("detail_replace/init/".$data['id_replace']);
+        redirect("replace");
     } else {
         $this->session->set_flashdata('error', 'Jenis Barang <strong>Gagal</strong> Diubah!');
-        redirect("detail_replace/init/".$data['id_replace']);
+        redirect("replace");
     }
 }
 }
@@ -191,10 +190,10 @@ class Detail_Replace extends CI_Controller
 {
     $result = $this->Mmain->qDel("detail_ganti", "id_detail_replace", $id);
     if ($result) {
-        redirect("detail_replace/init/".$idBarang);
+        redirect("replace");
     } else {
         $this->session->set_flashdata('error', 'Jenis Barang <strong>Gagal</strong> Dihapus!');
-        redirect("detail_replace/init/".$idBarang);
+        redirect("replace");
     }
 }
 }

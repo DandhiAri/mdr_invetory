@@ -86,15 +86,22 @@ class mMain  extends CI_Model
     }
 
 	public function getBarang($keyword=null, $limit, $start) {
-        $this->db->select('barang.*, jenis.nama_jenis, satuan.nama_satuan, COUNT(detail_barang.id_barang) AS detail_count');
+        $this->db->select('barang.*, 
+			jenis.nama_jenis, 
+			satuan.nama_satuan, 
+			COUNT(detail_barang.id_barang) AS detail_count,
+			SUM(CASE WHEN detail_barang.status = "Stored" THEN 1 ELSE 0 END) AS stored_count'
+		);
         $this->db->from('barang');
         $this->db->join('jenis', 'barang.id_jenis = jenis.id_jenis');
-        $this->db->join('satuan', 'barang.id_satuan = satuan.id_satuan');
+        $this->db->join('satuan', 'barang.id_satuan = satuan.id_satuan');	
 		$this->db->join('detail_barang', 'barang.id_barang = detail_barang.id_barang', 'left');
 		if ($keyword) {
 			$this->db->like('detail_barang.serial_code', $keyword);
+			$this->db->or_like('detail_barang.id_barang', $keyword);
+			$this->db->or_like('detail_barang.id_detail_barang', $keyword);
 			$this->db->or_like('barang.nama_barang', $keyword);
-			$this->db->or_like('barang.id_barang', $keyword);
+			$this->db->or_like('jenis.nama_jenis', $keyword);
 		}
 		$this->db->group_by('barang.id_barang, detail_barang.id_barang');
         $this->db->limit($limit, $start); 
@@ -141,6 +148,20 @@ class mMain  extends CI_Model
         $this->db->limit($limit, $start); 
         $query = $this->db->get();
         return $query->result();
+    }
+
+	public function get_serial_codes($id_barang) {
+        
+        $this->db->select('serial_code, id_detail_barang, status');
+        $this->db->from('detail_barang');
+        $this->db->where('id_barang', $id_barang);
+        $query = $this->db->get();
+       
+        if ($query->num_rows() > 0) {
+            return $query->result_array(); 
+        } else {
+            return []; 
+        }
     }
     // ++++++++++++++++++++++++++++++++++++++++++ Create delete query
 

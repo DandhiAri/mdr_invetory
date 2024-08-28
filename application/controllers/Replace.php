@@ -26,7 +26,7 @@ class Replace extends CI_Controller
         $data['user'] = $this->user;
 
 		$config['base_url'] = base_url('replace/index/'); 
-		$config['per_page'] = 5;
+		$config['per_page'] = 6;
 		$config['uri_segment'] = 3;
 		
 		if ($this->input->post('keywordRep')){
@@ -49,14 +49,22 @@ class Replace extends CI_Controller
 		$data['Replace'] = $this->Mmain->getReplace($data['keywordRep'], $config['per_page'], $data['page']);
 		
 		if (!empty($key)) {
-			$data['Detail_Replace'] = $this->Mmain->qRead(
+			$res = $this->Mmain->qRead(
 				"detail_ganti WHERE serial_code LIKE '%$key%'"
 			)->result();
+			if(!$res==null){
+				$data['Detail_Replace'] = $res;
+			} else{
+				$data['Detail_Replace'] = $this->Mmain->qRead(
+					"detail_ganti"
+				)->result();
+			}
 		} else {
 			$data['Detail_Replace'] = $this->Mmain->qRead(
 				"detail_ganti"
 			)->result();
 		}
+
 		$data['pagination'] = $this->pagination->create_links();
         $data['content'] = $this->load->view('pages/replace/replace', $data,true);
 		$this->load->view('layout/master_layout', $data);
@@ -83,7 +91,6 @@ class Replace extends CI_Controller
 		$data = array(
 			"nama" => $this->input->post('nama'),
 			"tgl_replace" => $this->input->post('tgl_replace'),
-			"status" => $this->input->post('status'),
 			"keterangan" => $this->input->post('keterangan'),
 		);
         

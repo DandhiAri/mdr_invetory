@@ -16,13 +16,26 @@
 			</div> 
         </div>
 		<?php
-			if($keyword){
+		if($keyword){
 		?>
-			<p>Keyword yang sedang dicari : <?= $keyword ?></p>
+			<p style="padding:7px 0 0 1.2em;">Keyword yang sedang dicari : <b><?= $keyword ?></b></p>
 		<?php
-			}
+		}
 		?>
 		<div class="ibox-body">
+			<?php if ($this->session->flashdata('success')): ?>
+				<div class="warn succ">
+					<div class="msg" onclick="warnError()">
+						<?php echo $this->session->flashdata('success'); ?>
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('failed')):?>
+				<div class="warn err">
+					<div class="msg" onclick="warnError()">
+						<?php echo $this->session->flashdata('failed'); ?>
+					</div>
+				</div>
+			<?php endif;?>
 			<table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
 				<thead>
 					<tr>
@@ -35,88 +48,120 @@
 						<th>Satuan</th>
 						<th>Aksi</th>
 					</tr>
-					<?php foreach($Barang as $b){
-						$id = json_encode(strtoupper($b->id_barang));
+					<?php 
+					if(!$Barang==null){
+						foreach($Barang as $b){
+							$id = json_encode(strtoupper($b->id_barang));
 					?>
-					<tr>
-						<td><?= ++$page ?></td>
-						<td>
-							<div class="dropdown">
-								<button onclick='toggleDiv(<?= $id ?>)' style="cursor:pointer" class='btn btn-primary font-weight-bold btn dropdown-toggle' type="button" id='dropdownMenuButton-<?php echo $b->id_barang ?>' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									Dropdown Detail
-								</button>
-								<script>
-									function toggleDiv(id) {
-										var div = document.getElementById('toggleDiv-'+ id);
-										var buttonDrop = document.getElementById('dropdownMenuButton-'+ id);
-										if (div.style.display === 'none' || div.style.display === '') {
-											div.style.display = 'table-row';
-											buttonDrop.classList.add("btn-success");
-											buttonDrop.classList.remove("btn-primary");
-										} else {
-											div.style.display = 'none';
-											buttonDrop.classList.remove("btn-success");
-											buttonDrop.classList.add("btn-primary");
+						<tr>
+							<td><?= ++$page ?></td>
+							<td>
+								<div class="dropdown">
+									<button onclick='toggleDiv(<?= $id ?>)' style="cursor:pointer" class='btn btn-primary font-weight-bold btn dropdown-toggle' type="button" id='dropdownMenuButton-<?php echo $b->id_barang ?>' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										Dropdown Detail
+									</button>
+									<script>
+										function toggleDiv(id) {
+											var div = document.getElementById('toggleDiv-'+ id);
+											var buttonDrop = document.getElementById('dropdownMenuButton-'+ id);
+											if (div.style.display === 'none' || div.style.display === '') {
+												div.style.display = 'table-row';
+												buttonDrop.classList.add("btn-success");
+												buttonDrop.classList.remove("btn-primary");
+											} else {
+												div.style.display = 'none';
+												buttonDrop.classList.remove("btn-success");
+												buttonDrop.classList.add("btn-primary");
+											}
 										}
-									}
-								</script>
+									</script>
+								</div>
+							</td>
+							<td><?= $b->id_barang ?></td>
+							<td><?= $b->nama_barang ?></td>
+							<td><?= $b->nama_jenis ?></td>
+							<td><?= $b->stored_count; ?></td>
+							<td><?= $b->nama_satuan ?></td>
+
+							<td>
+								<a onclick=return href="<?= base_url('barang/edit/') . $b->id_barang ?>" class="btn btn-warning" title="Edit"><i class="ti ti-pencil"></i></a>
+								<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('barang/hapus_data/') . $b->id_barang ?>"class="btn btn-danger" id="deletebarang" title="Hapus" style="cursor: pointer;"><i class="ti ti-trash"></i></button>
+							</td>
+						</tr>
+						<tr style="display:none;" id="toggleDiv-<?= $b->id_barang ?>" class=" nested-table-container" width="100%">
+							<td colspan='8'>
+								<p style="text-align:center;">
+									<a href="<?= base_url('detail_barang/tambah/'). $b->id_barang  ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Detail Barang <?= $b->id_barang ?> </a>
+								</p>
+								<table style="background-color:#D3D3D3;" class="table table-bordered">
+									<thead>
+										<tr>
+											<th>No</th>
+											<th>ID Barang</th>
+											<th>ID Detail Barang</th>
+											<th>ID Pengajuan</th>
+											<th>Serial Code</th>
+											<th>Quantity</th>
+											<th>Lokasi</th>
+											<?php if($b->nama_satuan == "Unit"){ ?>
+											<th>Nama PIC</th>
+											<th>Status</th>
+											<?php } ?>
+											<th>Keterangan</th>
+											<th>Aksi</th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php 
+										$nom = 1;
+										// var_dump($DetailBarang);
+										foreach($DetailBarang as $detail){
+											if($detail->id_barang === $b->id_barang){
+										?>
+											<tr>
+												<td><?= $nom++ ?></td>
+												<td><?= $detail->id_barang ?></td>
+												<td><?= $detail->id_detail_barang ?></td>
+												<td><?= $detail->id_pengajuan ?></td>
+												<td><?= $detail->serial_code?></td>
+												<td><?= $detail->qtty?></td>
+												<td><?= $detail->lokasi?></td>
+												<?php if($b->nama_satuan == "Unit"){ ?>
+												<td><?= $detail->PIC ?></td>
+												<td><?= $detail->status ?></td>
+												<?php } ?>
+												<td><?= $detail->keterangan?></td>
+												<td>
+													<a onclick=return href="<?= base_url('detail_barang/edit/') . $detail->id_detail_barang ?>" class="btn btn-warning" title="Edit"><i class="ti ti-pencil"></i></a>
+													<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('detail_barang/hapus_data/') . $detail->id_detail_barang.'/'.$detail->id_barang ?>"class="btn btn-danger" id="deletebarang" title="Hapus" style="cursor: pointer;"><i class="ti ti-trash"></i></button>
+												</td>
+											</tr>
+										<?php 
+											}
+										}
+										?>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					<?php 
+						}
+					} elseif ($keyword == ""){
+					?>
+						<td colspan="20">
+							<div class="null-result-container">
+								<p class="null-result">Tidak Ada Data untuk Ditampilkan :(</p>
 							</div>
 						</td>
-						<td><?= $b->id_barang ?></td>
-						<td><?= $b->nama_barang ?></td>
-						<td><?= $b->nama_jenis ?></td>
-						<td><?= $b->detail_count; ?></td>
-						<td><?= $b->nama_satuan ?></td>
-						
-						<td>
-							<a onclick=return href="<?= base_url('barang/edit/') . $b->id_barang ?>" class="btn btn-warning" title="Edit"><i class="ti ti-pencil"></i></a>
-							<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('barang/hapus_data/') . $b->id_barang ?>"class="btn btn-danger" id="deletebarang" title="Hapus" style="cursor: pointer;"><i class="ti ti-trash"></i></button>
+					<?php } else { ?>
+						<td colspan="20">
+							<div class="null-result-container">
+								<p class="null-result">Keyword <b>"<?= $keyword ?>"</b> yang dicari tidak ada</p>
+								<form action="<?= base_url('barang'); ?>" style="display:flex;" method="post">
+									<button type="submit" style="cursor: pointer;" class="btn btn-danger" name="reset" value="1">Kembali Semula</button>
+								</form>
+							</div>
 						</td>
-					</tr>
-					<tr style="display:none;" id="toggleDiv-<?= $b->id_barang ?>" class=" nested-table-container" width="100%">
-						<td colspan='8'>
-							<p style="text-align:center;">
-								<a href="<?= base_url('detail_barang/tambah/'). $b->id_barang  ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Detail Barang <?= $b->id_barang ?> </a>
-							</p>
-							<table style="background-color:#D3D3D3;" class="table table-bordered">
-								<thead>
-									<tr>
-										<th>No</th>
-										<th>ID Barang</th>
-										<th>ID Detail Barang</th>
-										<th>Serial Code</th>
-										<th>Lokasi</th>
-										<th>Keterangan</th>
-										<th>Aksi</th>
-									</tr>
-								</thead>
-								<tbody>
-									<?php 
-									$nom = 1;
-									// var_dump($DetailBarang);
-									foreach($DetailBarang as $detail){
-										if($detail->id_barang === $b->id_barang){
-									?>
-										<tr>
-											<td><?= $nom++ ?></td>
-											<td><?= $detail->id_barang ?></td>
-											<td><?= $detail->id_detail_barang ?></td>
-											<td><?= $detail->serial_code?></td>
-											<td><?= $detail->lokasi?></td>
-											<td><?= $detail->keterangan?></td>
-											<td>
-											
-											<a onclick=return href="<?= base_url('detail_barang/edit/') . $detail->id_detail_barang ?>" class="btn btn-warning" title="Edit"><i class="ti ti-pencil"></i></a>
-											<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('detail_barang/hapus_data/') . $detail->id_detail_barang.'/'.$detail->id_barang ?>"class="btn btn-danger" id="deletebarang" title="Hapus" style="cursor: pointer;"><i class="ti ti-trash"></i></button>
-										</tr>
-									<?php 
-										}
-									}
-									?>
-								</tbody>
-							</table>
-						</td>
-					</tr>
 					<?php } ?>
 				</thead>
 			</table>

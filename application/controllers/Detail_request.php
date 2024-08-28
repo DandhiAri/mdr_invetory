@@ -18,9 +18,7 @@ class Detail_request extends CI_Controller
     	}
 		$this->form_validation->set_rules('id_request', 'ID Request', 'required');
 		$this->form_validation->set_rules('id_barang', 'ID Barang', 'required');
-		$this->form_validation->set_rules('serial_code', 'Serial Code', 'required');
 		$this->form_validation->set_rules('lokasi', 'Lokasi', 'required');
-		$this->form_validation->set_rules('jumlah', 'Jumlah', 'required|integer');
 	}
 	
     public function index()
@@ -66,8 +64,7 @@ class Detail_request extends CI_Controller
         if ($this->session->login['role'] == 'admin') {
             $this->session->set_flashdata('error', 'Tambah data hanya untuk admin!');
             redirect('dashboard');
-        }
-
+		}
 
 		if ($this->form_validation->run() == FALSE) {
             $this->session->set_flashdata('failed', validation_errors());
@@ -77,18 +74,18 @@ class Detail_request extends CI_Controller
                 "id_request" => $this->input->post('id_request'),
 				"keterangan" => $this->input->post('keterangan'),
 				"id_barang" => $this->input->post('id_barang'),
+				"id_detail_barang" => $this->input->post('id_detail_barang'),
 				"serial_code" => $this->input->post('serial_code'),
 				"lokasi" => $this->input->post('lokasi'),
 				"jumlah" => $this->input->post('jumlah'),
             );
-
 			$id_detail_request = $this->Mmain->autoId("detail_request","id_detail_request","DRQ","DRQ"."001","001");
-			
+			$serial = $data['serial_code'];
 			$data['id_detail_request'] = $id_detail_request;
-
 			$this->Mmain->qIns('detail_request', $data);
+			
 			$this->session->set_flashdata('success', 'Data <strong>Berhasil</strong> Ditambahkan!');
-			redirect("detail_request/init/".$id);
+			redirect("request");
         }
     }
 
@@ -96,8 +93,8 @@ class Detail_request extends CI_Controller
         $data['title'] = 'Detail Request';
 		$data['user'] = $this->user;
         $data['Detail_Request'] = $this->m_detail_req->edit_request($id);
-		$data['barang'] = $this->m_detail_barang->getBarang();
-		$data['detail_barang'] = $this->m_detail_req->getseri();
+		$data['barang'] = $this->Mmain->qRead('barang')->result();
+		$data['detail_barang'] = $this->Mmain->qRead("detail_barang")->result();
 		$data['id'] = $id;
 
 		$data['content'] = $this->load->view('pages/detail_request/editdetail', $data, true);
@@ -126,43 +123,24 @@ class Detail_request extends CI_Controller
 				"jumlah" => $this->input->post('jumlah'),
 				"status" => $this->input->post('status'),
             );
-
-			$detail_barang_data = $this->Mmain->qRead("detail_barang where serial_code = '".$data['serial_code']."'", "id_detail_barang");
 			
-			if ($status == 'Finished') {
-				$renQty = $this->Mmain->qRead("detail_barang where serial_code = '".$serial_code."' ","qtty, id_detail_barang");
-			
-				if ($renQty->num_rows() > 0) {
-					foreach ($renQty->result() as $row) {
-						$qty = $row->qtty;
-						$idDetailBarang = $row->id_detail_barang;
-					}
-        		}		
-		
-				$valStok = $qty - $jumlah;
-				
-				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $idDetailBarang, Array("qtty"), Array($valStok) );
+			if ($data['status'] == 'Finished') {
+				$id_detail_barang = $this->db->query("SELECT id_detail_barang FROM detail_barang WHERE serial_code ='".$data['serial_code']."'")->row()->id_detail_barang;
+				$data1["PIC"] = $this->db->query("SELECT nama FROM request WHERE id_request ='".$data['id_request']."'")->row()->nama;
+				$data1["status"] = "In-Used";
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $id_detail_barang, array_keys($data1), array_values($data1) );
 			}
 		
-			if ($status == 'Rejected') {
-				$renQty = $this->Mmain->qRead("detail_barang where serial_code = '".$serial_code."' ","qtty, id_detail_barang");
-				
-				if ($renQty->num_rows() > 0) {
-					foreach ($renQty->result() as $row) {
-						$qty = $row->qtty;
-						$idDetailBarang = $row->id_detail_barang;
-					}
-				}		
-				
-				$valStok = $qty + $jumlah;
-				
-				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $idDetailBarang, Array("qtty"), Array($valStok) );
+			if ($data['status'] == 'Rejected') {
+				$data1["status"] = "Stored";
+
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $idDetailBarang, array_keys($data1), array_values($data1) );
 			}  
 
 			$this->Mmain->qUpdpart("detail_request", 'id_detail_request', $id, array_keys($data), array_values($data)); 
 
 			$this->session->set_flashdata('success', 'Data <strong>Berhasil</strong> Diubah!');
-			redirect("detail_request/init/".$data['id_request']);
+			redirect("request");
         }
 	}
 	
@@ -175,10 +153,10 @@ class Detail_request extends CI_Controller
 
 		if (!$render) {
 			$this->session->set_flashdata('success', 'Data <strong>Berhasil</strong> Dihapus!');
-			redirect("detail_request/init/".$idRequest);
+			redirect("request");
 		} else {
 			$this->session->set_flashdata('failed', 'Data <strong>Gagal</strong> Dihapus!');
-			redirect("detail_request/init/".$idRequest);
+			redirect("request");
 		}
 	}
 }

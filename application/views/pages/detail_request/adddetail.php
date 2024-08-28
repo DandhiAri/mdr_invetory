@@ -1,13 +1,11 @@
-<?php include 'Koneksi.php' ?>
 <div class="page-heading">
     <h1 class="page-title"><?= $title ?></h1>
 </div>
-<div class="row justify-content-center">
 <div class="page-content fade-in-up">
     <div class="ibox">
         <div class="ibox-head">
             <div class="ibox-title">
-                Form Tambah Request
+                Form Edit Detail Request
             </div>
         </div>
 		<?php if ($this->session->flashdata('failed')): ?>
@@ -29,29 +27,30 @@
 					<div class="col-md-6">
                         <div class="mb-3">
                             <label for="lokasi" class="form-label">Lokasi</label>
-                            <input type="text" class="form-control" name="lokasi" id="jumlah" placeholder="Isi Lokasi...">
+                            <input type="text" class="form-control" name="lokasi" id="lokasi" placeholder="Isi Lokasi...">
                         </div>
                     </div>
 					<div class="col-md-6">
                         <div class="mb-3">
                             <label  class="form-label">ID Barang</label>
-                        <div class="input-group">
-                            <select class="form-control" name="id_barang" id="getIdBarang" required>
-                                <option value="" >Pilih Barang</option>
-                                <?php foreach ($Barang as $b){ ?>
-                                    <option value="<?= $b->id_barang ?>"><?= $b->id_barang ?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+							<div class="input-group">
+								<select class="form-control" name="id_barang" id="getIdBarang" required>
+									<option value="" >Pilih Barang</option>
+									<?php foreach ($Barang as $b){ ?>
+										<option value="<?= $b->id_barang ?>"><?= $b->nama_barang ?></option>
+									<?php } ?>
+								</select>
+							</div>
+						</div>
+					</div>
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label">Serial Number</label>
-                            <select class="form-control" name="serial_code" id="showSerialCode">
+                            <select class="form-control" name="serial_code" id="showSerialCode" required>
                                 <option value="">Pilih Nomor Seri</option>
 								
                             </select>
+							<input type="text" name="id_detail_barang" id="id_detail_barang" hidden>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -60,23 +59,13 @@
                             <input type="text" class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan keterangan...">
                         </div>
                     </div>
-					<div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="jumlah" class="form-label">Jumlah</label>
-                            <input type="number" class="form-control" min="0" name="jumlah" id="jumlah" min="1">
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="row float-right">
-                                <div class="col-md-12" style="margin-left:1em;">
-									<a href="<?= base_url('Request') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
-                                    <button type="submit" class="btn btn-success" id="simpan" style="cursor: pointer;"><i class="ti ti-save"></i> Simpan</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
+				<div class="row float-right">
+					<div class="col-md-12" style="margin-left:1em;">
+						<a href="<?= base_url('Request') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
+						<button type="submit" class="btn btn-success" id="simpan" style="cursor: pointer;"><i class="ti ti-save"></i> Simpan</button>
+					</div>
+				</div>
             </form>
         </div>
     </div>

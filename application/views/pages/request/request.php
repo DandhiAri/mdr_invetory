@@ -88,33 +88,35 @@
 							</p>
 							<table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
 								<thead>
-									<tr>
-										<th>No</th>
-										<th>ID Detail Request</th>
-										<th>ID Request</th>
-										<th>Keterangan</th>
-										<th>ID Barang</th>
-										<th>Serial Code</th>
-										<th>Lokasi</th>
-										<th>Jumlah</th>
-										<th>Status</th>
-										<th>Aksi</th>
-									</tr>
+								<tr>
+									<th>No</th>
+									<th>ID Detail Request</th>
+									<th>ID Request</th>
+									<th>ID Barang</th>
+									<th>ID Detail Barang</th>
+									<th>Serial Code</th>
+									<th>Lokasi</th>
+									<th>Jumlah</th>
+									<th>Keterangan</th>
+									<th>Status</th>
+									<th>Aksi</th>
+								</tr>
 									<?php 
 									$no = 1;
 									foreach($Detail_Request as $dr){
 										if($dr->id_request === $r->id_request){
 										?>
 										<tr>
-											<td><?php echo $no++ ?></td>
-											<td><?php echo $dr->id_detail_request ?></td>
-											<td><?php echo $dr->id_request ?></td>
-											<td><?php echo $dr->keterangan?></td>
-											<td><?php echo $dr->id_barang ?></td>
-											<td><?php echo $dr->serial_code ?></td>
-											<td><?php echo $dr->lokasi ?></td>
-											<td><?php echo $dr->jumlah ?></td>
-											<td><?php echo $dr->status ?></td>
+										<td><?= $no++ ?></td>
+										<td><?= $dr->id_detail_request ?></td>
+										<td><?= $dr->id_request ?></td>
+										<td><?= $dr->id_barang ?></td>
+										<td><?= $dr->id_detail_barang ?></td>
+										<td><?= $dr->serial_code ?></td>
+										<td><?= $dr->lokasi ?></td>
+										<td><?= $dr->jumlah ?></td>
+										<td><?= $dr->keterangan?></td>
+										<td><?= $dr->status ?></td>
 											<td>
 												<a onclick=return href="<?= base_url('detail_request/edit/') . $dr->id_detail_request ?>" class="btn btn-warning" title="Edit"><i class="ti ti-pencil"></i></a>
 												<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('detail_request/hapus_data/') . $dr->id_detail_request.'/'.$dr->id_request ?>"class="btn btn-danger" id="deleterequest" title="Hapus" style="cursor: pointer;"><i class="ti ti-trash"></i>

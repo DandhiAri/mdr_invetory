@@ -11,6 +11,7 @@ class Jenis extends CI_Controller
         $this->load->model('Mmain');
         $this->load->helper('url');
     	$this->load->library('form_validation');
+    	$this->load->library('pagination');
 		$this->user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		if (!$this->session->userdata('email')){
 			redirect('auth');
@@ -20,10 +21,37 @@ class Jenis extends CI_Controller
     public function index()
     {
         $data['title'] = 'Jenis';
-        $data['jenis'] = $this->m_jenis->tampil_jenis()->result();
         $data['user'] = $this->user;
-		$render = $this->Mmain->qRead("jenis");
-		$data['Jenis'] = $render->result();
+
+		$config['base_url'] = base_url('jenis/index/');
+		$config['per_page'] = 10;
+		$config['uri_segment'] = 3;
+
+		if ($this->input->post('keywordJEN')){
+			$data['keywordJEN'] = $this->input->post('keywordJEN');
+			$this->session->set_userdata('keywordJEN',$data['keywordJEN']);
+		} elseif ($this->input->post('reset')){
+			$data['keywordJEN'] = null;
+			$this->session->unset_userdata('keywordJEN');
+		} else {
+			$data['keywordJEN'] = $this->session->userdata('keywordJEN');
+		}
+
+		$key = $data['keywordJEN'];
+
+		$this->db->from('jenis');
+
+		if(!empty($key)){
+			$this->db->like('jenis.nama_jenis', $key);
+		}
+
+		$config['total_rows'] = $this->db->count_all_results();
+		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$this->pagination->initialize($config);
+
+		$data['jenis'] = $this->m_jenis->getJenis($data['keywordJEN'], $config['per_page'], $data['page']);
+
+		$data['pagination'] = $this->pagination->create_links();
         $data['content'] = $this->load->view('pages/jenis_barang/jenis', $data, true);
 		$this->load->view('layout/master_layout', $data);
 

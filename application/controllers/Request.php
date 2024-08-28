@@ -41,7 +41,6 @@ class Request extends CI_Controller
 		}
 		$key = $data['keywordReq'];
 
-
 		if (!empty($data['keywordReq'])) {
             $this->db->like('request.nama', $data['keywordReq']);
 			$serial = $this->db->or_like('detail_request.serial_code', $data['keywordReq']);
@@ -85,7 +84,7 @@ class Request extends CI_Controller
         //$data['Request'] = $this->m_data->tampil_datarequest()->result();
 		$render=$this->Mmain->qRead("request");
 		$data['Request'] = $render->result();
-		$data['barang'] = $this->m_detail_barang->getBarang();
+		$data['Barang'] = $this->m_detail_barang->getBarang();
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 
 		$data['content'] = $this->load->view('pages/request/addrequest', $data, true);
@@ -101,7 +100,6 @@ class Request extends CI_Controller
 		
 		$this->form_validation->set_rules('nama', 'Nama PIC', 'required');
         $this->form_validation->set_rules('tgl_request', 'Tanggal Request', 'required');
-        $this->form_validation->set_rules('keterangan', 'Keterangan', 'required');
 
 		if ($this->form_validation->run() == FALSE) {
             $this->session->set_flashdata('failed', validation_errors());
@@ -137,11 +135,7 @@ class Request extends CI_Controller
 			$this->session->set_flashdata('error', 'Ubah data hanya untuk admin!');
 			redirect('dashboard');
 		}
-
-		// Mendapatkan ID dari inputan POST
 		$id = $this->input->post('id_request');
-
-		// Data untuk diubah
 		$data = [
 			'id_request' => $id,
             'nama' => $this->input->post('nama'),
@@ -149,20 +143,13 @@ class Request extends CI_Controller
             'keterangan' => $this->input->post('keterangan'),
 			'status' => $this->input->post('status'),
 		];
-
-		// Menggunakan metode qUpdpart untuk mengubah data
 		$this->Mmain->qUpdpart("request", 'id_request', $id, array_keys($data), array_values($data));
-
-		// Set flash data untuk notifikasi keberhasilan
 		$this->session->set_flashdata('success', 'Data <strong>Berhasil</strong> Diubah!');
-
-		// Redirect ke halaman detail_request
 		redirect('request');
 	}
 
     public function hapus_data($id)
        {
-           //$result = $this->m_data->hapus_request($id);
 		   $result = $this->Mmain->qDel("detail_request","id_request",$id);
 		   $result = $this->Mmain->qDel("request","id_request",$id);
    

@@ -17,24 +17,34 @@
 		<?php endif; ?>
         <div class="ibox-body">
             <form action="<?= base_url('Satuan/proses_ubah') ?>" method="POST">
-                <div class="row">
+				<div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="nama_satuan" class="form-label">Nama Satuan</label>
-                            <input type="text" class="form-control" name="nama_satuan" id="nama_satuan" placeholder="Masukkan nama barang..." value="<?= $Satuan['nama_satuan'] ?>">
-                            <input type="hidden" name="id_satuan" id="id_satuan" value="<?= $Satuan['id_satuan'] ?>">
+                            <label for="tgl_pengajuan" class="form-label">Tanggal Pengajuan</label>
+                            <input type="date" value="<?= $Pengajuan['tgl_pengajuan'] ?>" class="form-control" name="tgl_pengajuan" id="tgl_pengajuan">
                         </div>
                     </div>
                 </div>
-        </div>
-    </div>
-    <div class="row float-right">
-        <div class="col-md-12">
-            <a href="<?= base_url('Satuan') ?>" class="btn btn-danger" id="deleteSatuan" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
-            <button type="submit" class="btn btn-success" id="simpansatuan" style="cursor: pointer;"><i class="ti ti-save"></i> Simpan</button>
-        </div>
-    </div>
-    </form>
-
-</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="mb-3">
+							<label for="invoice" class="form-label">Bukti Invoice Pengajuan</label>
+							<?php if(!empty($Pengajuan['invoice'])){ ?>
+								<br><b>Bukti Invoice Pengajuan terakhir : <b><?= $Pengajuan['invoice'] ?></b></b>
+							<?php }else{ ?>
+								<p>Data ini tidak punya bukti invoice pengajuan.</p>
+							<?php } ?>
+							<input type="file" class="form-control" size="20" name="invoice" id="invoice">
+						</div>
+					</div>
+				</div>
+				<div class="row float-right">
+					<div class="col-md-12">
+						<a href="<?= base_url('Pengajuan') ?>" class="btn btn-danger" id="deleteSatuan" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
+						<button type="submit" class="btn btn-success" id="simpansatuan" style="cursor: pointer;"><i class="ti ti-save"></i> Simpan</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>

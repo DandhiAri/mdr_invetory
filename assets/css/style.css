@@ -1,9 +1,9 @@
 /* Define colors and border-radius */
 :root {
-	--border-color: #3d315b; /* Border color */
+	--border-color: #31565b; /* Border color */
 	--background-color: #266dd3; /* Background color */
-	--list-background-color: #444b6e; /* Background color for list items */
-	--active-list-background-color: #9ab87a; /* Background color for active list item */
+	--list-background-color: #8cd5df; /* Background color for list items */
+	--active-list-background-color: #aae46c; /* Background color for active list item */
 	--border-radius: 5px; /* Border radius */
 }
 
@@ -76,4 +76,16 @@
 #dropdownMenuButton1 {
 	background-color: aqua;
 	font-weight: 900;
+}
+.null-result-container{
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+	display: flex;
+	flex-direction: column;
+}
+.null-result{
+	text-align: center;
+	padding-top: 20px;
+	font-size: 20px;
 }

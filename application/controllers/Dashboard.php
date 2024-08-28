@@ -23,6 +23,7 @@ class Dashboard extends CI_Controller
         $data['request'] = $this->m_dashboard->count('request');
         $data['replace'] = $this->m_dashboard->count('ganti');
         $data['barang'] = $this->m_dashboard->count('barang');
+        $data['pengajuan'] = $this->m_dashboard->count('pengajuan');
         
 		$data['content'] = $this->load->view('dashboard', $data, true);
 		$this->load->view('layout/master_layout',$data);

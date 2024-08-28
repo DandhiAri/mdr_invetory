@@ -29,11 +29,12 @@
                     <th>No</th>
                     <th>ID Detail Request</th>
 					<th>ID Request</th>
-                    <th>Keterangan</th>
                     <th>ID Barang</th>
+                    <th>ID Detail Barang</th>
                     <th>Serial Code</th>
                     <th>Lokasi</th>
 					<th>Jumlah</th>
+                    <th>Keterangan</th>
                     <th>Status</th>
                     <th>Aksi</th>
                 </tr>
@@ -45,11 +46,12 @@
                         <td><?php echo $no++ ?></td>
                         <td><?php echo $dr->id_detail_request ?></td>
 						<td><?php echo $dr->id_request ?></td>
-                        <td><?php echo $dr->keterangan?></td>
                         <td><?php echo $dr->id_barang ?></td>
+                        <td><?php echo $dr->id_detail_barang ?></td>
                         <td><?php echo $dr->serial_code ?></td>
 						<td><?php echo $dr->lokasi ?></td>
                         <td><?php echo $dr->jumlah ?></td>
+                        <td><?php echo $dr->keterangan?></td>
                         <td><?php echo $dr->status ?></td>
                         <td>
 							<a onclick=return href="<?= base_url('detail_request/edit/') . $dr->id_detail_request ?>" class="btn btn-warning" title="Edit"><i class="ti ti-pencil"></i></a>

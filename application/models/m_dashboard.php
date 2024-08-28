@@ -31,6 +31,13 @@ class M_dashboard extends CI_Model{
 
         return $query;
     }
+	function rpnj(){
+		$this->db->select('*');
+        $this->db->form('pengajuan');
+        $this->db->where('id_pengajuan');
+
+        return $this->db->get()->num_rows();
+	}
 
     function rpc() 
     {

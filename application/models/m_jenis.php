@@ -16,6 +16,17 @@
         function tampil_datasatuan(){
         return $this->db->get('satuan');
         }
+		public function getJenis($keyword=null, $limit, $start) {
+			$this->db->select('jenis.*');
+			$this->db->from('jenis');
+			if ($keyword) {
+				$this->db->or_like('jenis.nama_jenis', $keyword);
+			}
+			$this->db->group_by('jenis.id_jenis');
+			$this->db->limit($limit, $start); 
+			$query = $this->db->get();
+			return $query->result();
+		}
         function tambah_jenis_barang($data){
         return $this->db->insert($this->_table->$data);
         }

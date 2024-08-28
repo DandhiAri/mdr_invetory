@@ -8,6 +8,13 @@
                 Form Tambah Barang
             </div>
         </div>
+		<?php if ($this->session->flashdata('failed')): ?>
+			<div class="warn err">
+				<div class="msg" onclick="warnError()">
+					<?php echo $this->session->flashdata('failed'); ?>
+				</div>
+			</div>
+		<?php endif; ?>
         <div class="ibox-body">
             <form action="<?= base_url('Barang/proses_tambah') ?>" method="POST">
                 <div class="row">
@@ -15,12 +22,6 @@
                         <div class="mb-3">
                             <label for="nama_barang" class="form-label">Nama Barang</label>
                             <input type="text" class="form-control" name="nama_barang" id="nama_barang" placeholder="Masukkan nama barang..."> 
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="stok" class="form-label">Quantity</label>
-                            <input type="text" class="form-control" name="stok" id="stok" min="1">
                         </div>
                     </div>
 					 <div class="col-md-6">
@@ -47,16 +48,13 @@
                             </select>
                         </div>
                     </div>
-                        <div class="row">
-                            <div class="row float-right">
-                                <div class="col-md-12" style="margin-left:3em;">
-									<a href="<?= base_url('Barang') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
-                                    <button type="submit" formaction="<?= base_url('Barang/proses_tambah') ?>" class="btn btn-success" id="simpanbarang" style="cursor: pointer;"><i class="ti ti-save"></i> Simpan</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
+				<div class="row float-right">
+					<div class="col-md-12" style="margin-left:3em;">
+						<a href="<?= base_url('Barang') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
+						<button type="submit" formaction="<?= base_url('Barang/proses_tambah') ?>" class="btn btn-success" id="simpanbarang" style="cursor: pointer;"><i class="ti ti-save"></i> Simpan</button>
+					</div>
+				</div>
             </form>
         </div>
     </div>
