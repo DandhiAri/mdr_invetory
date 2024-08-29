@@ -32,9 +32,15 @@
 							<select class="form-control" name="id_barang" id="getIdBarang" required>
 								<option value="" >Pilih Barang</option>
 								<?php foreach ($Barang as $b){ ?>
-									<option value="<?= $b->id_barang ?>"><?= $b->id_barang ?></option>
+									<option value="<?= $b->id_barang ?>"><?= $b->nama_barang ?></option>
 								<?php } ?>
 							</select>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="mb-3">
+							<label for="qtty" class="form-label">Quantity</label>
+							<input type="number" class="form-control" min="0" name="qtty" id="qtty" placeholder="Masukkan Kuantitas...">
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -44,12 +50,7 @@
 								<option value="">Pilih Nomor Seri</option>
 								
 							</select>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="mb-3">
-							<label for="qtty" class="form-label">Quantity</label>
-							<input type="number" class="form-control" min="0" name="qtty" id="qtty" placeholder="Masukkan Kuantitas Quantity...">
+							<input type="text" name="id_detail_barang" id="id_detail_barang" hidden>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -60,14 +61,8 @@
 					</div>
 					<div class="col-md-6">
 						<div class="mb-3">
-							<label for="tgl_kembali" class="form-label">Tgl Kembali</label>
-							<input type="date" class="form-control" name="tgl_kembali" id="tgl_kembali" type="text" class="form-control date" placeholder="Tanggal Kembali...">
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="mb-3">
-							<label for="jam_kembali" class="form-label">Jam Kembali</label>
-							<input type="time" class="form-control" name="jam_kembali" id="jam_kembali" placeholder="Masukkan Jam Kembali...">
+							<label for="wkt_kembali" class="form-label">Tgl Kembali</label>
+							<input type="datetime-local" class="form-control" name="wkt_kembali" id="wkt_kembali" type="text" class="form-control date" placeholder="Tanggal Kembali...">
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -79,7 +74,7 @@
 				</div>
 				<div class="row float-right">
 					<div class="col-md-12">
-						<a href="<?= base_url('Detail_pinjam') ?>" class="btn btn-danger" id="deleteSatuan" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
+						<a href="<?= base_url('pinjam') ?>" class="btn btn-danger" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
 						<button type="submit" formaction="<?= base_url('Detail_pinjam/proses_tambah') ?>" class="btn btn-success" id="simpansatuan" style="cursor: pointer;"><i class="ti ti-save"></i> Simpan</button>
 					</div>
 				</div>

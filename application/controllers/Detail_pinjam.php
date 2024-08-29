@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Detail_pinjam extends CI_Controller
+class Detail_Pinjam extends CI_Controller
 {
 	private $mainTable = 'detail_pinjam';
     /* private $mainPk = 'id_pinjam';  */
@@ -9,7 +9,7 @@ class Detail_pinjam extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        // cek_login();
+		date_default_timezone_set('Asia/Jakarta');
 
         $this->load->model('M_detail_pinjam');
 		$this->load->model('m_pinjam');
@@ -21,27 +21,12 @@ class Detail_pinjam extends CI_Controller
 			redirect('auth');
 		}
 
-		$this->form_validation->set_rules('id_barang', 'ID Barang', 'required');
-		$this->form_validation->set_rules('serial_code', 'Serial Code', 'required');
+		$this->form_validation->set_rules('id_barang', 'Nama Barang', 'required');
+		$this->form_validation->set_rules('id_detail_barang', 'ID Detail Barang','required');
 		$this->form_validation->set_rules('qtty', 'Quantity', 'required|integer');
 		$this->form_validation->set_rules('lokasi', 'Lokasi', 'required');
-		$this->form_validation->set_rules('tgl_kembali', 'Tanggal Kembali', 'required');
-		$this->form_validation->set_rules('jam_kembali', 'Jam Kembali', 'required');
+		$this->form_validation->set_rules('wkt_kembali', 'Waktu Kembali', 'required');
     }
-	
-
-    public function index()
-    {
-        $data['title'] = 'Detail pinjam';
-        $data['Detail_pinjam'] = $this->M_detail_pinjam->tampil_detail();
-		/* echo json_encode($data['Detail_pinjam']); die; */
-		$this->load->view('templates/header', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('detail_pinjam/detail_pinjam', $data);
-        $this->load->view('templates/footer'); 
-    } 
-	
 	
 	public function init($id)
     {
@@ -52,7 +37,6 @@ class Detail_pinjam extends CI_Controller
 
 		$data['content'] = $this->load->view('pages/detail_pinjam/detail_pinjam', $data,true);
 		$this->load->view('layout/master_layout', $data);
-		
     }
 	
     public function tambah_detail($id)
@@ -85,11 +69,11 @@ class Detail_pinjam extends CI_Controller
             $data = array(
 				"id_pinjam" => $this->input->post('id_pinjam'),
 				"id_barang" => $this->input->post('id_barang'),
+				"id_detail_barang" => $this->input->post('id_detail_barang'),
 				"serial_code" => $this->input->post('serial_code'),
 				"qtty" => $this->input->post('qtty'),
 				"lokasi" => $this->input->post('lokasi'),
-				"tgl_kembali" => $this->input->post('tgl_kembali'),
-				"jam_kembali" => $this->input->post('jam_kembali'),
+				"wkt_kembali" => $this->input->post('wkt_kembali'),
 				"keterangan" => $this->input->post('keterangan'),
             );
 
@@ -97,7 +81,7 @@ class Detail_pinjam extends CI_Controller
 			$data['id_detail_pinjam'] = $this->Mmain->autoId("detail_pinjam", "id_detail_pinjam", "DP", "DP" . "001", "001");
 			
 			$this->Mmain->qIns('detail_pinjam', $data);
-			$this->session->set_flashdata('success', 'Data Barang <strong>Berhasil</strong> Ditambahkan!');
+			$this->session->set_flashdata('success', 'Data Detail Pinjam <strong>Berhasil</strong> Ditambahkan!');
 			redirect("pinjam");
         }
     }
@@ -105,12 +89,10 @@ class Detail_pinjam extends CI_Controller
     public function edit_data($id)
     {
         $data['title'] = 'Detail Pinjam';
-		$data['id'] = $id;
-		// $data['Barang'] = $this->Mmain->qRead("barang")->result();
-        $data['Detail_pinjam'] = $this->M_detail_pinjam->edit_data($id);
-		$data['barang'] = $this->M_detail_pinjam->getBarang();
-		$data['detail_barang'] = $this->M_detail_pinjam->getSeri();
 		$data['user'] = $this->user;
+		$data['id'] = $id;
+        $data['Detail_pinjam'] = $this->M_detail_pinjam->edit_data($id);
+		$data['barang'] = $this->Mmain->qRead('barang')->result();
 
 		$data['content'] = $this->load->view('pages/detail_pinjam/edit', $data,true);
 		$this->load->view('layout/master_layout', $data);
@@ -129,34 +111,71 @@ class Detail_pinjam extends CI_Controller
         } else {
             $data = array(
 				"id_barang" => $this->input->post('id_barang'),
+				"id_detail_barang" => $this->input->post('id_detail_barang'),
 				"id_pinjam" => $this->input->post('id_pinjam'),
 				"serial_code" => $this->input->post('serial_code'),
 				"qtty" => $this->input->post('qtty'),
 				"lokasi" => $this->input->post('lokasi'),
-				"tgl_kembali" => $this->input->post('tgl_kembali'),
-				"jam_kembali" => $this->input->post('jam_kembali'),
+				"wkt_kembali" => $this->input->post('wkt_kembali'),
 				'status'=> $this->input->post('status'),
 				"keterangan" => $this->input->post('keterangan'),
             );
 
-			$id_pinjam = $data['id_pinjam'];
-			$this->Mmain->qUpdpart("detail_pinjam", 'id_detail_pinjam', $id, array_keys($data), array_values($data)); // Menambahkan argumen terakhir
+			$query = $this->db->query("
+				SELECT qtty, status 
+				FROM detail_barang 
+				WHERE id_detail_barang = '".$data['id_detail_barang']."'
+			")->row();
+			$query1 = $this->db->query("
+				SELECT status 
+				FROM detail_pinjam
+				WHERE id_detail_pinjam = '".$id."'
+			")->row();
+			if (($query1->status == 'Requested' || $query1->status == 'Rejected') && $data['status'] == 'Finished') {
+				$data1["PIC"] = $this->db->query("SELECT nama_peminjam FROM pinjam WHERE id_pinjam ='".$data['id_pinjam']."'")->row()->nama_peminjam;
+				$data1["status"] = "In-Used";
+				if ($query->qtty !== null && $query->qtty > 0) {
+					$data1["qtty"] = max($query->qtty - $data['qtty'], 0);
+				}
 
-			$this->session->set_flashdata('success', 'Data Barang <strong>Berhasil</strong> Diubah!');
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
+			
+			} elseif ($query1->status == 'Finished' && ($data['status'] == 'Rejected' || $data['status'] == 'Requested')) {
+				$data1["status"] = "Stored";
+				$data1["PIC"] = "";
+				if ($query1->status == "Finished"){
+					$data1["qtty"] = max($query->qtty + $data['qtty'], 0);
+				}
+
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
+			}
+			$this->Mmain->qUpdpart("detail_pinjam", 'id_detail_pinjam', $id, array_keys($data), array_values($data)); 
+
+			$this->session->set_flashdata('success', 'Data Detail Pinjam <strong>Berhasil</strong> Diubah!');
 			redirect("pinjam");
         }
 	}
 
-
-    public function hapus($id,$idPinjam) 
+    public function hapus($id) 
 	{
-		$result = $this->Mmain->qDel("detail_pinjam", "id_detail_pinjam", $id);
-		
-		if ($result) {
-			$this->session->set_flashdata('success', 'Data Barang <strong>Berhasil</strong> Dihapus!');
-			redirect("pinjam");
-		} else {
-			$this->session->set_flashdata('error', 'Data Barang <strong>Gagal</strong> Dihapus!');
+		$data = $this->db->query("SELECT * FROM detail_pinjam WHERE id_detail_pinjam = '".$id."'")->row();
+		$query = $this->db->query("SELECT * FROM detail_barang WHERE id_detail_barang = '".$data->id_detail_barang."'")->row();
+		if ($query) {
+			if ($data->status == "Finished") {
+				$data1 = [];
+				$data1["status"] = "Stored";
+				$data1["PIC"] = "";
+				$data1["qtty"] = $query->qtty + $data->qtty;
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data->id_detail_barang, array_keys($data1), array_values($data1));
+			}
+
+			$result = $this->Mmain->qDel("detail_pinjam", "id_detail_pinjam", $id);
+
+			if (!$result) {
+				$this->session->set_flashdata('success', 'Data Detail Pinjam <strong>Berhasil</strong> Dihapus!');
+			} else {
+				$this->session->set_flashdata('failed', 'Data Detail Pinjam <strong>Gagal</strong> Dihapus!');
+			}
 			redirect("pinjam");
 		}
 	}

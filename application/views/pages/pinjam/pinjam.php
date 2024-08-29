@@ -38,8 +38,7 @@
                         <th>PIC</th>
                         <th>Nama Penerima</th>
                         <th>Nama Pemberi</th>
-                        <th>Tanggal Pinjam</th>
-                        <th>Jam Pinjam</th>
+                        <th>Waktu Pinjam</th>
                         <th>Keterangan</th>
                         <th>Aksi</th>
                     </tr>
@@ -51,10 +50,10 @@
 						$id = json_encode(strtoupper($P->id_pinjam));
                     ?>
                         <tr>
-                            <td><?php echo ++$page ?></td>
+                            <td><?= ++$page ?></td>
 							<td>
 								<div class="dropdown">
-									<button onclick='toggleDiv(<?= $id ?>)' style="cursor:pointer" class='btn btn-primary font-weight-bold btn dropdown-toggle' type="button" id='dropdownMenuButton-<?php echo $P->id_pinjam ?>' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<button onclick='toggleDiv(<?= $id ?>)' style="cursor:pointer" class='btn btn-primary font-weight-bold btn dropdown-toggle' type="button" id='dropdownMenuButton-<?= $P->id_pinjam ?>' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 										Dropdown Detail
 									</button>
 									<script>
@@ -74,34 +73,34 @@
 									</script>
 								</div>
 							</td>
-                            <td><?php echo $P->id_pinjam ?></td>
-                            <td><?php echo $P->nama_peminjam ?></td>
-                            <td><?php echo $P->nama_penerima ?></td>
-                            <td><?php echo $P->nama_pemberi ?></td>
-                            <td><?php echo $P->tgl_pinjam ?></td>
-                            <td><?php echo $P->jam_pinjam ?></td>                            
-							<td><?php echo $P->keterangan ?></td>
+                            <td><?= $P->id_pinjam ?></td>
+                            <td><?= $P->nama_peminjam ?></td>
+                            <td><?= $P->nama_penerima ?></td>
+                            <td><?= $P->nama_pemberi ?></td>
+                            <td><?= $P->wkt_pinjam ?></td>                    
+							<td><?= $P->keterangan ?></td>
                             <td>
                                 <a href="<?= base_url('pinjam/edit_data/') . $P->id_pinjam ?>" class="btn btn-warning" title="Edit pinjam"><i class="ti ti-pencil"></i></a>
                                 <a href="<?= base_url('pinjam/hapus_data/') . $P->id_pinjam ?>" class="btn btn-danger" onclick="alert('Apakah anda yakin ingin menghapus?')" id="deletesatuan" title="Hapus satuan" style="cursor: pointer;"><i class="ti ti-trash"></i></button>
                             </td>
                         </tr>
-						<tr style="display:none;" id="toggleDiv-<?php echo $P->id_pinjam ?>" class=" nested-table-container" width="100%">
+						<tr style="display:none;" id="toggleDiv-<?= $P->id_pinjam ?>" class=" nested-table-container" width="100%">
 							<td colspan='15'>
 								<p style="text-align:center;">
-									<a href="<?= base_url('detail_pinjam/tambah_detail/') . $P->id_pinjam  ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Detail Barang <?= $P->id_pinjam ?> </a>
+									<a href="<?= base_url('detail_pinjam/tambah_detail/') . $P->id_pinjam  ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Detail Pinjam <?= $P->id_pinjam ?> </a>
 								</p>
 								<table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
 									<thead>
 										<tr>
 											<th>No</th>
-											<th>Nama Barang</th>
+											<th>ID Pinjam</th>
+											<th>ID Barang</th>
+											<th>ID Detail Barang</th>
 											<th>Serial Code</th>
+											<th>Waktu Kembali</th>
 											<th>Quantity</th>
 											<th>Lokasi</th>
-											<th>Tanggal Kembali</th>
-											<th>Jam Kembali</th>
-											<th>Status</th>	
+											<th>Status</th>
 											<th>Keterangan</th>
 											<th>Aksi</th>
 										</tr>
@@ -112,15 +111,16 @@
 										foreach ($Detail_pinjam as $dp) {
 										?>
 											<tr>
-												<td><?php echo $no++ ?></td>		
-												<td><?php echo $dp->id_barang ?></td>
-												<td><?php echo $dp->serial_code ?></td>
-												<td><?php echo $dp->qtty ?></td>
-												<td><?php echo $dp->lokasi ?></td>
-												<td><?php echo $dp->tgl_kembali ?></td>
-												<td><?php echo $dp->jam_kembali ?></td>
-												<td><?php echo $dp->status ?></td>
-												<td><?php echo $dp->keterangan ?></td>
+												<td><?= $no++ ?></td>
+												<td><?= $dp->id_pinjam ?></td>
+												<td><?= $dp->id_barang ?></td>
+												<td><?= $dp->id_detail_barang ?></td>
+												<td><?= $dp->serial_code ?></td>
+												<td><?= $dp->wkt_kembali ?></td>              
+												<td><?= $dp->qtty ?></td>
+												<td><?= $dp->lokasi ?></td>
+												<td><?= $dp->status ?></td>
+												<td><?= $dp->keterangan ?></td>
 												
 												<td>
 													<a href="<?= base_url('detail_pinjam/edit_data/') . $dp->id_detail_pinjam  ?>" class="btn btn-warning" title="Edit pinjam"><i class="ti ti-pencil"></i></a>

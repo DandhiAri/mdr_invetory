@@ -96,13 +96,14 @@
 											<th>No</th>
 											<th>ID Detail Replace</th>
 											<th>ID Replace</th>
-											<th>Tanggal Replace</th>
 											<th>ID Barang</th>
+											<th>ID Detail Barang</th>
+											<th>Serial Code</th>
 											<th>Quantity</th>
-											<th>No Seri</th>
 											<th>Lokasi</th>
-											<th>Status</th>
 											<th>Keterangan</th>
+											<th>Status</th>
+											<th>Waktu Update Replace</th>
 											<th>Aksi</th>
 										</tr>
 										<?php 
@@ -114,13 +115,14 @@
 												<td><?= $no++ ?></td>
 												<td><?= $d->id_detail_replace ?></td>
 												<td><?= $d->id_replace ?></td>
-												<td><?= $d->tgl_replace ?></td>
 												<td><?= $d->id_barang ?></td>
-												<td><?= $d->qty_replace ?></td>
+												<td><?= $d->id_detail_barang ?></td>
 												<td><?= $d->serial_code ?></td>
+												<td><?= $d->qtty ?></td>
 												<td><?= $d->lokasi ?></td>
-												<td><?= $d->status ?></td>
 												<td><?= $d->keterangan ?></td>
+												<td><?= $d->status ?></td>
+												<td><?= $d->tgl_replace_update ?></td>
 												<td>
 													<a href="<?= base_url('Detail_Replace/edit_detail/') . $d->id_detail_replace ?>" class="btn btn-warning btn-circle btn-sm"><i class="fa fa-pencil"></i></a>
 													<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('Detail_Replace/del_replace/') . $d->id_detail_replace.'/'.$d->id_replace ?>" class="btn btn-danger btn-circle btn-sm"><i class="fa fa-trash"></i></a>

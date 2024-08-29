@@ -1,6 +1,6 @@
 <?php include 'koneksi.php' ?>
 <div class="page-heading">
-    <h1 class="page-title"></h1>
+    <h1 class="page-title"><?= $title ?></h1>
 </div>
 <div class="page-content fade-in-up">
     <div class="ibox">
@@ -33,12 +33,10 @@
 							<select class="form-control" name="id_barang" id="getIdBarang" required>
 								<option value="" >Pilih Barang</option>
 								<?php 
-									//foreach ($barang as $data) { 
-									$itembarang = mysqli_query($koneksi,"select * from barang");
-									while($b = mysqli_fetch_array($itembarang)){
-									?>
-										<option value="<?= $b['id_barang'] ?>"<?= $b['id_barang'] == $Detail_pinjam['id_barang'] ? "selected":""?>><?= $b['nama_barang'] ?></option>
-									<?php } ?>
+									foreach($barang as $b){
+								?>
+									<option value="<?= $b->id_barang ?>"<?= $b->id_barang == $Detail_pinjam['id_barang'] ? "selected":""?>><?= $b->nama_barang ?></option>
+								<?php } ?>
 							</select>
 						</div>
 					</div>
@@ -47,13 +45,9 @@
 							<label class="form-label">Serial Code</label>
 							<select class="form-control" name="serial_code" id="showSerialCode">
 								<option value="">Pilih Nomor Seri</option>
-								<?php foreach ($detail_barang as $data) { ?>
-									<!--<option value="<?= $data['serial_code'] ?>"<?= $data['serial_code'] == $Detail_pinjam['id_barang'] ? "selected":""?>><?= $data['serial_code'] ?></option>-->
-									<option value="<?= $data['serial_code'] ?>" <?= $data['serial_code'] == $Detail_pinjam['serial_code'] ? "selected" : "" ?>>
-									<?= $data['serial_code'] ?>
-								</option>
-								<?php } ?>
+
 							</select>
+							<input type="text" name="id_detail_barang" id="id_detail_barang" hidden>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -70,14 +64,8 @@
 					</div>
 					<div class="col-md-6">
 						<div class="mb-3">
-							<label for="tgl_kembali" class="form-label">Tanggal Kembali</label>
-							<input type="date" class="form-control" name="tgl_kembali" id="tgl_kembali" type="text" class="form-control date" placeholder="Tanggal Kembali..." value="<?= $Detail_pinjam['tgl_kembali'] ?>">
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="mb-3">
-							<label for="jam_kembali" class="form-label">Jam Kembali</label>
-							<input type="time" class="form-control" name="jam_kembali" id="jam_kembali" placeholder="Masukkan Jam Kembali..." value="<?= $Detail_pinjam['jam_kembali'] ?>">
+							<label for="wkt_kembali" class="form-label">Waktu Kembali</label>
+							<input type="datetime-local" class="form-control" name="wkt_kembali" id="wkt_kembali" type="text" class="form-control date" placeholder="Tanggal Kembali..." value="<?= $Detail_pinjam['wkt_kembali'] ?>">
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -85,9 +73,9 @@
 							<label for="status" class="form-label">Status</label>
 							<select class="form-control" name="status" id="status" placeholder="Pilih Status...">
 								<?php
-								$status_options = ['Dipinjam', 'Finished'];
+								$status_options = ['Requested','Finished','Rejected'];
 								foreach ($status_options as $option) {
-									$selected = ($Detail_Request['status'] == $option) ? 'selected' : '';
+									$selected = ($Detail_pinjam['status'] == $option) ? 'selected' : '';
 									echo "<option value='$option' $selected>$option</option>";
 								}
 								?>
@@ -97,13 +85,13 @@
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="keterangan" class="form-label">Keterangan</label>
-							<input type="text" class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan nama Keterangan..." value="<?= $Detail_pinjam['keterangan'] ?>">
+							<input type="text" class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan Keterangan..." value="<?= $Detail_pinjam['keterangan'] ?>">
 						</div>
 					</div>
 				</div>
 				<div class="row float-right">
 					<div class="col-md-12">
-					
+						<a href="<?= base_url('pinjam') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
 						<button class="btn btn-success" id="btn-save-mtact" style="cursor: pointer;"><i class="ti ti-save"></i> Simpan</button>
 					</div>
 				</div>

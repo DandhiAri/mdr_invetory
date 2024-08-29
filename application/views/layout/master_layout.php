@@ -100,7 +100,15 @@
 			}
 
 			if (id_barang) {
-				var selectedSerialCode = '<?= isset($Detail_Request['id_detail_barang']) ? $Detail_Request['id_detail_barang'] : '' ?>';
+				<?php if ($title == "Detail Replace") { ?>
+					var selectedSerialCode = '<?= isset($Detail_Replace['id_detail_barang']) ? $Detail_Replace['id_detail_barang'] : '' ?>';
+				<?php } elseif ($title == "Detail Request") { ?>
+					var selectedSerialCode = '<?= isset($Detail_Request['id_detail_barang']) ? $Detail_Request['id_detail_barang'] : '' ?>';
+				<?php } elseif ($title == "Detail Pinjam") { ?>
+					var selectedSerialCode = '<?= isset($Detail_pinjam['id_detail_barang']) ? $Detail_pinjam['id_detail_barang'] : '' ?>';
+				<?php } else { ?>
+					var selectedSerialCode = '';
+				<?php } ?>		
 				populateSerialCodes(id_barang, selectedSerialCode);
 			}
 

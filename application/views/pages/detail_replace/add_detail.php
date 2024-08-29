@@ -54,8 +54,8 @@
 					</div>
 					<div class="col-md-6">
 						<div class="mb-3">
-							<label for="qty_replace" class="form-label">Jumlah</label>
-							<input type="number" class="form-control" name="qty_replace" id="qty_replace" placeholder="Masukkan Kuantitas Barang...">
+							<label for="qtty" class="form-label">Jumlah</label>
+							<input type="number" class="form-control" name="qtty" id="qtty" placeholder="Masukkan Kuantitas Barang...">
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -72,6 +72,7 @@
 					</div>
 					<div class="row float-right">
 						<div class="col-md-12">
+							<a href="<?= base_url('replace') ?>" class="btn btn-danger" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
 							<button type="submit" class="btn btn-success" id="simpanreplace" style="cursor: pointer;"><i class="ti ti-save"></i> Simpan</button>
 						</div>
 					</div>

@@ -20,6 +20,13 @@ class Detail_Replace extends CI_Controller
 		if (!$this->session->userdata('email')){
 			redirect('auth');
    		}
+		
+		$this->form_validation->set_rules('id_replace', 'ID Replace', 'required');
+		$this->form_validation->set_rules('tgl_replace_update', 'Waktu Update Replace', 'required');
+		$this->form_validation->set_rules('id_barang', 'ID Barang', 'required');
+		$this->form_validation->set_rules('id_detail_barang', 'ID Detail Barang', 'required');
+		$this->form_validation->set_rules('qtty', 'Quantity Replace', 'required|integer');
+		$this->form_validation->set_rules('lokasi', 'Lokasi', 'required');
 	}
 	
     public function index()
@@ -54,7 +61,7 @@ class Detail_Replace extends CI_Controller
 
 		$data['id'] = $id;
 		$data['Barang'] = $this->Mmain->qRead("barang")->result();
-		$data['Detail_Replace'] = $this->Mmain->qRead("detail_barang")->result();
+		$data['detail_barang'] = $this->Mmain->qRead("detail_barang")->result();
 		$data['user'] = $this->user;
 
 		$data['content'] = $this->load->view('pages/detail_replace/add_detail', $data,true);
@@ -68,11 +75,7 @@ class Detail_Replace extends CI_Controller
             redirect('dashboard');
         }
 
-		$this->form_validation->set_rules('id_replace', 'ID Replace', 'required');
-		$this->form_validation->set_rules('tgl_replace_update', 'Waktu Update Replace', 'required');
-		$this->form_validation->set_rules('id_barang', 'ID Barang', 'required');
-		$this->form_validation->set_rules('qty_replace', 'Quantity Replace', 'required|integer');
-		$this->form_validation->set_rules('lokasi', 'Lokasi', 'required');
+
 
 		if ($this->form_validation->run() == FALSE) {
             $this->session->set_flashdata('failed', validation_errors());
@@ -82,7 +85,8 @@ class Detail_Replace extends CI_Controller
 				"id_replace" => $this->input->post('id_replace'),
 				"tgl_replace_update" => $this->input->post('tgl_replace_update'),
 				"id_barang" => $this->input->post('id_barang'),
-				"qty_replace" => $this->input->post('qty_replace'),
+				"id_detail_barang" => $this->input->post('id_detail_barang'),
+				"qtty" => $this->input->post('qtty'),
 				"serial_code" => $this->input->post('serial_code'),
 				"lokasi" => $this->input->post('lokasi'),
 				"keterangan" => $this->input->post('keterangan'),
@@ -100,102 +104,96 @@ class Detail_Replace extends CI_Controller
     {
         $data['title'] = 'Detail Replace';
         $data['Detail_Replace'] = $this->M_detail_replace->edit_detail($id);
-		$data['barang'] = $this->M_detail_replace->getBarang();
-		$data['detail_barang'] = $this->M_detail_replace->getseri();
+		$data['Barang'] = $this->Mmain->qRead("barang")->result();
+		$data['detail_barang'] = $this->Mmain->qRead("detail_barang")->result();
 		$data['user'] = $this->user;
+		$data['id'] = $id;
 
 		$data['content'] = $this->load->view('pages/detail_replace/edit_detail', $data,true);
 		$this->load->view('layout/master_layout', $data);
     }
- 
-    public function proses_edit_detail()
-	{
-    if ($this->session->login['role'] == 'admin') {
-        $this->session->set_flashdata('error', 'Ubah data hanya untuk admin!');
-        redirect('dashboard');
-    }
 	
-	$id = $this->input->post('id_detail_replace');
-		$serial_code = $this->input->post('serial_code');
-		
-		$detail_barang_data = $this->Mmain->qRead("detail_barang where serial_code = '$serial_code' ", "id_detail_barang");
-		
-		if ($detail_barang_data->num_rows() > 0) {
-			$tgl_replace = $this->input->post('tgl_replace');
-			$id_barang = $this->input->post('id_barang');
-			$qty_replace = $this->input->post('qty_replace');
-			$serial_code = $this->input->post('serial_code');
-			$idDetailBarang = $detail_barang_data->row()->id_detail_barang;
-			$lokasi = $this->input->post('lokasi');
-			$status = $this->input->post('status');
-			$keterangan = $this->input->post('keterangan');
-			
-			if ($status == 'Finished') {
-		$renQty = $this->Mmain->qRead("detail_barang where serial_code = '".$serial_code."' ","qtty, id_detail_barang");
-		
-		 if ($renQty->num_rows() > 0) {
-            foreach ($renQty->result() as $row) {
-                $qty = $row->qtty;
-                $idDetailBarang = $row->id_detail_barang;
-            }
-        }		
-		
-		$valStok = $qty - $qty_replace;
-		
-		$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $idDetailBarang, Array("qtty"), Array($valStok) );
+	public function proses_edit_detail($id){
+		if ($this->session->login['role'] == 'admin') {
+			$this->session->set_flashdata('error', 'Ubah data hanya untuk admin!');
+			redirect('dashboard');
 		}
-		
-		if ($status == 'Rejected') {
-			$renQty = $this->Mmain->qRead("detail_barang where serial_code = '".$serial_code."' ","qtty, id_detail_barang");
-			
-			 if ($renQty->num_rows() > 0) {
-				foreach ($renQty->result() as $row) {
-					$qty = $row->qtty;
-					$idDetailBarang = $row->id_detail_barang;
+
+		$this->form_validation->set_rules('status', 'status', 'required');
+
+		if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('failed', validation_errors());
+			redirect($_SERVER['HTTP_REFERER']);
+        } else {
+            $data = array(
+                'id_replace' => $this->input->post('id_replace'),
+				'tgl_replace_update' => $this->input->post('tgl_replace_update'),
+				'id_barang' => $this->input->post('id_barang'),
+				'qtty' => $this->input->post('qtty'),
+				'serial_code' => $this->input->post('serial_code'),
+				'id_detail_barang' => $this->input->post('id_detail_barang'), 
+				'lokasi' => $this->input->post('lokasi'),
+				'status' => $this->input->post('status'),
+				'keterangan' => $this->input->post('keterangan'),
+            );
+
+			$query = $this->db->query("
+				SELECT qtty, status 
+				FROM detail_barang 
+				WHERE id_detail_barang = '".$data['id_detail_barang']."'
+			")->row();
+			$query1 = $this->db->query("
+				SELECT status 
+				FROM detail_ganti 
+				WHERE id_detail_replace = '".$id."'
+			")->row();
+			if (($query1->status == 'Requested' || $query1->status == 'Rejected') && $data['status'] == 'Finished') {
+				$data1["PIC"] = $this->db->query("SELECT nama FROM ganti WHERE id_replace ='".$data['id_replace']."'")->row()->nama;
+				$data1["status"] = "In-Used";
+				if ($query->qtty !== null && $query->qtty > 0) {
+					$data1["qtty"] = max($query->qtty - $data['qtty'], 0);
 				}
-			}		
+
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
 			
-			$valStok = $qty + $qty_replace;
-			
-			$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $idDetailBarang, Array("qtty"), Array($valStok) );
+			} elseif ($query1->status == 'Finished' && ($data['status'] == 'Rejected' || $data['status'] == 'Requested')) {
+				$data1["status"] = "Stored";
+				$data1["PIC"] = "";
+				if ($query1->status == "Finished"){
+					$data1["qtty"] = max($query->qtty + $data['qtty'], 0);
+				}
+
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
 			}
-			
-			
-    $data = [
-        //'id_detail_replace' => $id,
-        'id_replace' => $this->input->post('id_replace'),
-        'tgl_replace' => $this->input->post('tgl_replace'),
-        'id_barang' => $this->input->post('id_barang'),
-        'qty_replace' => $this->input->post('qty_replace'),
-        'serial_code' => $this->input->post('serial_code'),
-		'id_detail_barang' => $idDetailBarang, 
-        'lokasi' => $this->input->post('lokasi'),
-		'status' => $this->input->post('status'),
-        'keterangan' => $this->input->post('keterangan'),
-    ];
 
-		$tbColUpd = Array("tgl_replace","id_barang","qty_replace","serial_code","id_detail_barang","lokasi","status","keterangan");
-		$tbColVal = Array($tgl_replace,$id_barang,$qty_replace,$serial_code,$idDetailBarang,$lokasi,$status,$keterangan,);
-		$this->Mmain->qUpdpart("detail_ganti", 'id_detail_replace', $id, $tbColUpd, $tbColVal); // Menambahkan argumen terakhir
+			$data['tgl_replace_update'] = date('Y-m-d\TH:i');
+			$this->Mmain->qUpdpart("detail_ganti", 'id_detail_replace', $id, array_keys($data), array_values($data)); 
 
-    if ($this->db->affected_rows() > 0) {
-        $this->session->set_flashdata('success', 'Jenis Barang <strong>Berhasil</strong> Diubah!');
-        redirect("replace");
-    } else {
-        $this->session->set_flashdata('error', 'Jenis Barang <strong>Gagal</strong> Diubah!');
-        redirect("replace");
-    }
-}
-}
-
+			$this->session->set_flashdata('success', 'Data Detail Replace <strong>Berhasil</strong> Diubah!');
+			redirect("replace");
+        }
+	}
    public function del_replace($id,$idBarang)
-{
-    $result = $this->Mmain->qDel("detail_ganti", "id_detail_replace", $id);
-    if ($result) {
-        redirect("replace");
-    } else {
-        $this->session->set_flashdata('error', 'Jenis Barang <strong>Gagal</strong> Dihapus!');
-        redirect("replace");
-    }
-}
+	{
+		$data = $this->db->query("SELECT * FROM detail_ganti WHERE id_detail_replace = '".$id."'")->row();
+		$query = $this->db->query("SELECT * FROM detail_barang WHERE id_detail_barang = '".$data->id_detail_barang."'")->row();
+		if ($query) {
+			if ($data->status == "Finished") {
+				$data1 = [];
+				$data1["status"] = "Stored";
+				$data1["PIC"] = "";
+				$data1["qtty"] = $query->qtty + $data->qtty;
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data->id_detail_barang, array_keys($data1), array_values($data1));
+			}
+
+			$result = $this->Mmain->qDel("detail_ganti", "id_detail_replace", $id);
+
+			if(!$result){
+				$this->session->set_flashdata('success', 'Data Detail Replace <strong>Berhasil</strong> Dihapus!');
+			} else {
+				$this->session->set_flashdata('error', 'Data Detail Replace <strong>Gagal</strong> Dihapus!');
+			}
+		}
+		redirect("replace");
+	}
 }
