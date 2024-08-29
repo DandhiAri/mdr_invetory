@@ -47,7 +47,12 @@
 							</div>
 						</div>
 					</div>
-
+					<div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="qtty" class="form-label">Quantity</label>
+                            <input type="number" min="0" value="<?= $Detail_Request['qtty'] ?>" class="form-control" name="qtty" id="qtty" placeholder="Isi Quantity...">
+                        </div>
+                    </div>
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="showSerialCode" class="form-label">Serial Number</label>
@@ -55,6 +60,7 @@
 								<option value="">Pilih Nomor Seri</option>
 								
 							</select>
+							<input type="text" name="id_detail_barang" id="id_detail_barang" hidden>
 						</div>
 					</div>
 					<div class="col-md-6">

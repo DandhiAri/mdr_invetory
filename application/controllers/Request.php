@@ -7,6 +7,8 @@ class Request extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+		date_default_timezone_set('Asia/Jakarta');
+
         $this->load->model('m_data');
         $this->load->model('Mmain');
 		$this->load->model('m_detail_barang');
@@ -114,7 +116,7 @@ class Request extends CI_Controller
 			$data['id_request'] = $id;
 			$this->Mmain->qIns('request', $data);
 
-            $this->session->set_flashdata('success', 'Data Barang sudah ditambahkan');
+            $this->session->set_flashdata('success', 'Data Request sudah ditambahkan');
 			redirect('detail_request/tambah/'.$id);
         }
     }
@@ -144,21 +146,32 @@ class Request extends CI_Controller
 			'status' => $this->input->post('status'),
 		];
 		$this->Mmain->qUpdpart("request", 'id_request', $id, array_keys($data), array_values($data));
-		$this->session->set_flashdata('success', 'Data <strong>Berhasil</strong> Diubah!');
+		$this->session->set_flashdata('success', 'Data Request <strong>Berhasil</strong> Diubah!');
 		redirect('request');
 	}
 
     public function hapus_data($id)
-       {
-		   $result = $this->Mmain->qDel("detail_request","id_request",$id);
-		   $result = $this->Mmain->qDel("request","id_request",$id);
-   
-           if ($result) {
-               $this->session->set_flashdata('success', 'Data <strong>Berhasil</strong> Dihapus!');
-               redirect('request');
-           } else {
-               $this->session->set_flashdata('error', 'Data <strong>Gagal</strong> Dihapus!');
-               redirect('request');
-           }
-       }
+	{
+		$data = $this->db->query("SELECT * FROM detail_request WHERE id_request = '".$id."'")->row();
+		$query = $this->db->query("SELECT * FROM detail_barang WHERE id_detail_barang = '".$data->id_detail_barang."'")->row();
+		if ($query) {
+			if ($data->status == "Finished") {
+				$data1 = [];
+				$data1["status"] = "Stored";
+				$data1["PIC"] = "";
+				$data1["qtty"] = $query->qtty + $data->qtty;
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data->id_detail_barang, array_keys($data1), array_values($data1));
+			}
+
+			$this->Mmain->qDel("detail_request", "id_request", $id);
+			$this->Mmain->qDel("request", "id_request", $id);
+
+			if(!$result){
+				$this->session->set_flashdata('success', 'Data Request <strong>Berhasil</strong> Dihapus!');
+			} else {
+				$this->session->set_flashdata('error', 'Data Request <strong>Gagal</strong> Dihapus!');
+			}
+		}
+		redirect("request");
+	}
 }

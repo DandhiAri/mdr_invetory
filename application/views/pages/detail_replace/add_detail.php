@@ -27,8 +27,8 @@
 					</div>
 					<div class="col-md-6">
 						<div class="mb-3">
-							<label for="tgl_replace" class="form-label">Tanggal Replace</label>
-							<input type="date" class="form-control" name="tgl_replace" id="tgl_replace" value="<?= date('Y-m-d')?>">
+							<label for="tgl_replace_update" class="form-label">Waktu Update Replace</label>
+							<input type="datetime-local" class="form-control" name="tgl_replace_update" id="tgl_replace_update" value="<?= date('Y-m-d\TH:i') ?>">
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -49,6 +49,7 @@
 								<option value="">Pilih Nomor Seri</option>
 								
 							</select>
+							<input type="text" name="id_detail_barang" id="id_detail_barang" hidden>
 						</div>
 					</div>
 					<div class="col-md-6">

@@ -7,6 +7,8 @@ class Detail_Replace extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+		date_default_timezone_set('Asia/Jakarta');
+
         $this->load->model('M_detail_replace');
 		$this->load->model('m_detail_barang');
 		$this->load->database();
@@ -67,7 +69,7 @@ class Detail_Replace extends CI_Controller
         }
 
 		$this->form_validation->set_rules('id_replace', 'ID Replace', 'required');
-		$this->form_validation->set_rules('tgl_replace', 'Tanggal Replace', 'required');
+		$this->form_validation->set_rules('tgl_replace_update', 'Waktu Update Replace', 'required');
 		$this->form_validation->set_rules('id_barang', 'ID Barang', 'required');
 		$this->form_validation->set_rules('qty_replace', 'Quantity Replace', 'required|integer');
 		$this->form_validation->set_rules('lokasi', 'Lokasi', 'required');
@@ -78,7 +80,7 @@ class Detail_Replace extends CI_Controller
         } else {
             $data = array(
 				"id_replace" => $this->input->post('id_replace'),
-				"tgl_replace" => $this->input->post('tgl_replace'),
+				"tgl_replace_update" => $this->input->post('tgl_replace_update'),
 				"id_barang" => $this->input->post('id_barang'),
 				"qty_replace" => $this->input->post('qty_replace'),
 				"serial_code" => $this->input->post('serial_code'),

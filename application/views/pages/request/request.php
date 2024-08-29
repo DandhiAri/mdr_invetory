@@ -39,7 +39,6 @@
 						<th>PIC</th>
 						<th>Tanggal</th>
 						<th>Keterangan</th>
-						<th>Status</th>
 						<th>Aksi</th>
 					</tr>
 					<?php 
@@ -75,7 +74,6 @@
 							<td><?php echo $r->nama?></td>
 							<td><?php echo $r->tgl_request ?></td>
 							<td><?php echo $r->keterangan ?></td>
-							<td><?php echo $r->status ?></td>
 							<td>
 								<a onclick=return href="<?= base_url('request/edit/') . $r->id_request ?>" class="btn btn-warning" title="Edit"><i class="ti ti-pencil"></i></a>
 								<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('request/hapus_data/') . $r->id_request ?>"class="btn btn-danger" id="deleterequest" title="Hapus" style="cursor: pointer;"><i class="ti ti-trash"></i></button>
@@ -96,9 +94,10 @@
 									<th>ID Detail Barang</th>
 									<th>Serial Code</th>
 									<th>Lokasi</th>
-									<th>Jumlah</th>
+									<th>Quantity</th>
 									<th>Keterangan</th>
 									<th>Status</th>
+									<th>Waktu Update Request</th>
 									<th>Aksi</th>
 								</tr>
 									<?php 
@@ -114,9 +113,10 @@
 										<td><?= $dr->id_detail_barang ?></td>
 										<td><?= $dr->serial_code ?></td>
 										<td><?= $dr->lokasi ?></td>
-										<td><?= $dr->jumlah ?></td>
+										<td><?= $dr->qtty ?></td>
 										<td><?= $dr->keterangan?></td>
 										<td><?= $dr->status ?></td>
+										<td><?= $dr->tgl_request_update ?></td>
 											<td>
 												<a onclick=return href="<?= base_url('detail_request/edit/') . $dr->id_detail_request ?>" class="btn btn-warning" title="Edit"><i class="ti ti-pencil"></i></a>
 												<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('detail_request/hapus_data/') . $dr->id_detail_request.'/'.$dr->id_request ?>"class="btn btn-danger" id="deleterequest" title="Hapus" style="cursor: pointer;"><i class="ti ti-trash"></i>

@@ -7,6 +7,7 @@ class Detail_request extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+		date_default_timezone_set('Asia/Jakarta');
         $this->load->model('m_detail_req');
 		$this->load->model('m_detail_barang');
         $this->load->model('Mmain');
@@ -19,6 +20,7 @@ class Detail_request extends CI_Controller
 		$this->form_validation->set_rules('id_request', 'ID Request', 'required');
 		$this->form_validation->set_rules('id_barang', 'ID Barang', 'required');
 		$this->form_validation->set_rules('lokasi', 'Lokasi', 'required');
+		$this->form_validation->set_rules('qtty', 'Quantity', 'required');
 	}
 	
     public function index()
@@ -65,6 +67,7 @@ class Detail_request extends CI_Controller
             $this->session->set_flashdata('error', 'Tambah data hanya untuk admin!');
             redirect('dashboard');
 		}
+		$this->form_validation->set_rules('tgl_request_update', 'Update Tanggal Request', 'required');
 
 		if ($this->form_validation->run() == FALSE) {
             $this->session->set_flashdata('failed', validation_errors());
@@ -75,16 +78,17 @@ class Detail_request extends CI_Controller
 				"keterangan" => $this->input->post('keterangan'),
 				"id_barang" => $this->input->post('id_barang'),
 				"id_detail_barang" => $this->input->post('id_detail_barang'),
+				"tgl_request_update" => $this->input->post('tgl_request_update'),
 				"serial_code" => $this->input->post('serial_code'),
 				"lokasi" => $this->input->post('lokasi'),
-				"jumlah" => $this->input->post('jumlah'),
+				"qtty" => $this->input->post('qtty'),
             );
 			$id_detail_request = $this->Mmain->autoId("detail_request","id_detail_request","DRQ","DRQ"."001","001");
 			$serial = $data['serial_code'];
 			$data['id_detail_request'] = $id_detail_request;
 			$this->Mmain->qIns('detail_request', $data);
 			
-			$this->session->set_flashdata('success', 'Data <strong>Berhasil</strong> Ditambahkan!');
+			$this->session->set_flashdata('success', 'Data Detail Request <strong>Berhasil</strong> Ditambahkan!');
 			redirect("request");
         }
     }
@@ -118,28 +122,46 @@ class Detail_request extends CI_Controller
                 "id_request" => $this->input->post('id_request'),
 				"keterangan" => $this->input->post('keterangan'),
 				"id_barang" => $this->input->post('id_barang'),
+				"id_detail_barang" => $this->input->post('id_detail_barang'),
 				"serial_code" => $this->input->post('serial_code'),
 				"lokasi" => $this->input->post('lokasi'),
-				"jumlah" => $this->input->post('jumlah'),
+				"qtty" => $this->input->post('qtty'),
 				"status" => $this->input->post('status'),
             );
-			
-			if ($data['status'] == 'Finished') {
-				$id_detail_barang = $this->db->query("SELECT id_detail_barang FROM detail_barang WHERE serial_code ='".$data['serial_code']."'")->row()->id_detail_barang;
+
+			$query = $this->db->query("
+				SELECT qtty, status 
+				FROM detail_barang 
+				WHERE id_detail_barang = '".$data['id_detail_barang']."'
+			")->row();
+			$query1 = $this->db->query("
+				SELECT status 
+				FROM detail_request 
+				WHERE id_detail_request = '".$id."'
+			")->row();
+			if (($query1->status == 'Requested' || $query1->status == 'Rejected') && $data['status'] == 'Finished') {
 				$data1["PIC"] = $this->db->query("SELECT nama FROM request WHERE id_request ='".$data['id_request']."'")->row()->nama;
 				$data1["status"] = "In-Used";
-				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $id_detail_barang, array_keys($data1), array_values($data1) );
-			}
-		
-			if ($data['status'] == 'Rejected') {
+				if ($query->qtty !== null && $query->qtty > 0) {
+					$data1["qtty"] = max($query->qtty - $data['qtty'], 0);
+				}
+
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
+			
+			} elseif ($query1->status == 'Finished' && ($data['status'] == 'Rejected' || $data['status'] == 'Requested')) {
 				$data1["status"] = "Stored";
+				$data1["PIC"] = "";
+				if ($query1->status == "Finished"){
+					$data1["qtty"] = max($query->qtty + $data['qtty'], 0);
+				}
 
-				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $idDetailBarang, array_keys($data1), array_values($data1) );
-			}  
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
+			}
 
+			$data['tgl_request_update'] = date('Y-m-d\TH:i');
 			$this->Mmain->qUpdpart("detail_request", 'id_detail_request', $id, array_keys($data), array_values($data)); 
 
-			$this->session->set_flashdata('success', 'Data <strong>Berhasil</strong> Diubah!');
+			$this->session->set_flashdata('success', 'Data Detail Request <strong>Berhasil</strong> Diubah!');
 			redirect("request");
         }
 	}
@@ -148,15 +170,25 @@ class Detail_request extends CI_Controller
 
     public function hapus_data($id,$idRequest)
 	{
-		//$result = $this->m_detail_req->hapus_request($id);
-		$result=$this->Mmain->qDel("Detail_request","id_detail_request",$id);
+		$data = $this->db->query("SELECT * FROM detail_request WHERE id_detail_request = '".$id."'")->row();
+		$query = $this->db->query("SELECT * FROM detail_barang WHERE id_detail_barang = '".$data->id_detail_barang."'")->row();
+		if ($query) {
+			if ($data->status == "Finished") {
+				$data1 = [];
+				$data1["status"] = "Stored";
+				$data1["PIC"] = "";
+				$data1["qtty"] = $query->qtty + $data->qtty;
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data->id_detail_barang, array_keys($data1), array_values($data1));
+			}
 
-		if (!$render) {
-			$this->session->set_flashdata('success', 'Data <strong>Berhasil</strong> Dihapus!');
-			redirect("request");
-		} else {
-			$this->session->set_flashdata('failed', 'Data <strong>Gagal</strong> Dihapus!');
-			redirect("request");
+			$result=$this->Mmain->qDel("Detail_request","id_detail_request",$id);
+
+			if(!$result){
+				$this->session->set_flashdata('success', 'Data Detail Request <strong>Berhasil</strong> Dihapus!');
+			} else {
+				$this->session->set_flashdata('error', 'Data Detail Request <strong>Gagal</strong> Dihapus!');
+			}
 		}
+		redirect("request");
 	}
 }

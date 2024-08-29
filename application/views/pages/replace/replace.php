@@ -23,6 +23,19 @@
         </div>
        
 		<div class="ibox-body">
+			<?php if ($this->session->flashdata('success')): ?>
+				<div class="warn succ">
+					<div class="msg" onclick="warnError()">
+						<?php echo $this->session->flashdata('success'); ?>
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('failed')):?>
+				<div class="warn err">
+					<div class="msg" onclick="warnError()">
+						<?php echo $this->session->flashdata('failed'); ?>
+					</div>
+				</div>
+			<?php endif;?>
 			<table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
 				<thead>
 					<tr>
@@ -31,7 +44,6 @@
 						<th>ID Replace</th>
 						<th>PIC</th>
 						<th>Tanggal Replace</th>
-						<th>Status</th>
 						<th>Keterangan</th>
 						<th>Aksi</th>
 					</tr>
@@ -65,10 +77,8 @@
 								</div>
 							</td>
 							<td><?= $rp->id_replace ?></td>
-							<!-- <td><?= $rp->id_barang ?></td>	 -->
 							<td><?= $rp->nama ?></td>
 							<td><?= $rp->tgl_replace ?></td>
-							<td><?= $rp->status ?></td>
 							<td><?= $rp->keterangan ?></td>
 							<td>
 								<a href="<?= base_url('Replace/edit_replace/') . $rp->id_replace ?>" class="btn btn-warning btn-circle btn-sm"><i class="fa fa-pencil"></i></a>

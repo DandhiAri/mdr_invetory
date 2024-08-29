@@ -80,7 +80,7 @@
 							<td><?= $b->id_barang ?></td>
 							<td><?= $b->nama_barang ?></td>
 							<td><?= $b->nama_jenis ?></td>
-							<td><?= $b->stored_count; ?></td>
+							<td><?= $b->detail_count; ?></td>
 							<td><?= $b->nama_satuan ?></td>
 
 							<td>

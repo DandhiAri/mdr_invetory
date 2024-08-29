@@ -5,7 +5,7 @@
     <div class="ibox">
         <div class="ibox-head">
             <div class="ibox-title">
-                Form Edit Detail Request
+                Form Tambah Detail Request
             </div>
         </div>
 		<?php if ($this->session->flashdata('failed')): ?>
@@ -32,6 +32,12 @@
                     </div>
 					<div class="col-md-6">
                         <div class="mb-3">
+                            <label for="tgl_request_update" class="form-label">Waktu Update Request</label>
+                            <input type="datetime-local"  value="<?= date('Y-m-d\TH:i') ?>" class="form-control" name="tgl_request_update" id="tgl_request_update" placeholder="Isi tgl_request_update...">
+                        </div>
+                    </div>
+					<div class="col-md-6">
+                        <div class="mb-3">
                             <label  class="form-label">ID Barang</label>
 							<div class="input-group">
 								<select class="form-control" name="id_barang" id="getIdBarang" required>
@@ -43,6 +49,12 @@
 							</div>
 						</div>
 					</div>
+					<div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="qtty" class="form-label">Quantity</label>
+                            <input type="number" class="form-control" name="qtty" id="qtty" placeholder="Isi Quantity...">
+                        </div>
+                    </div>
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label">Serial Number</label>

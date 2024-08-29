@@ -71,12 +71,14 @@
 						success: function(serialCodes) {
 							$serialCodeSelect.empty();
 							$serialCodeSelect.append('<option value="">Pilih Nomor Seri</option>');
-
+							
 							if (serialCodes.length > 0) {
 								$.each(serialCodes, function(index, serialCode) {
-									var isSelected = serialCode.serial_code == selectedSerialCode ? "selected" : "";
-									var displayValue = serialCode.serial_code ? serialCode.serial_code : "TIDAK ADA SERIAL CODE";
-									$serialCodeSelect.append('<option value="' + serialCode.serial_code + '" ' + isSelected + '>' + serialCode.id_detail_barang + "|" + displayValue + '</option>');
+									if (serialCode.qtty > 0 || selectedSerialCode == serialCode.id_detail_barang ){
+										var isSelected = serialCode.id_detail_barang == selectedSerialCode ? "selected" : "";
+										var displayValue = serialCode.serial_code ? serialCode.serial_code : "TIDAK ADA SERIAL CODE";
+										$serialCodeSelect.append('<option value="' + serialCode.serial_code + '" ' + isSelected + '>' + serialCode.id_detail_barang + "|" + displayValue + '</option>');
+									}
 								});
 							} else {
 								$serialCodeSelect.append('<option value="">Tidak ada serial code</option>');
@@ -98,7 +100,7 @@
 			}
 
 			if (id_barang) {
-				var selectedSerialCode = '<?= isset($Detail_Request['serial_code']) ? $Detail_Request['serial_code'] : '' ?>';
+				var selectedSerialCode = '<?= isset($Detail_Request['id_detail_barang']) ? $Detail_Request['id_detail_barang'] : '' ?>';
 				populateSerialCodes(id_barang, selectedSerialCode);
 			}
 

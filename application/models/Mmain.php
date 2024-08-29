@@ -89,7 +89,7 @@ class mMain  extends CI_Model
         $this->db->select('barang.*, 
 			jenis.nama_jenis, 
 			satuan.nama_satuan, 
-			COUNT(detail_barang.id_barang) AS detail_count,
+			SUM(detail_barang.qtty) AS detail_count,
 			SUM(CASE WHEN detail_barang.status = "Stored" THEN 1 ELSE 0 END) AS stored_count'
 		);
         $this->db->from('barang');
@@ -152,7 +152,7 @@ class mMain  extends CI_Model
 
 	public function get_serial_codes($id_barang) {
         
-        $this->db->select('serial_code, id_detail_barang, status');
+        $this->db->select('serial_code, id_detail_barang, qtty, status');
         $this->db->from('detail_barang');
         $this->db->where('id_barang', $id_barang);
         $query = $this->db->get();
