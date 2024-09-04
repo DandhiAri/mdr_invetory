@@ -20,19 +20,19 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="nama" class="form-label">PIC</label>
+                            <label for="nama" class="form-label">Nama PIC Request</label>
                             <input type="text" class="form-control" name="nama" id="nama" placeholder="Masukkan nama..."> 
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="tgl_request" class="form-label">Tanggal</label>
+                            <label for="tgl_request" class="form-label">Tanggal Request</label>
                             <input type="date" class="form-control" name="tgl_request" id="tgl_request" >
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="keterangan" class="form-label">Keterangan</label>
+                            <label for="keterangan" class="form-label">Keterangan Request</label>
                             <input type="text" class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan keterangan...">
                         </div>
 					</div>

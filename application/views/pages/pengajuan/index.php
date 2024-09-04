@@ -71,7 +71,7 @@
 								</td>
 								<td>
 									<a href="<?= base_url('pengajuan/edit_data/' . $S->id_pengajuan) ?>" class="btn btn-warning" title="Edit satuan"><i class="ti ti-pencil"></i></a>
-									<a href="<?= base_url('pengajuan/hapus_data/' . $S->id_pengajuan) ?>" class="btn btn-danger" onclick="alert('Apakah anda yakin ingin menghapus?')" id="deletesatuan" title="Hapus satuan" style="cursor: pointer;"><i class="ti ti-trash"></i></button>
+									<a href="<?= base_url('pengajuan/hapus_data/' . $S->id_pengajuan) ?>" class="btn btn-danger" onclick="confirm('Apakah anda yakin ingin menghapus?')" id="deletesatuan" title="Hapus satuan" style="cursor: pointer;"><i class="ti ti-trash"></i></button>
 								</td>
 							</tr>
 					<?php } ?>	

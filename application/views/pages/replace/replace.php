@@ -44,6 +44,8 @@
 						<th>ID Replace</th>
 						<th>PIC</th>
 						<th>Tanggal Replace</th>
+						<th>Status Replace</th>
+						<th>Status Action</th>
 						<th>Keterangan</th>
 						<th>Aksi</th>
 					</tr>
@@ -79,16 +81,21 @@
 							<td><?= $rp->id_replace ?></td>
 							<td><?= $rp->nama ?></td>
 							<td><?= $rp->tgl_replace ?></td>
+							<td><?= $rp->status ?></td>
+							<td>
+								<a href="<?= base_url('Replace/accept/') . $rp->id_replace ?>" title="Finished/Menerima replace semua barang" class="btn btn-success"><i class="fa fa-check"></i></a>
+								<a href="<?= base_url('Replace/reject/') . $rp->id_replace ?>" title="Rejected/Menolak replace semua barang" class="btn btn-danger"><i class="fa fa-remove"></i></a>
+							</td>
 							<td><?= $rp->keterangan ?></td>
 							<td>
-								<a href="<?= base_url('Replace/edit_replace/') . $rp->id_replace ?>" class="btn btn-warning btn-circle btn-sm"><i class="fa fa-pencil"></i></a>
-								<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('Replace/hapus_replace/') . $rp->id_replace ?>" class="btn btn-danger btn-circle btn-sm"><i class="fa fa-trash"></i></a>
+								<a href="<?= base_url('Replace/edit_replace/') . $rp->id_replace ?>" class="btn btn-warning"><i class="fa fa-pencil"></i></a>
+								<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('Replace/hapus_replace/') . $rp->id_replace ?>" class="btn btn-danger"><i class="fa fa-trash"></i></a>
 							</td>
 						</tr>
 						<tr style="display:none;" id="toggleDiv-<?php echo $rp->id_replace ?>" class=" nested-table-container" width="100%">
 							<td colspan='20'>
 								<p style="text-align:center;">
-									<a href="<?= base_url('detail_replace/tambah_data_detail/'). $rp->id_replace  ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Detail Barang <?= $rp->id_replace ?> </a>
+									<a href="<?= base_url('detail_replace/tambah_data_detail/'). $rp->id_replace  ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Data Detail Replace <?= $rp->id_replace ?> </a>
 								</p>
 								<table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
 									<thead>
@@ -124,8 +131,8 @@
 												<td><?= $d->status ?></td>
 												<td><?= $d->tgl_replace_update ?></td>
 												<td>
-													<a href="<?= base_url('Detail_Replace/edit_detail/') . $d->id_detail_replace ?>" class="btn btn-warning btn-circle btn-sm"><i class="fa fa-pencil"></i></a>
-													<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('Detail_Replace/del_replace/') . $d->id_detail_replace.'/'.$d->id_replace ?>" class="btn btn-danger btn-circle btn-sm"><i class="fa fa-trash"></i></a>
+													<a href="<?= base_url('Detail_Replace/edit_detail/') . $d->id_detail_replace ?>" class="btn btn-warning"><i class="fa fa-pencil"></i></a>
+													<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('Detail_Replace/del_replace/') . $d->id_detail_replace.'/'.$d->id_replace ?>" class="btn btn-danger"><i class="fa fa-trash"></i></a>
 												</td>
 											</tr>
 										<?php 

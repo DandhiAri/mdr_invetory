@@ -39,14 +39,13 @@
 					<div class="col-md-6">
                         <div class="mb-3">
                             <label  class="form-label">ID Barang</label>
-							<div class="input-group">
-								<select class="form-control" name="id_barang" id="getIdBarang" required>
-									<option value="" >Pilih Barang</option>
-									<?php foreach ($Barang as $b){ ?>
-										<option value="<?= $b->id_barang ?>"><?= $b->nama_barang ?></option>
-									<?php } ?>
-								</select>
-							</div>
+							<select class="form-control" name="id_barang" id="getIdBarang" required>
+								<option value="" >Pilih Barang</option>
+								
+								<?php foreach ($Barang as $b){ ?>
+									<option value="<?= $b->id_barang ?>"><?= $b->nama_barang ?></option>
+								<?php } ?>
+							</select>
 						</div>
 					</div>
 					<div class="col-md-6">

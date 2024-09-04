@@ -2,6 +2,21 @@
  
 class M_detail_replace extends CI_Model
 {
+	public function changeStatusReplace($id){
+		$status_get = $this->db->query('SELECT status FROM detail_ganti WHERE id_replace = "'.$id.'"')->result();
+		foreach ($status_get as $s){
+			$statuses[]= $s->status;
+		}
+		if (in_array("Requested", $statuses)) {
+			$stats['status'] = "Requested";
+		} elseif (count(array_unique($statuses)) === 1 && $statuses[0] === "Rejected") {
+			$stats['status'] = "Rejected";
+		} else {
+			$stats['status'] = "Finished";
+		}
+		$this->Mmain->qUpdpart("request", "id_request", $id, array_keys($stats), array_values($stats));
+	}
+	
     function tampil_detail(){
         $query = $this->db->query("SELECT det.id_detail_replace, det.nama_replace, det.tgl_replace, det.id_barang, det.jml_replace, det.qty_replace, det.serial_code, det.status, det.keterangan 
         FROM detail_ganti det INNER JOIN barang b ON det.id_barang = b.id_barang"); //WHERE det.id_barang = '$id'

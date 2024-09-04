@@ -104,6 +104,7 @@ class mMain  extends CI_Model
 			$this->db->or_like('jenis.nama_jenis', $keyword);
 		}
 		$this->db->group_by('barang.id_barang, detail_barang.id_barang');
+		$this->db->order_by('id_barang', 'ASC');
         $this->db->limit($limit, $start); 
         $query = $this->db->get();
         return $query->result();
@@ -115,6 +116,7 @@ class mMain  extends CI_Model
 		$this->db->join('detail_request', 'request.id_request = detail_request.id_request', 'left');
 		if ($keyword) {
 			$this->db->like('detail_request.serial_code', $keyword);
+			$this->db->or_like('detail_request.id_detail_barang', $keyword);
 			$this->db->or_like('request.nama', $keyword);
 		}
 		$this->db->group_by('request.id_request, detail_request.id_request');

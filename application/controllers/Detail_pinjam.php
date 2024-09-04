@@ -131,9 +131,14 @@ class Detail_Pinjam extends CI_Controller
 				FROM detail_pinjam
 				WHERE id_detail_pinjam = '".$id."'
 			")->row();
+			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$query->id_barang.'"')->row();
+
 			if (($query1->status == 'Requested' || $query1->status == 'Rejected') && $data['status'] == 'Finished') {
-				$data1["PIC"] = $this->db->query("SELECT nama_peminjam FROM pinjam WHERE id_pinjam ='".$data['id_pinjam']."'")->row()->nama_peminjam;
-				$data1["status"] = "In-Used";
+				if($satuanBarang === "16"){
+					$data1["PIC"] = $this->db->query("SELECT nama_peminjam FROM pinjam WHERE id_pinjam ='".$data['id_pinjam']."'")->row()->nama_peminjam;
+					$data1["status"] = "In-Used";
+					$data1["lokasi"] = $data['lokasi'];
+				}
 				if ($query->qtty !== null && $query->qtty > 0) {
 					$data1["qtty"] = max($query->qtty - $data['qtty'], 0);
 				}
@@ -141,12 +146,24 @@ class Detail_Pinjam extends CI_Controller
 				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
 			
 			} elseif ($query1->status == 'Finished' && ($data['status'] == 'Rejected' || $data['status'] == 'Requested')) {
-				$data1["status"] = "Stored";
-				$data1["PIC"] = "";
+				if($satuanBarang === "16"){
+					$data1["status"] = "Stored";
+					$data1["PIC"] = "";
+					$data1["lokasi"] = "IT-STOCKROOM";
+				}
 				if ($query1->status == "Finished"){
 					$data1["qtty"] = max($query->qtty + $data['qtty'], 0);
 				}
 
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
+			} elseif ($data['status'] == 'Finished' && $query1->status == 'Finished' ){
+				if($satuanBarang === "16"){
+					$data1["lokasi"] = $data['lokasi'];
+				}
+				if ($query->qtty !== null && $query->qtty > 0 && $query->qtty !== $data['qtty']) {
+					$awalNilai = max($query->qtty + $query1->qtty, 0);
+					$data1["qtty"] = max($awalNilai - $data['qtty'], 0);
+				}
 				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
 			}
 			$this->Mmain->qUpdpart("detail_pinjam", 'id_detail_pinjam', $id, array_keys($data), array_values($data)); 
@@ -160,24 +177,25 @@ class Detail_Pinjam extends CI_Controller
 	{
 		$data = $this->db->query("SELECT * FROM detail_pinjam WHERE id_detail_pinjam = '".$id."'")->row();
 		$query = $this->db->query("SELECT * FROM detail_barang WHERE id_detail_barang = '".$data->id_detail_barang."'")->row();
-		if ($query) {
-			if ($data->status == "Finished") {
-				$data1 = [];
+		$barang = $this->db->query("SELECT * FROM barang WHERE id_barang = '".$query->id_barang."'")->row();
+		if ($data->status == "Finished") {
+			if ($barang->id_satuan === "16"){
 				$data1["status"] = "Stored";
 				$data1["PIC"] = "";
-				$data1["qtty"] = $query->qtty + $data->qtty;
-				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data->id_detail_barang, array_keys($data1), array_values($data1));
+				$data1["lokasi"] = "IT-STOCKROOM";
 			}
-
-			$result = $this->Mmain->qDel("detail_pinjam", "id_detail_pinjam", $id);
-
-			if (!$result) {
-				$this->session->set_flashdata('success', 'Data Detail Pinjam <strong>Berhasil</strong> Dihapus!');
-			} else {
-				$this->session->set_flashdata('failed', 'Data Detail Pinjam <strong>Gagal</strong> Dihapus!');
-			}
-			redirect("pinjam");
+			$data1["qtty"] = $query->qtty + $data->qtty;
+			$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data->id_detail_barang, array_keys($data1), array_values($data1));
 		}
+
+		$result = $this->Mmain->qDel("detail_pinjam", "id_detail_pinjam", $id);
+
+		if (!$result) {
+			$this->session->set_flashdata('success', 'Data Detail Pinjam <strong>Berhasil</strong> Dihapus!');
+		} else {
+			$this->session->set_flashdata('failed', 'Data Detail Pinjam <strong>Gagal</strong> Dihapus!');
+		}
+		redirect("pinjam");
 	}
 }
 

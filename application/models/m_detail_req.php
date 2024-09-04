@@ -86,4 +86,19 @@ class M_detail_req extends CI_Model{
         $this->db->where('id_detail_request', $id);
         return $this->db->delete('detail_request');
     }
+
+	public function changeStatusRequest($id){
+		$status_get = $this->db->query('SELECT status FROM detail_request WHERE id_request = "'.$id.'"')->result();
+		foreach ($status_get as $s){
+			$statuses[]= $s->status;
+		}
+		if (in_array("Requested", $statuses)) {
+			$stats['status'] = "Requested";
+		} elseif (count(array_unique($statuses)) === 1 && $statuses[0] === "Rejected") {
+			$stats['status'] = "Rejected";
+		} else {
+			$stats['status'] = "Finished";
+		}
+		$this->Mmain->qUpdpart("request", "id_request", $id, array_keys($stats), array_values($stats));
+	}
 }

@@ -46,8 +46,8 @@
 							<td><?php echo $j->id_jenis ?></td>
 							<td><?php echo $j->nama_jenis ?></td>
 							<td>
-								<a href="<?= base_url('Jenis/edit_data/') . $j->id_jenis ?>" class="btn btn-warning btn-circle btn-sm"><i class="ti ti-pencil"></i></a>
-								<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('Jenis/hapus_data/') . $j->id_jenis ?>" class="btn btn-danger btn-circle btn-sm"><i class="fa fa-trash"></i></a>
+								<a href="<?= base_url('Jenis/edit_data/') . $j->id_jenis ?>" class="btn btn-warning"><i class="ti ti-pencil"></i></a>
+								<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('Jenis/hapus_data/') . $j->id_jenis ?>" class="btn btn-danger"><i class="fa fa-trash"></i></a>
 							</td>
 						</tr>
 					<?php } ?>

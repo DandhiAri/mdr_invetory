@@ -43,11 +43,11 @@ class Detail_barang extends CI_Controller
 		$config['base_url'] = base_url('controller/detail/'.$id);
 		$config['total_rows'] = $this->db->where('id_barang', $id)->count_all_results('detail_barang');
 		$config['per_page'] = 6; 
-		$config['uri_segment'] = 4;
+		$config['uri_segment'] = 3;
 		
 		$this->pagination->initialize($config);
 	
-		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 		$data['detail_barang'] = $this->m_detail_barang->tampil_datadetail($id, $config['per_page'], $page);
 		$data['pagination'] = $this->pagination->create_links();
 		
@@ -103,6 +103,8 @@ class Detail_barang extends CI_Controller
 			$this->Mmain->qIns('detail_barang', $data);
 
             $this->session->set_flashdata('success', 'Detail Barang sudah ditambahkan');
+			$total_items = $this->db->count_all('barang');
+
 			redirect('barang');
         }
     }

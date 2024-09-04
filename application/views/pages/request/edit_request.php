@@ -16,7 +16,7 @@
 			</div>
 		<?php endif; ?>
         <div class="ibox-body">
-            <form action="<?= base_url('Request/proses_ubah') ?>" method="POST">
+            <form action="<?= base_url('Request/proses_ubah/'.$id)?>" method="POST">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
@@ -27,7 +27,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="tgl_request" class="form-label">Tanggal</label>
+                            <label for="tgl_request" class="form-label">Tanggal Request</label>
                             <input type="date" class="form-control" name="tgl_request" id="tgl_request" value="<?= $Request['tgl_request'] ?>">
                         </div>
                     </div>
@@ -36,30 +36,15 @@
                             <label for="keterangan" class="form-label">Keterangan</label>
                             <input type="text" class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan keterangan..." value="<?= $Request['keterangan'] ?>">
                         </div>
-						</div>
-					<div class="col-md-6">
-					<div class="mb-3">
-						<label for="status" class="form-label">Status</label>
-						<select class="form-control" name="status" id="status" placeholder="Pilih Status...">
-							<?php
-							$status_options = ['Requested', 'Finished', 'Rejected'];
-							foreach ($status_options as $option) {
-								$selected = ($Detail_Request['status'] == $option) ? 'selected' : '';
-								echo "<option value='$option' $selected>$option</option>";
-							}
-							?>
-						</select>
 					</div>
 				</div>
 				<div class="row float-right">
 					<div class="col-md-12">
 						<a href="<?= base_url('Request') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
-						<button type="submit" formaction="<?= base_url('Request/proses_ubah') ?>" class="btn btn-success" id="btn-save-mtact" style="cursor: pointer;"><i class="ti ti-save"></i> Simpan</button>
+						<button type="submit" class="btn btn-success" id="btn-save-mtact" style="cursor: pointer;"><i class="ti ti-save"></i> Simpan</button>
 					</div>
 				</div>
             </form>
         </div>
     </div>
-
-</div>
 </div>

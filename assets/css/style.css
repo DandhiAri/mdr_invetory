@@ -6,6 +6,11 @@
 	--active-list-background-color: #aae46c; /* Background color for active list item */
 	--border-radius: 5px; /* Border radius */
 }
+table{
+	/* display: table-header-group; */
+	vertical-align: middle;
+	text-align: center;
+}
 
 /* Pagination container */
 .pagination-container {

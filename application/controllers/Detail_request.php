@@ -61,6 +61,7 @@ class Detail_request extends CI_Controller
 		$data['content'] = $this->load->view('pages/detail_request/adddetail', $data, true);
 		$this->load->view('layout/master_layout',$data);
     }
+	
     public function proses_tambah($id)
     {
         if ($this->session->login['role'] == 'admin') {
@@ -87,7 +88,9 @@ class Detail_request extends CI_Controller
 			$serial = $data['serial_code'];
 			$data['id_detail_request'] = $id_detail_request;
 			$this->Mmain->qIns('detail_request', $data);
-			
+
+			$this->m_detail_req->changeStatusRequest($data['id_request']);
+
 			$this->session->set_flashdata('success', 'Data Detail Request <strong>Berhasil</strong> Ditambahkan!');
 			redirect("request");
         }
@@ -128,20 +131,25 @@ class Detail_request extends CI_Controller
 				"qtty" => $this->input->post('qtty'),
 				"status" => $this->input->post('status'),
             );
-
+			
 			$query = $this->db->query("
 				SELECT qtty, status 
 				FROM detail_barang 
 				WHERE id_detail_barang = '".$data['id_detail_barang']."'
 			")->row();
 			$query1 = $this->db->query("
-				SELECT status 
+				SELECT qtty,status 
 				FROM detail_request 
 				WHERE id_detail_request = '".$id."'
 			")->row();
+			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$query->id_barang.'"')->row();
+
 			if (($query1->status == 'Requested' || $query1->status == 'Rejected') && $data['status'] == 'Finished') {
-				$data1["PIC"] = $this->db->query("SELECT nama FROM request WHERE id_request ='".$data['id_request']."'")->row()->nama;
-				$data1["status"] = "In-Used";
+				if($satuanBarang === "16"){
+					$data1["PIC"] = $this->db->query("SELECT nama FROM request WHERE id_request ='".$data['id_request']."'")->row()->nama;
+					$data1["status"] = "In-Used";
+					$data1["lokasi"] = $data['lokasi'];
+				}
 				if ($query->qtty !== null && $query->qtty > 0) {
 					$data1["qtty"] = max($query->qtty - $data['qtty'], 0);
 				}
@@ -149,17 +157,31 @@ class Detail_request extends CI_Controller
 				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
 			
 			} elseif ($query1->status == 'Finished' && ($data['status'] == 'Rejected' || $data['status'] == 'Requested')) {
-				$data1["status"] = "Stored";
-				$data1["PIC"] = "";
+				if($satuanBarang === "16"){
+					$data1["status"] = "Stored";
+					$data1["PIC"] = "";
+					$data1["lokasi"] = "IT-STOCKROOM";
+				}
 				if ($query1->status == "Finished"){
 					$data1["qtty"] = max($query->qtty + $data['qtty'], 0);
 				}
 
 				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
+			} elseif ($data['status'] == 'Finished' && $query1->status == 'Finished' ){
+				if($satuanBarang === "16"){
+					$data1["lokasi"] = $data['lokasi'];
+				}
+				if ($query->qtty !== null && $query->qtty > 0 && $query->qtty !== $data['qtty']) {
+					$awalNilai = max($query->qtty + $query1->qtty, 0);
+					$data1["qtty"] = max($awalNilai - $data['qtty'], 0);
+				}
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
 			}
 
 			$data['tgl_request_update'] = date('Y-m-d\TH:i');
 			$this->Mmain->qUpdpart("detail_request", 'id_detail_request', $id, array_keys($data), array_values($data)); 
+
+			$this->m_detail_req->changeStatusRequest($data['id_request']);
 
 			$this->session->set_flashdata('success', 'Data Detail Request <strong>Berhasil</strong> Diubah!');
 			redirect("request");
@@ -172,23 +194,28 @@ class Detail_request extends CI_Controller
 	{
 		$data = $this->db->query("SELECT * FROM detail_request WHERE id_detail_request = '".$id."'")->row();
 		$query = $this->db->query("SELECT * FROM detail_barang WHERE id_detail_barang = '".$data->id_detail_barang."'")->row();
-		if ($query) {
-			if ($data->status == "Finished") {
-				$data1 = [];
+		$barang = $this->db->query("SELECT * FROM barang WHERE id_barang = '".$query->id_barang."'")->row();
+		
+		if ($data->status == "Finished") {
+			if ($barang->id_satuan === "16"){
 				$data1["status"] = "Stored";
 				$data1["PIC"] = "";
-				$data1["qtty"] = $query->qtty + $data->qtty;
-				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data->id_detail_barang, array_keys($data1), array_values($data1));
+				$data1["lokasi"] ="IT-STOCKROOM";
 			}
-
-			$result=$this->Mmain->qDel("Detail_request","id_detail_request",$id);
-
-			if(!$result){
-				$this->session->set_flashdata('success', 'Data Detail Request <strong>Berhasil</strong> Dihapus!');
-			} else {
-				$this->session->set_flashdata('error', 'Data Detail Request <strong>Gagal</strong> Dihapus!');
-			}
+			$data1["qtty"] = $query->qtty + $data->qtty;
+			$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data->id_detail_barang, array_keys($data1), array_values($data1));
 		}
+
+		$result=$this->Mmain->qDel("Detail_request","id_detail_request",$id);
+
+		$this->m_detail_req->changeStatusRequest($data->id_request);
+
+		if(!$result){
+			$this->session->set_flashdata('success', 'Data Detail Request <strong>Berhasil</strong> Dihapus!');
+		} else {
+			$this->session->set_flashdata('error', 'Data Detail Request <strong>Gagal</strong> Dihapus!');
+		}
+		
 		redirect("request");
 	}
 }

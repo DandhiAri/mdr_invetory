@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="ibox-body">
-            <form action="<?= base_url('Replace/proses_edit_replace')?>" method="POST">
+            <form action="<?= base_url('Replace/proses_edit_replace/'.$id)?>" method="POST">
 				<div class="row">
 					<div class="col-md-6">
 						<div class="mb-3">
@@ -21,22 +21,8 @@
 					</div>
 					<div class="col-md-6">
 						<div class="mb-3">
-							<label for="status" class="form-label">Status</label>
-							<select class="form-control" name="status" id="status" placeholder="Pilih Status...">
-								<?php
-								$status_options = ['Requested', 'Finished', 'Rejected'];
-								foreach ($status_options as $option) {
-									$selected = ($Replace['status'] == $option) ? 'selected' : '';
-									echo "<option value='$option' $selected>$option</option>";
-								}
-								?>
-							</select>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="mb-3">
 							<label for="tgl_replace_update" class="form-label">Waktu Update Replace</label>
-							<input type="datetime-local" class="form-control" name="tgl_replace_update" id="tgl_replace_update" value="<?= $Replace['tgl_replace'] ?>">
+							<input type="date" class="form-control" name="tgl_replace" id="tgl_replace" value="<?= $Replace['tgl_replace'] ?>">
 						</div>
 					</div>
 					<div class="col-md-6">

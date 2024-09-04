@@ -50,20 +50,22 @@ class Barang extends CI_Controller
 		$key = $data['keyword'];
 
 		$this->db->from('barang');
-		$this->db->join('detail_barang', 'barang.id_barang = detail_barang.id_barang', 'left');
-
 		if(!empty($key)){
+			$this->db->join('detail_barang', 'barang.id_barang = detail_barang.id_barang', 'left');
 			$this->db->like('detail_barang.serial_code', $key);
 			$this->db->or_like('detail_barang.id_barang', $key);
+			$this->db->or_like('detail_barang.id_detail_barang', $key);
 			$this->db->or_like('barang.nama_barang', $key);
 		}
 		
 		$config['total_rows'] = $this->db->count_all_results();
+		
 
 		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-		$this->pagination->initialize($config);
 
 		$data['Barang'] = $this->Mmain->getBarang($key, $config['per_page'], $data['page']);
+		$this->pagination->initialize($config);
+		$data['pagination'] = $this->pagination->create_links();
 		
 		if (!empty($key)) {
 			$res = $this->Mmain->qRead(
@@ -82,7 +84,6 @@ class Barang extends CI_Controller
 			)->result();
 		}
 
-		$data['pagination'] = $this->pagination->create_links();
 		$data['content'] = $this->load->view('pages/barang/barang', $data, true);
 		$this->load->view('layout/master_layout', $data);
     }
@@ -178,14 +179,14 @@ class Barang extends CI_Controller
 
 	public function hapus_data($id)
 	{
-		$result = $this->Mmain->qDel("detail_barang","id_barang",$id);
-		$result = $this->Mmain->qDel("barang","id_barang",$id);
+		$result1 = $this->Mmain->qDel("detail_barang","id_barang",$id);
+		$result2 = $this->Mmain->qDel("barang","id_barang",$id);
 
-		if ($result) {
+		if (!$result1 && !$result2) {
 			$this->session->set_flashdata('success', 'Data Barang <strong>Berhasil</strong> Dihapus!');
 			redirect('barang');
 		} else {
-			$this->session->set_flashdata('error', 'Data Barang <strong>Gagal</strong> Dihapus!');
+			$this->session->set_flashdata('failed', 'Data Barang <strong>Gagal</strong> Dihapus!');
 			redirect('barang');
 		}
 	}

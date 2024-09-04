@@ -32,7 +32,6 @@
                                 <?php foreach ($jenis as $data) { ?>
                                     <option value="<?= $data['id_jenis'] ?>"><?= $data['nama_jenis'] ?></option>
                                 <?php } ?>
-                                <!-- tambahkan opsi barang lainnya sesuai kebutuhan -->
                             </select>
                         </div>
                     </div>
@@ -44,7 +43,6 @@
                                 <?php foreach ($satuan as $data) { ?>
                                     <option value="<?= $data['id_satuan'] ?>"><?= $data['nama_satuan'] ?></option>
                                 <?php } ?>
-                                <!-- tambahkan opsi barang lainnya sesuai kebutuhan -->
                             </select>
                         </div>
                     </div>

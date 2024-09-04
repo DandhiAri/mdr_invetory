@@ -11,6 +11,7 @@ class Request extends CI_Controller
 
         $this->load->model('m_data');
         $this->load->model('Mmain');
+        $this->load->model('m_detail_req');
 		$this->load->model('m_detail_barang');
         $this->user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 
@@ -21,6 +22,8 @@ class Request extends CI_Controller
 		if (!$this->session->userdata('email')){
 			redirect('auth');
 		}
+		$this->form_validation->set_rules('nama', 'Nama PIC', 'required');
+        $this->form_validation->set_rules('tgl_request', 'Tanggal Request', 'required');
 	}
 
     public function index()
@@ -42,19 +45,19 @@ class Request extends CI_Controller
 			$data['keywordReq'] = $this->session->userdata('keywordReq');
 		}
 		$key = $data['keywordReq'];
-
-		if (!empty($data['keywordReq'])) {
-            $this->db->like('request.nama', $data['keywordReq']);
-			$serial = $this->db->or_like('detail_request.serial_code', $data['keywordReq']);
-        }
 		
 		$this->db->from('request');
+		if (!empty($data['keywordReq'])) {
+			$this->db->join('detail_request', 'request.id_request = detail_request.id_request', 'left');
+			$this->db->like('detail_request.serial_code', $data['keywordReq']);
+			$this->db->or_like('detail_request.id_detail_barang', $data['keywordReq']);
+            $this->db->or_like('request.nama', $data['keywordReq']);
+        }
+		
 		$config['total_rows'] = $this->db->count_all_results();
 
 		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 		$this->pagination->initialize($config);
-		$limit = $config['per_page'];
-		$start = $data['page'];
 
 		$data['Request'] = $this->Mmain->getRequest($data['keywordReq'], $config['per_page'], $data['page']);
 		
@@ -83,8 +86,7 @@ class Request extends CI_Controller
     public function tambah()
     {
         $data['title'] = 'Request';
-        //$data['Request'] = $this->m_data->tampil_datarequest()->result();
-		$render=$this->Mmain->qRead("request");
+		$render = $this->Mmain->qRead("request");
 		$data['Request'] = $render->result();
 		$data['Barang'] = $this->m_detail_barang->getBarang();
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
@@ -96,12 +98,9 @@ class Request extends CI_Controller
     public function proses_tambah()
     {
         if ($this->session->login['role'] == 'admin') {
-            $this->session->set_flashdata('error', 'Tambah data hanya untuk admin!');
+            $this->session->set_flashdata('failed', 'Tambah data hanya untuk admin!');
             redirect('dashboard');
         }
-		
-		$this->form_validation->set_rules('nama', 'Nama PIC', 'required');
-        $this->form_validation->set_rules('tgl_request', 'Tanggal Request', 'required');
 
 		if ($this->form_validation->run() == FALSE) {
             $this->session->set_flashdata('failed', validation_errors());
@@ -121,56 +120,136 @@ class Request extends CI_Controller
         }
     }
 
+	public function accept($id){
+		$data['status'] = "Finished";
+		$status_get = $this->db->query('SELECT id_barang,lokasi,qtty,status,id_detail_request,id_detail_barang FROM detail_request WHERE id_request = "'.$id.'"')->result();
+		foreach ($status_get as $sg){
+			$query = $this->db->query("
+				SELECT qtty, status 
+				FROM detail_barang 
+				WHERE id_detail_barang = '".$sg->id_detail_barang."'
+			")->row();
+			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$sg->id_barang.'"')->row();
+			if($satuanBarang === "16"){
+				$data1["PIC"] = $this->db->query("SELECT nama FROM request WHERE id_request ='".$id."'")->row()->nama;
+				$data1["status"] = "In-Used";
+				$data1["lokasi"] = $sg->lokasi;
+			}
+			if ($query->qtty !== null && $query->qtty > 0 && $sg->status !== "Finished") {
+				$data1["qtty"] = max($query->qtty - $sg->qtty, 0);
+			}
+
+			$this->Mmain->qUpdpart("detail_request", 'id_detail_request', $sg->id_detail_request, array_keys($data), array_values($data));
+			$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
+		}
+
+		if($status_get){
+			$this->Mmain->qUpdpart("request", 'id_request', $id, array_keys($data), array_values($data));
+			$this->session->set_flashdata('success', 'Request Barang Berhasil Diterima!');
+		} else {
+			$this->session->set_flashdata('failed', 'Request Barang Gagal Diterima!');
+		}
+
+		redirect('request');
+	}
+
+	public function reject($id){
+		$data['status'] = "Rejected";
+		$status_get = $this->db->query('SELECT id_barang,qtty,id_detail_request,id_detail_barang FROM detail_request WHERE id_request = "'.$id.'"')->result();
+		
+		foreach ($status_get as $sg){
+			$query = $this->db->query("
+				SELECT qtty, status 
+				FROM detail_barang 
+				WHERE id_detail_barang = '".$sg->id_detail_barang."'
+			")->row();
+
+			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$sg->id_barang.'"')->row();
+			if($satuanBarang === "16"){
+				$data1["status"] = "Stored";
+				$data1["PIC"] = null;
+				$data1["lokasi"] = "IT STOCKROOM";
+			}
+			$data1["qtty"] = max($query->qtty + $sg->qtty, 0);
+
+			$this->Mmain->qUpdpart("detail_request", 'id_detail_request', $sg->id_detail_request, array_keys($data), array_values($data));
+			$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
+		}
+
+		if($status_get){
+			$this->Mmain->qUpdpart("request", 'id_request', $id, array_keys($data), array_values($data));
+			$this->session->set_flashdata('success', 'Request Barang Berhasil Ditolak!');
+		} else {
+			$this->session->set_flashdata('failed', 'Request Barang Gagal Ditolak!');
+		}
+		redirect('request');
+	}
+
     public function edit($id){
         $data['title'] = 'Request';
         $data['Request'] = $this->m_data->edit_request($id);
 		$data['barang'] = $this->m_detail_barang->getBarang();
         $data['user'] = $this->user;
+		$data['id'] = $id;
 
 		$data['content'] = $this->load->view('pages/request/edit_request', $data, true);
 		$this->load->view('layout/master_layout',$data);
     }
 	
-	public function proses_ubah()
+	public function proses_ubah($id)
 	{
 		if ($this->session->login['role'] == 'admin') {
-			$this->session->set_flashdata('error', 'Ubah data hanya untuk admin!');
+			$this->session->set_flashdata('failed', 'Ubah data hanya untuk admin!');
 			redirect('dashboard');
 		}
-		$id = $this->input->post('id_request');
-		$data = [
-			'id_request' => $id,
-            'nama' => $this->input->post('nama'),
-            'tgl_request' => $this->input->post('tgl_request'),
-            'keterangan' => $this->input->post('keterangan'),
-			'status' => $this->input->post('status'),
-		];
-		$this->Mmain->qUpdpart("request", 'id_request', $id, array_keys($data), array_values($data));
-		$this->session->set_flashdata('success', 'Data Request <strong>Berhasil</strong> Diubah!');
-		redirect('request');
+		if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('failed', validation_errors());
+			redirect($_SERVER['HTTP_REFERER']);
+        } else {
+			$data = [
+				'nama' => $this->input->post('nama'),
+				'tgl_request' => $this->input->post('tgl_request'),
+				'keterangan' => $this->input->post('keterangan'),
+			];
+
+			$dereq = $this->db->query("SELECT * FROM detail_request WHERE id_request = '".$id."'")->row();
+			$query = $this->db->query("SELECT * FROM detail_barang WHERE id_detail_barang = '".$dereq->id_detail_barang."'")->row();
+			if ($query) {
+				if ($dereq->status == "Finished") {
+					$data1["PIC"] = $data['nama'];
+					$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $dereq->id_detail_barang, array_keys($data1), array_values($data1));
+				}
+				$this->Mmain->qUpdpart("request", 'id_request', $id, array_keys($data), array_values($data));
+				$this->session->set_flashdata('success', 'Data Request <strong>Berhasil</strong> Diubah!');
+			} else {
+				$this->session->set_flashdata('failed', 'ID Detail Barang tidak ada!');
+			}
+			redirect('request');
+		}
 	}
 
     public function hapus_data($id)
 	{
 		$data = $this->db->query("SELECT * FROM detail_request WHERE id_request = '".$id."'")->row();
 		$query = $this->db->query("SELECT * FROM detail_barang WHERE id_detail_barang = '".$data->id_detail_barang."'")->row();
-		if ($query) {
-			if ($data->status == "Finished") {
-				$data1 = [];
+		$barang = $this->db->query("SELECT * FROM barang WHERE id_barang = '".$query->id_barang."'")->row();
+		if ($data->status == "Finished") {
+			if($barang->id_satuan === "16"){
 				$data1["status"] = "Stored";
-				$data1["PIC"] = "";
-				$data1["qtty"] = $query->qtty + $data->qtty;
-				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data->id_detail_barang, array_keys($data1), array_values($data1));
+				$data1["PIC"] = null;
+				$data1["lokasi"] = "IT STOCKROOM";
 			}
+			$data1["qtty"] = $query->qtty + $data->qtty;
+			$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data->id_detail_barang, array_keys($data1), array_values($data1));
+		}
 
-			$this->Mmain->qDel("detail_request", "id_request", $id);
-			$this->Mmain->qDel("request", "id_request", $id);
+		$this->Mmain->qDel("detail_request", "id_request", $id);
+		$this->Mmain->qDel("request", "id_request", $id);
 
-			if(!$result){
-				$this->session->set_flashdata('success', 'Data Request <strong>Berhasil</strong> Dihapus!');
-			} else {
-				$this->session->set_flashdata('error', 'Data Request <strong>Gagal</strong> Dihapus!');
-			}
+		if(!$result){
+			$this->session->set_flashdata('success', 'Data Request <strong>Berhasil</strong> Dihapus!');
+		} else {
+			$this->session->set_flashdata('failed', 'Data Request <strong>Gagal</strong> Dihapus!');
 		}
 		redirect("request");
 	}

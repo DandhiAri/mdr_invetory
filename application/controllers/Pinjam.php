@@ -44,7 +44,7 @@ class Pinjam extends CI_Controller
 		$key = $data['keywordPin'];
 
 		$this->db->from('pinjam');
-		$config['total_rows'] = $this->db->count_all_results();
+		$config['total_rows'] = $this->db->count_all("pinjam");
 		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 		$this->pagination->initialize($config);
 
@@ -75,7 +75,7 @@ class Pinjam extends CI_Controller
 	
     public function tambah_pinjam()
     {
-        $data['title'] = 'TambahPinjam';
+        $data['title'] = 'Pinjam';
         $data['user'] = $this->user;
 
 		$data['barang'] = $this->Mmain->qRead("barang")->result();
@@ -146,18 +146,29 @@ class Pinjam extends CI_Controller
 
     public function hapus_data($id)
     {
+		$data = $this->db->query("SELECT * FROM detail_pinjam WHERE id_pinjam = '".$id."'")->row();
+		$query = $this->db->query("SELECT * FROM detail_barang WHERE id_detail_barang = '".$data->id_detail_barang."'")->row();
+		$barang = $this->db->query("SELECT * FROM barang WHERE id_barang = '".$query->id_barang."'")->row();
 		
-        $result = $this->Mmain->qDel("detail_pinjam", "id_pinjam", $id);
-        $result = $this->Mmain->qDel("pinjam", "id_pinjam", $id);
-		
+		if ($data->status == "Finished") {
+			if($barang->id_satuan === "16"){
+				$data1["status"] = "Stored";
+				$data1["PIC"] = null;
+				$data1["lokasi"] = "IT STOCKROOM";
+			}
+			$data1["qtty"] = $query->qtty + $data->qtty;
+			$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data->id_detail_barang, array_keys($data1), array_values($data1));
+		}
 
-        if ($result) {
-            $this->session->set_flashdata('success', 'Data Pinjam <strong>Berhasil</strong> Dihapus!');
-            redirect('pinjam');
-        } else {
-            $this->session->set_flashdata('error', 'Data Pinjam <strong>Gagal</strong> Dihapus!');
-            redirect('pinjam');
-        }
+		$this->Mmain->qDel("detail_pinjam", "id_pinjam", $id);
+		$this->Mmain->qDel("pinjam", "id_pinjam", $id);
+
+		if(!$result){
+			$this->session->set_flashdata('success', 'Data Pinjam <strong>Berhasil</strong> Dihapus!');
+		} else {
+			$this->session->set_flashdata('failed', 'Data Pinjam <strong>Gagal</strong> Dihapus!');
+		}
+		redirect("pinjam");
     }
 }
 

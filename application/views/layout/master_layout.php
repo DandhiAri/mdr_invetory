@@ -13,10 +13,20 @@
     <link href="<?= base_url('assets'); ?>./vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="<?= base_url('assets'); ?>./vendors/themify-icons/css/themify-icons.css" rel="stylesheet" />
     <!-- PLUGINS STYLES-->
+	<link href="<?= base_url('assets'); ?>/vendors/select2/dist/css/select2.min.css" rel="stylesheet" />
     <link href="<?= base_url('assets'); ?>./vendors/jvectormap/jquery-jvectormap-2.0.3.css" rel="stylesheet" />
     <!-- THEME STYLES-->
     <link href="<?= base_url('assets'); ?>./css/main.min.css" rel="stylesheet" />
     <!-- PAGE LEVEL STYLES-->
+	<style>
+		table{
+			text-align: center;	
+			vertical-align: middle;
+		}
+		.table thead th{
+			text-align: center;
+		}
+	</style>
 </head>
 
 <body class="fixed-navbar">
@@ -38,8 +48,6 @@
     </div>
     <!-- CORE PLUGINS-->
     <script src="<?= base_url('assets'); ?>./js/script.js"></script>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="<?= base_url('assets'); ?>./vendors/jquery/dist/jquery.min.js" type="text/javascript"></script>
     <script src="<?= base_url('assets'); ?>./vendors/popper.js/dist/umd/popper.min.js" type="text/javascript"></script>
     <script src="<?= base_url('assets'); ?>./vendors/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
@@ -54,13 +62,15 @@
     <script src="<?= base_url('assets'); ?>/js/app.min.js" type="text/javascript"></script>
     <!-- PAGE LEVEL SCRIPTS-->
     <script src="<?= base_url('assets'); ?>./js/scripts/dashboard_1_demo.js" type="text/javascript"></script>
+	<script src="<?= base_url('assets'); ?>./vendors/select2/dist/js/select2.min.js"></script>
+
 
 	<script>
 		$(document).ready(function() {
+			
 			var id_barang = $('#getIdBarang').val();
 			var $serialCodeSelect = $('#showSerialCode');
 			var $idDetailBarangInput = $('#id_detail_barang');
-
 			function populateSerialCodes(id_barang, selectedSerialCode) {
 				if (id_barang) {
 					$.ajax({
@@ -70,7 +80,7 @@
 						dataType: 'json',
 						success: function(serialCodes) {
 							$serialCodeSelect.empty();
-							$serialCodeSelect.append('<option value="">Pilih Nomor Seri</option>');
+							$serialCodeSelect.append('<option value="">Pilih Nomor Serial</option>');
 							
 							if (serialCodes.length > 0) {
 								$.each(serialCodes, function(index, serialCode) {
@@ -80,13 +90,14 @@
 										$serialCodeSelect.append('<option value="' + serialCode.serial_code + '" ' + isSelected + '>' + serialCode.id_detail_barang + "|" + displayValue + '</option>');
 									}
 								});
+								
 							} else {
 								$serialCodeSelect.append('<option value="">Tidak ada serial code</option>');
 							}
 
 							$serialCodeSelect.change(function() {
 								var selectedOption = $(this).find('option:selected');
-								var selectedIdDetailBarang = selectedOption.text().split('|')[0]; // Extract ID Detail Barang from the option text
+								var selectedIdDetailBarang = selectedOption.text().split('|')[0]; 
 								$idDetailBarangInput.val(selectedIdDetailBarang); 
 							});
 							
@@ -106,18 +117,27 @@
 					var selectedSerialCode = '<?= isset($Detail_Request['id_detail_barang']) ? $Detail_Request['id_detail_barang'] : '' ?>';
 				<?php } elseif ($title == "Detail Pinjam") { ?>
 					var selectedSerialCode = '<?= isset($Detail_pinjam['id_detail_barang']) ? $Detail_pinjam['id_detail_barang'] : '' ?>';
-				<?php } else { ?>
-					var selectedSerialCode = '';
-				<?php } ?>		
+				<?php } ?>
 				populateSerialCodes(id_barang, selectedSerialCode);
 			}
 
 			$('#getIdBarang').change(function() {
 				var selectedSerialCode = null; 
 				populateSerialCodes($(this).val(), selectedSerialCode);
-			});
-		});
 
+			});
+			
+			$('#getIdBarang').select2({
+				placeholder: 'Pilih Barang',
+				allowClear: true,
+				width: 'resolve' 
+			});
+			$('#getIdPengajuan').select2({
+				placeholder: 'Pilih Pengajuan',
+				allowClear: true,
+				width: 'resolve' 
+			});	
+		});
 
 		function warnError() {
 			var errorElement = document.querySelector('.warn');
