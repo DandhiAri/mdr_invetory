@@ -13,6 +13,7 @@
 					Tambah Data Replace
 				</span>
 			</a>
+			<div class="col"></div>
 			<div class="col-md-5">
 				<form action="<?= base_url('replace'); ?>" style="display:flex;" method="post">
 					<input type="text" class="form-control" name="keywordRep" placeholder="Nama Barang, Serial Code, ID Pengajuan.....">
@@ -40,7 +41,7 @@
 				<thead>
 					<tr>
 						<th>No</th>
-						<th>Dropdown Detail</th>
+						<th>Detail Replace</th>
 						<th>ID Replace</th>
 						<th>PIC</th>
 						<th>Tanggal Replace</th>
@@ -52,6 +53,7 @@
 					<?php 
 					$no = 1;
 					foreach($Replace as $rp){
+						$formatted_date = date('d F Y', strtotime($rp->tgl_replace));
 						$id = json_encode(strtoupper($rp->id_replace));
 						?>
 						<tr>
@@ -79,9 +81,9 @@
 								</div>
 							</td>
 							<td><?= $rp->id_replace ?></td>
-							<td><?= $rp->nama ?></td>
-							<td><?= $rp->tgl_replace ?></td>
-							<td><?= $rp->status ?></td>
+							<td><b><?= $rp->nama ?></b></td>
+							<td><?= $formatted_date ?></td>
+							<td> <p class="<?= $rp->status ?>"><?= $rp->status ?></p></td>
 							<td>
 								<a href="<?= base_url('Replace/accept/') . $rp->id_replace ?>" title="Finished/Menerima replace semua barang" class="btn btn-success"><i class="fa fa-check"></i></a>
 								<a href="<?= base_url('Replace/reject/') . $rp->id_replace ?>" title="Rejected/Menolak replace semua barang" class="btn btn-danger"><i class="fa fa-remove"></i></a>
@@ -97,20 +99,22 @@
 								<p style="text-align:center;">
 									<a href="<?= base_url('detail_replace/tambah_data_detail/'). $rp->id_replace  ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Data Detail Replace <?= $rp->id_replace ?> </a>
 								</p>
+								<h5 style="text-align:center;">
+									Detail Replace <b><?= $rp->id_replace ?></b> Table 
+								</h5>
 								<table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
 									<thead>
 										<tr>
 											<th>No</th>
 											<th>ID Detail Replace</th>
-											<th>ID Replace</th>
 											<th>ID Barang</th>
 											<th>ID Detail Barang</th>
 											<th>Serial Code</th>
 											<th>Quantity</th>
 											<th>Lokasi</th>
 											<th>Keterangan</th>
+											<th>Waktu Update</th>
 											<th>Status</th>
-											<th>Waktu Update Replace</th>
 											<th>Aksi</th>
 										</tr>
 										<?php 
@@ -120,16 +124,15 @@
 											?>
 											<tr>
 												<td><?= $no++ ?></td>
-												<td><?= $d->id_detail_replace ?></td>
-												<td><?= $d->id_replace ?></td>
+												<td><b><?= $d->id_detail_replace ?></b></td>
 												<td><?= $d->id_barang ?></td>
-												<td><?= $d->id_detail_barang ?></td>
-												<td><?= $d->serial_code ?></td>
-												<td><?= $d->qtty ?></td>
+												<td><b><?= $d->id_detail_barang ?></b></td>
+												<td><b><?= $d->serial_code ?></b></td>
+												<td style="text-align:right;"><?= $d->qtty ?></td>
 												<td><?= $d->lokasi ?></td>
 												<td><?= $d->keterangan ?></td>
-												<td><?= $d->status ?></td>
 												<td><?= $d->tgl_replace_update ?></td>
+												<td><p class="<?= $d->status ?>"><?= $d->status ?></p></td>
 												<td>
 													<a href="<?= base_url('Detail_Replace/edit_detail/') . $d->id_detail_replace ?>" class="btn btn-warning"><i class="fa fa-pencil"></i></a>
 													<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('Detail_Replace/del_replace/') . $d->id_detail_replace.'/'.$d->id_replace ?>" class="btn btn-danger"><i class="fa fa-trash"></i></a>
@@ -140,6 +143,7 @@
 										} 
 										?>
 									</thead>
+									<!-- <?= $pagination1; ?> -->
 								</table>
 							</td>
 						</tr>

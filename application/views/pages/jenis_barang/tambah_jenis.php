@@ -21,7 +21,7 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label for="nama_jenis" class="form-label">Jenis Barang</label>
-                        <input type="text" class="form-control" name="nama_jenis" id="nama_jenis" placeholder="Masukkan Jenis Barang...">
+                        <input type="text" class="form-control" name="nama_jenis" id="nama_jenis" placeholder="Masukkan Jenis Barang..." required>
                     </div>
                     <div class="row">
                         <div class="row float-right">

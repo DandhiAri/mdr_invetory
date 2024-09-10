@@ -47,7 +47,7 @@
 						?>
 							<tr>
 								<td><?= ++$page ?></td>
-								<td><?= $S->id_pengajuan ?></td>
+								<td><b><?= $S->id_pengajuan ?></b></td>
 								<td><?= $S->tgl_pengajuan ?></td>
 								<td>
 									<button alt="Invoice" class="btn btn-success" style=" cursor: pointer;" data-toggle="modal" data-target="#invoiceModal-<?= $S->id_pengajuan ?>" onclick="showInvoice('')"> Show </button>

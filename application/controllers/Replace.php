@@ -30,7 +30,7 @@ class Replace extends CI_Controller
         $data['user'] = $this->user;
 
 		$config['base_url'] = base_url('replace/index/'); 
-		$config['per_page'] = 6;
+		$config['per_page'] = 10;
 		$config['uri_segment'] = 3;
 		
 		if ($this->input->post('keywordRep')){
@@ -51,7 +51,7 @@ class Replace extends CI_Controller
 		$this->pagination->initialize($config);
 
 		$data['Replace'] = $this->Mmain->getReplace($data['keywordRep'], $config['per_page'], $data['page']);
-		
+
 		if (!empty($key)) {
 			$res = $this->Mmain->qRead(
 				"detail_ganti WHERE serial_code LIKE '%$key%'"

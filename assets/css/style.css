@@ -94,3 +94,27 @@ table{
 	padding-top: 20px;
 	font-size: 20px;
 }
+.Requested{
+	color: rgb(132, 141, 0);
+	background-color: rgba(255, 251, 30, 0.151);
+	border-radius: 1em;
+	/* padding: 1px; */
+}
+.Finished, .Stored{
+	color: rgb(30, 255, 0);
+	background-color: rgba(68, 255, 30, 0.151);
+	border-radius: 1em;
+	/* padding: 1px; */
+}
+.Rejected{
+	color: rgb(231, 0, 0);
+	background-color: rgba(255, 30, 30, 0.151);
+	border-radius: 1em;
+	/* padding: 1px; */
+}
+.In-Used{
+	color: rgb(4, 0, 255);
+	background-color: rgba(30, 248, 255, 0.103);
+	border-radius: 1em;
+	/* padding: 2px; */
+}

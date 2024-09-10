@@ -89,10 +89,10 @@ class Detail_Replace extends CI_Controller
 				"lokasi" => $this->input->post('lokasi'),
 				"keterangan" => $this->input->post('keterangan'),
             );
-
+			if ($data['serial_code'] === "-"){
+				$data['serial_code'] = null;
+			}
 			$data['id_detail_replace'] = $this->Mmain->autoId("detail_ganti","id_detail_replace","DRT","DRT"."001","001");
-			
-			$this->M_detail_replace->changeStatusReplace($data['id_replace']);
 			
 			$this->Mmain->qIns('detail_ganti', $data);
 			$this->session->set_flashdata('success', 'Data Detail Replace <strong>Berhasil</strong> Ditambahkan!');
@@ -136,7 +136,9 @@ class Detail_Replace extends CI_Controller
 				'status' => $this->input->post('status'),
 				'keterangan' => $this->input->post('keterangan'),
             );
-
+			if ($data['serial_code'] === "-"){
+				$data['serial_code'] = null;
+			}
 			$query = $this->db->query("
 				SELECT *
 				FROM detail_barang 

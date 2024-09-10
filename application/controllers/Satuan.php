@@ -11,6 +11,7 @@ class Satuan extends CI_Controller
         $this->load->model('Mmain');
         $this->load->helper('url');
     	$this->load->library('form_validation');
+		$this->load->library('pagination');
 		$this->user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		if (!$this->session->userdata('email')){
 			redirect('auth');
@@ -19,8 +20,37 @@ class Satuan extends CI_Controller
 
     public function index()
     {
-		$data['Satuan'] = $this->Mmain->qRead("satuan")->result();
         $data['user'] = $this->user;
+
+		$config['base_url'] = base_url('satuan/index/');
+		$config['per_page'] = 10;
+		$config['uri_segment'] = 3;
+
+		if ($this->input->post('keywordSAT')){
+			$data['keywordSAT'] = $this->input->post('keywordSAT');
+			$this->session->set_userdata('keywordSAT',$data['keywordSAT']);
+		} elseif ($this->input->post('reset')){
+			$data['keywordSAT'] = null;
+			$this->session->unset_userdata('keywordSAT');
+		} else {
+			$data['keywordSAT'] = $this->session->userdata('keywordSAT');
+		}
+
+		$key = $data['keywordSAT'];
+
+		$this->db->from('jenis');
+
+		if(!empty($key)){
+			$this->db->like('jenis.nama_jenis', $key);
+		}
+
+		$config['total_rows'] = $this->db->count_all_results();
+		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$this->pagination->initialize($config);
+
+		$data['Satuan'] = $this->m_satuan->getSatuan($data['keywordSAT'], $config['per_page'], $data['page']);
+
+		$data['pagination'] = $this->pagination->create_links();
 
         $data['content'] = $this->load->view('pages/satuan/satuan', $data, true);
 		$this->load->view('layout/master_layout', $data);

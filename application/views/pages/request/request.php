@@ -26,13 +26,13 @@
 			<?php if ($this->session->flashdata('success')): ?>
 				<div class="warn succ">
 					<div class="msg" onclick="warnError()">
-						<?php echo $this->session->flashdata('success'); ?>
+						<?= $this->session->flashdata('success'); ?>
 					</div>
 				</div>
 			<?php elseif ($this->session->flashdata('failed')):?>
 				<div class="warn err">
 					<div class="msg" onclick="warnError()">
-						<?php echo $this->session->flashdata('failed'); ?>
+						<?= $this->session->flashdata('failed'); ?>
 					</div>
 				</div>
 			<?php endif;?>
@@ -43,7 +43,7 @@
 						<th>Detail Request</th>
 						<th>ID Request</th>
 						<th>PIC</th>
-						<th>Created Date</th>
+						<th>Tanggal Request</th>
 						<th>Status Request</th>
 						<th>Status Action</th>
 						<th>Keterangan</th>
@@ -52,14 +52,15 @@
 					<?php 
 					$no = 1;
 					foreach($Request as $r){
+						$formatted_date = date('d F Y', strtotime($r->tgl_request));
 						$id = json_encode(strtoupper($r->id_request));
 						?>
 						<tr>
-							<td><?php echo ++$page ?></td>
+							<td><?= ++$page ?></td>
 							<td>
 								<div class="dropdown">
-									<button onclick='toggleDiv(<?= $id ?>)' style="cursor:pointer" class='btn btn-primary font-weight-bold btn dropdown-toggle' type="button" id='dropdownMenuButton-<?php echo $r->id_request ?>' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										Dropdown Detail
+									<button onclick='toggleDiv(<?= $id ?>)' style="cursor:pointer" class='btn btn-primary font-weight-bold btn dropdown-toggle' type="button" id='dropdownMenuButton-<?= $r->id_request ?>' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										Detail Request
 									</button>
 									<script>
 										function toggleDiv(id) {
@@ -78,17 +79,17 @@
 									</script>
 								</div>
 							</td>
-							<td><?php echo $r->id_request ?></td>
-							<td><?php echo $r->nama?></td>
-							<td><?php echo $r->tgl_request ?></td>
-							<td><?php echo $r->status ?></td>
+							<td><?= $r->id_request ?></td>
+							<td><b><?= $r->nama?></b></td>
+							<td><?= $formatted_date ?></td>
+							<td><p class="<?= $r->status ?>"><?= $r->status ?></p></td>
 							<td>
 								<div class="row" style="justify-content:center;">
 									<a href="<?= base_url('request/accept/') . $r->id_request ?>" class="btn btn-success" style="margin-right:5px;" title="Finished/Menerima request semua barang"><i class="fa fa-check"></i></a>
 									<a href="<?= base_url('request/reject/') . $r->id_request ?>" class="btn btn-danger" id="deleterequest" title="Rejected/Menolak request semua barang" style="cursor: pointer;"><i class="fa fa-remove"></i></a>
 								</div>
 							</td>
-							<td><?php echo $r->keterangan ?></td>
+							<td><?= $r->keterangan ?></td>
 							<td>
 								<div class="row" style="padding-bottom:10px; justify-content:center;">
 									<a href="<?= base_url('request/edit/') . $r->id_request ?>" class="btn btn-warning" style="margin-right:5px;" title="Edit"><i class="ti ti-pencil"></i></a>
@@ -96,44 +97,46 @@
 								</div>
 							</td>
 					</tr>
-					<tr style="display:none;" id="toggleDiv-<?php echo $r->id_request ?>" class=" nested-table-container" width="100%">
+					<tr style="display:none;" id="toggleDiv-<?= $r->id_request ?>" class=" nested-table-container" width="100%">
 						<td colspan='20'>
 							<p style="text-align:center;">
 								<a href="<?= base_url('detail_request/tambah/'). $r->id_request  ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Detail Request <?= $r->id_request ?> </a>
 							</p>
+							<h5 style="text-align:center;">
+								Detail Request <b><?= $r->id_request ?></b> Table 
+							</h5>
 							<table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
 								<thead>
 								<tr>
 									<th>No</th>
 									<th>ID Detail Request</th>
-									<th>ID Request</th>
 									<th>ID Barang</th>
 									<th>ID Detail Barang</th>
 									<th>Serial Code</th>
 									<th>Lokasi</th>
 									<th>Quantity</th>
 									<th>Keterangan</th>
+									<th>Waktu Update</th>
 									<th>Status</th>
-									<th>Waktu Update Request</th>
 									<th>Action</th>
 								</tr>
 									<?php 
 									$no = 1;
 									foreach($Detail_Request as $dr){
+										
 										if($dr->id_request === $r->id_request){
 										?>
 										<tr>
-										<td><?= $no++ ?></td>
-										<td><?= $dr->id_detail_request ?></td>
-										<td><?= $dr->id_request ?></td>
-										<td><?= $dr->id_barang ?></td>
-										<td><?= $dr->id_detail_barang ?></td>
-										<td><?= $dr->serial_code ?></td>
-										<td><?= $dr->lokasi ?></td>
-										<td><?= $dr->qtty ?></td>
-										<td><?= $dr->keterangan?></td>
-										<td><?= $dr->status ?></td>
-										<td><?= $dr->tgl_request_update ?></td>
+											<td><?= $no++ ?></td>
+											<td><b><?= $dr->id_detail_request ?></b></td>
+											<td><?= $dr->id_barang ?></td>
+											<td><b><?= $dr->id_detail_barang ?></b></td>
+											<td><b><?= $dr->serial_code ?></b></td>
+											<td><?= $dr->lokasi ?></td>
+											<td style="text-align:right;"><?= $dr->qtty ?></td>
+											<td><?= $dr->keterangan?></td>
+											<td><?= $dr->tgl_request_update ?></td>
+											<td><p class="<?= $r->status ?>"><?= $r->status ?></p></td>
 											<td>
 												
 												<a href="<?= base_url('detail_request/edit/') . $dr->id_detail_request ?>" class="btn btn-warning" title="Edit"><i class="ti ti-pencil"></i></a>

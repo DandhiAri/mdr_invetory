@@ -28,7 +28,7 @@
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="tgl_replace_update" class="form-label">Waktu Update Replace</label>
-							<input type="datetime-local" class="form-control" name="tgl_replace_update" id="tgl_replace_update" value="<?= date('Y-m-d\TH:i') ?>">
+							<input type="datetime-local" class="form-control" name="tgl_replace_update" id="tgl_replace_update" value="<?= date('Y-m-d\TH:i') ?>" required>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -45,7 +45,7 @@
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label class="form-label">Serial Number</label>
-							<select class="form-control" name="serial_code" id="showSerialCode">
+							<select class="form-control" name="serial_code" id="showSerialCode" required>
 								<option value="">Pilih Nomor Seri</option>
 								
 							</select>
@@ -55,13 +55,13 @@
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="qtty" class="form-label">Jumlah</label>
-							<input type="number" class="form-control" name="qtty" id="qtty" placeholder="Masukkan Kuantitas Barang...">
+							<input type="number" class="form-control" name="qtty" id="qtty" placeholder="Masukkan Kuantitas Barang..." required>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="lokasi" class="form-label">Lokasi</label>
-							<input type="text" class="form-control" name="lokasi" id="lokasi" placeholder="Masukkan Kuantitas Barang...">
+							<input type="text" class="form-control" name="lokasi" id="lokasi" placeholder="Masukkan Kuantitas Barang..." required>
 						</div>
 					</div>
 					<div class="col-md-6">

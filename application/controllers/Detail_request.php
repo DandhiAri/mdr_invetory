@@ -84,6 +84,9 @@ class Detail_request extends CI_Controller
 				"lokasi" => $this->input->post('lokasi'),
 				"qtty" => $this->input->post('qtty'),
             );
+			if ($data['serial_code'] === "-"){
+				$data['serial_code'] = null;
+			}
 			$id_detail_request = $this->Mmain->autoId("detail_request","id_detail_request","DRQ","DRQ"."001","001");
 			$serial = $data['serial_code'];
 			$data['id_detail_request'] = $id_detail_request;
@@ -131,7 +134,9 @@ class Detail_request extends CI_Controller
 				"qtty" => $this->input->post('qtty'),
 				"status" => $this->input->post('status'),
             );
-			
+			if ($data['serial_code'] === "-"){
+				$data['serial_code'] = null;
+			}
 			$query = $this->db->query("
 				SELECT qtty, status 
 				FROM detail_barang 

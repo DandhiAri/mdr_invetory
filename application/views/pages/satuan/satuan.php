@@ -11,13 +11,13 @@
 		<?php if ($this->session->flashdata('failed')): ?>
 			<div class="warn err">
 				<div class="msg" onclick="warnError()">
-					<?php echo $this->session->flashdata('failed'); ?>
+					<?= $this->session->flashdata('failed'); ?>
 				</div>
 			</div>
 		<?php elseif($this->session->flashdata('success')): ?>
 			<div class="warn succ">
 				<div class="msg" onclick="warnError()">
-					<?php echo $this->session->flashdata('success'); ?>
+					<?= $this->session->flashdata('success'); ?>
 				</div>
 			</div>
 		<?php endif; ?>
@@ -26,9 +26,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>ID Satuan</th>
                         <th>Nama Satuan</th>
-                        <!--<th>Nomer Seri</th>-->
                         <th>Aksi</th>
                     </tr>
                     <?php
@@ -36,10 +34,8 @@
                     foreach ($Satuan as $S) {
                     ?>
                         <tr>
-                            <td><?php echo $no++ ?></td>
-                            <td><?php echo $S->id_satuan ?></td>
-                            <td><?php echo $S->nama_satuan ?></td>
-                            <!--<td><?php echo $S->nomer_seri ?></td>-->
+                            <td><?= $no++ ?></td>
+                            <td><b><?= $S->nama_satuan ?></b></td>
                             <td>
                                 <a href="<?= base_url('satuan/edit_data/' . $S->id_satuan) ?>" class="btn btn-warning" title="Edit satuan"><i class="ti ti-pencil"></i></a>
                                 <a href="<?= base_url('satuan/hapus_data/' . $S->id_satuan) ?>" class="btn btn-danger" onclick="alert('Apakah anda yakin ingin menghapus?')" id="deletesatuan" title="Hapus satuan" style="cursor: pointer;"><i class="ti ti-trash"></i></button>

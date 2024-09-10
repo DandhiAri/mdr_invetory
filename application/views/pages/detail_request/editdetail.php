@@ -29,7 +29,7 @@
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="lokasi" class="form-label">Lokasi</label>
-							<input type="text" class="form-control" name="lokasi" id="lokasi" min="1" value="<?= $Detail_Request['lokasi'] ?>">
+							<input type="text" class="form-control" name="lokasi" id="lokasi" value="<?= $Detail_Request['lokasi'] ?>" required>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -50,13 +50,13 @@
 					<div class="col-md-6">
                         <div class="mb-3">
                             <label for="qtty" class="form-label">Quantity</label>
-                            <input type="number" min="0" value="<?= $Detail_Request['qtty'] ?>" class="form-control" name="qtty" id="qtty" placeholder="Isi Quantity...">
+                            <input type="number" min="0" value="<?= $Detail_Request['qtty'] ?>" class="form-control" name="qtty" id="qtty" placeholder="Isi Quantity..." required>
                         </div>
                     </div>
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="showSerialCode" class="form-label">Serial Number</label>
-							<select class="form-control" name="serial_code" id="showSerialCode">
+							<select class="form-control" name="serial_code" id="showSerialCode" required>
 								<option value="">Pilih Nomor Seri</option>
 								
 							</select>
@@ -72,7 +72,7 @@
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="status" class="form-label">Status</label>
-							<select class="form-control" name="status" id="status" placeholder="Pilih Status...">
+							<select class="form-control" name="status" id="status" placeholder="Pilih Status..." required>
 								<?php
 								$status_options = ['Requested', 'Finished', 'Rejected'];
 								foreach ($status_options as $option) {

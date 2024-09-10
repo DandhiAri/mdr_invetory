@@ -43,7 +43,7 @@
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label class="form-label">Serial Code</label>
-							<select class="form-control" name="serial_code" id="showSerialCode">
+							<select class="form-control" name="serial_code" id="showSerialCode" required>
 								<option value="">Pilih Nomor Seri</option>
 
 							</select>
@@ -53,25 +53,25 @@
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="qtty" class="form-label">Quantity</label>
-							<input type="text" class="form-control" min="0" name="qtty" id="qtty" placeholder="Masukkan Kuantitas Quantity..." value="<?= $Detail_pinjam['qtty'] ?>">
+							<input type="text" class="form-control" min="0" name="qtty" id="qtty" placeholder="Masukkan Kuantitas Quantity..." value="<?= $Detail_pinjam['qtty'] ?>" required>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="lokasi" class="form-label">lokasi</label>
-							<input type="text" class="form-control" name="lokasi" id="loksai" placeholder="Masukkan lokasi..." value="<?= $Detail_pinjam['lokasi'] ?>">
+							<input type="text" class="form-control" name="lokasi" id="loksai" placeholder="Masukkan lokasi..." value="<?= $Detail_pinjam['lokasi'] ?>" required>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="wkt_kembali" class="form-label">Waktu Kembali</label>
-							<input type="datetime-local" class="form-control" name="wkt_kembali" id="wkt_kembali" type="text" class="form-control date" placeholder="Tanggal Kembali..." value="<?= $Detail_pinjam['wkt_kembali'] ?>">
+							<input type="datetime-local" class="form-control" name="wkt_kembali" id="wkt_kembali" type="text" class="form-control date" placeholder="Tanggal Kembali..." value="<?= $Detail_pinjam['wkt_kembali'] ?>" required>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="status" class="form-label">Status</label>
-							<select class="form-control" name="status" id="status" placeholder="Pilih Status...">
+							<select class="form-control" name="status" id="status" placeholder="Pilih Status..." required>
 								<?php
 								$status_options = ['Requested','Finished','Rejected'];
 								foreach ($status_options as $option) {

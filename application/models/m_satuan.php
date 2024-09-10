@@ -2,10 +2,17 @@
 
 class M_satuan extends CI_Model
 {
-    // function tampil_data()
-    // {
-    //     return $this->db->get('barang');
-    // }
+	public function getSatuan($keyword=null, $limit, $start) {
+		$this->db->select('satuan.*');
+		$this->db->from('satuan');
+		if ($keyword) {
+			$this->db->or_like('satuan.nama_satuan', $keyword);
+		}
+		$this->db->group_by('satuan.id_satuan');
+		$this->db->limit($limit, $start); 
+		$query = $this->db->get();
+		return $query->result();
+	}
     function tampil_satuan()
     {
         return $this->db->get('satuan');

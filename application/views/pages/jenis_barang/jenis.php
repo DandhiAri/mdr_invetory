@@ -33,7 +33,6 @@
 				<thead>
 					<tr>
 						<th>No</th>
-						<th>ID Jenis</th>
 						<th>Jenis Barang</th>
 						<th>Aksi</th>
 					</tr>
@@ -42,9 +41,8 @@
 					foreach($jenis as $j){
 						?>
 						<tr>
-							<td><?php echo ++$page ?></td>
-							<td><?php echo $j->id_jenis ?></td>
-							<td><?php echo $j->nama_jenis ?></td>
+							<td><?= ++$page ?></td>
+							<td><b><?= $j->nama_jenis ?></b></td>
 							<td>
 								<a href="<?= base_url('Jenis/edit_data/') . $j->id_jenis ?>" class="btn btn-warning"><i class="ti ti-pencil"></i></a>
 								<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('Jenis/hapus_data/') . $j->id_jenis ?>" class="btn btn-danger"><i class="fa fa-trash"></i></a>

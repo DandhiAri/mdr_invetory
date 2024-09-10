@@ -57,18 +57,18 @@
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="qtty" class="form-label">Quantity</label>
-							<input type="number" class="form-control" name="qtty" id="qtty" min="0" value="<?= $Detail_Barang['qtty'] ?>" placeholder="Masukkan keterangan...">
+							<input type="number" class="form-control" name="qtty" id="qtty" min="0" value="<?= $Detail_Barang['qtty'] ?>" placeholder="Masukkan keterangan..." required>
 						</div>
 					</div>
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="lokasi" class="form-label">Lokasi</label>
-                            <input type="text" class="form-control" name="lokasi" id="lokasi" placeholder="Masukkan lokasi..." value="<?= $Detail_Barang['lokasi'] ?>">
+                            <input type="text" class="form-control" name="lokasi" id="lokasi" placeholder="Masukkan lokasi..." value="<?= $Detail_Barang['lokasi'] ?>" required>
                         </div>
                     </div>
 					<div class="col-md-6">
 						<label for="id_pengajuan" class="form-label">Pengajuan</label>
-						<select class="form-control" name="id_pengajuan" id="id_pengajuan">
+						<select class="form-control" name="id_pengajuan" id="id_pengajuan" required>
 							<option value="" selected="selected">Pilih Pengajuan</option>
 							<?php foreach ($pengajuan as $data) { ?>
 								<option value="<?= $data->id_pengajuan ?>" <?= $data->id_pengajuan == $Detail_Barang['lokasi'] ? "selected" : "" ?>>
@@ -96,7 +96,7 @@
 								<?php
 								$status_options = ['Stored','In-Used'];
 								foreach ($status_options as $option) {
-									$selected = ($Detail_Request['status'] == $option) ? 'selected' : '';
+									$selected = ($Detail_Barang['status'] == $option) ? 'selected' : '';
 									echo "<option value='$option' $selected>$option</option>";
 								}
 								?>

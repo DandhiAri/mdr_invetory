@@ -60,7 +60,6 @@ class Barang extends CI_Controller
 		
 		$config['total_rows'] = $this->db->count_all_results();
 		
-
 		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 
 		$data['Barang'] = $this->Mmain->getBarang($key, $config['per_page'], $data['page']);
@@ -102,7 +101,7 @@ class Barang extends CI_Controller
     public function proses_tambah()
     {
         if ($this->session->login['role'] == 'admin') {
-            $this->session->set_flashdata('error', 'Tambah data hanya untuk admin!');
+            $this->session->set_flashdata('failed', 'Tambah data hanya untuk admin!');
             redirect('dashboard');
         }
 		$this->form_validation->set_rules('nama_barang', 'Nama barang', 'required|is_unique[barang.nama_barang]', array('is_unique' => 'This %s already taken.'));
@@ -118,7 +117,7 @@ class Barang extends CI_Controller
 			} else {
 				$this->session->set_flashdata('failed', validation_errors());
 			}
-			redirect($_SERVER['HTTP_REFERER']);
+			redirect($_SERVER['HTTP_REFERER'],$data);
         } else {
             $data = array(
                 'nama_barang' => $this->input->post('nama_barang'),

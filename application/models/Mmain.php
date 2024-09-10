@@ -138,6 +138,14 @@ class mMain  extends CI_Model
         $query = $this->db->get();
         return $query->result();
     }
+	public function getDetailReplace($id, $limit, $start) {
+        $this->db->select('detail_ganti.*');
+        $this->db->from('detail_ganti');
+        $this->db->where('id_replace', $id);
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        return $query->result();
+    }
 	public function getPinjam($keyword=null, $limit, $start) {
         $this->db->select('pinjam.*');
         $this->db->from('pinjam');

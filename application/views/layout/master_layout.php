@@ -7,14 +7,14 @@
     <meta name="viewport" content="width=device-width initial-scale=1.0">
     <title>Admin | Dashboard</title>
 	<!-- CSS SENDIRI KALAU PINGIN NGUBAH-->
-    <link href="<?= base_url('assets'); ?>/css/style.css" rel="stylesheet" />
+    <link href="<?= base_url('assets'); ?>./css/style.css" rel="stylesheet" />
     <!-- GLOBAL MAINLY STYLES-->
     <link href="<?= base_url('assets'); ?>./vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="<?= base_url('assets'); ?>./vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="<?= base_url('assets'); ?>./vendors/themify-icons/css/themify-icons.css" rel="stylesheet" />
     <!-- PLUGINS STYLES-->
 	<link href="<?= base_url('assets'); ?>/vendors/select2/dist/css/select2.min.css" rel="stylesheet" />
-    <link href="<?= base_url('assets'); ?>./vendors/jvectormap/jquery-jvectormap-2.0.3.css" rel="stylesheet" />
+	<link href="<?= base_url('assets'); ?>./vendors/jvectormap/jquery-jvectormap-2.0.3.css" rel="stylesheet" />
     <!-- THEME STYLES-->
     <link href="<?= base_url('assets'); ?>./css/main.min.css" rel="stylesheet" />
     <!-- PAGE LEVEL STYLES-->
@@ -54,7 +54,6 @@
     <script src="<?= base_url('assets'); ?>./vendors/metisMenu/dist/metisMenu.min.js" type="text/javascript"></script>
     <script src="<?= base_url('assets'); ?>./vendors/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
     <!-- PAGE LEVEL PLUGINS-->
-    <script src="<?= base_url('assets'); ?>./vendors/chart.js/dist/Chart.min.js" type="text/javascript"></script>
     <script src="<?= base_url('assets'); ?>./vendors/jvectormap/jquery-jvectormap-2.0.3.min.js" type="text/javascript"></script>
     <script src="<?= base_url('assets'); ?>./vendors/jvectormap/jquery-jvectormap-world-mill-en.js" type="text/javascript"></script>
     <script src="<?= base_url('assets'); ?>./vendors/jvectormap/jquery-jvectormap-us-aea-en.js" type="text/javascript"></script>
@@ -63,6 +62,8 @@
     <!-- PAGE LEVEL SCRIPTS-->
     <script src="<?= base_url('assets'); ?>./js/scripts/dashboard_1_demo.js" type="text/javascript"></script>
 	<script src="<?= base_url('assets'); ?>./vendors/select2/dist/js/select2.min.js"></script>
+    <script src="<?= base_url('assets'); ?>./vendors/chartjs/dist/Chart.min.js" type="text/javascript"></script>
+
 
 
 	<script>
@@ -87,7 +88,9 @@
 									if (serialCode.qtty > 0 || selectedSerialCode == serialCode.id_detail_barang ){
 										var isSelected = serialCode.id_detail_barang == selectedSerialCode ? "selected" : "";
 										var displayValue = serialCode.serial_code ? serialCode.serial_code : "TIDAK ADA SERIAL CODE";
-										$serialCodeSelect.append('<option value="' + serialCode.serial_code + '" ' + isSelected + '>' + serialCode.id_detail_barang + "|" + displayValue + '</option>');
+										var valueNull = serialCode.serial_code ? serialCode.serial_code : "-";
+
+										$serialCodeSelect.append('<option value="' + valueNull + '" ' + isSelected + '>' + serialCode.id_detail_barang + "|" + displayValue + '</option>');
 									}
 								});
 								
@@ -132,8 +135,23 @@
 				allowClear: true,
 				width: 'resolve' 
 			});
+			$('#showSerialCode').select2({
+				placeholder: 'Pilih Serial Code',
+				allowClear: true,
+				width: 'resolve' 
+			});
 			$('#getIdPengajuan').select2({
 				placeholder: 'Pilih Pengajuan',
+				allowClear: true,
+				width: 'resolve' 
+			});
+			$('#id_satuan').select2({
+				placeholder: 'Pilih Satuan Barang',
+				allowClear: true,
+				width: 'resolve' 
+			});	
+			$('#id_jenis').select2({
+				placeholder: 'Pilih Jenis Barang',
 				allowClear: true,
 				width: 'resolve' 
 			});	
@@ -143,6 +161,98 @@
 			var errorElement = document.querySelector('.warn');
 			errorElement.style.display = 'none';
 		}
+		var ctx = document.getElementById('BarangChart').getContext('2d');
+		var BarangChart = new Chart(ctx, {
+			type: 'line', 
+			data: {
+				labels: ['January', 'February', 'March', 'April', 'May', 'June'], 
+				datasets: [{
+					label: 'Sales', 
+					data: [12, 19, 3, 5, 2, 3], 
+					backgroundColor: 'rgba(75, 192, 192, 0.2)', 
+					borderColor: 'rgba(75, 192, 192, 1)', 
+					borderWidth: 1 
+				}]
+			},
+			options: {
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero: true 
+						}
+					}]
+				}
+			}
+		});
+		var ctx = document.getElementById('RequestChart').getContext('2d');
+		var RequestChart = new Chart(ctx, {
+			type: 'bar', 
+			data: {
+				labels: ['January', 'February', 'March', 'April', 'May', 'June'], 
+				datasets: [{
+					label: 'Sales', 
+					data: [12, 19, 3, 5, 2, 3], 
+					backgroundColor: 'rgba(75, 192, 192, 0.2)', 
+					borderColor: 'rgba(75, 192, 192, 1)', 
+					borderWidth: 1 
+				}]
+			},
+			options: {
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero: true 
+						}
+					}]
+				}
+			}
+		});
+		var ctx = document.getElementById('PinjamChart').getContext('2d');
+		var PinjamChart = new Chart(ctx, {
+			type: 'bar', 
+			data: {
+				labels: ['January', 'February', 'March', 'April', 'May', 'June'], 
+				datasets: [{
+					label: 'Sales', 
+					data: [12, 19, 3, 5, 2, 3], 
+					backgroundColor: 'rgba(75, 192, 192, 0.2)', 
+					borderColor: 'rgba(75, 192, 192, 1)', 
+					borderWidth: 1 
+				}]
+			},
+			options: {
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero: true 
+						}
+					}]
+				}
+			}
+		});
+		var ctx = document.getElementById('ReplaceChart').getContext('2d');
+		var ReplaceChart = new Chart(ctx, {
+			type: 'bar', 
+			data: {
+				labels: ['January', 'February', 'March', 'April', 'May', 'June'], 
+				datasets: [{
+					label: 'Sales', 
+					data: [12, 19, 3, 5, 2, 3], 
+					backgroundColor: 'rgba(75, 192, 192, 0.2)', 
+					borderColor: 'rgba(75, 192, 192, 1)', 
+					borderWidth: 1 
+				}]
+			},
+			options: {
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero: true 
+						}
+					}]
+				}
+			}
+		});
 	</script>
 </body>
 

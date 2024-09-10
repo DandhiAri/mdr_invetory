@@ -38,13 +38,13 @@
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="qtty" class="form-label">Quantity</label>
-							<input type="number" class="form-control" name="qtty" id="qtty" placeholder="Masukkan Jumlah..."value="<?= $Detail_Replace['qtty'] ?>">
+							<input type="number" class="form-control" name="qtty" id="qtty" placeholder="Masukkan Jumlah..."value="<?= $Detail_Replace['qtty'] ?>" required>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="serial_code" class="form-label">Nomor Seri</label>
-							<select class="form-control" name="serial_code" id="showSerialCode">
+							<select class="form-control" name="serial_code" id="showSerialCode" required>
 								<option value="" selected="selected" disabled="disabled">Pilih Nomor Seri</option>
 
 							</select>
@@ -55,14 +55,14 @@
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="tgl_replace_update" class="form-label">Tanggal Replace</label>
-							<input type="datetime-local" class="form-control" name="tgl_replace_update" id="tgl_replace_update" value="<?= $Detail_Replace['tgl_replace_update'] ?>">
+							<input type="datetime-local" class="form-control" name="tgl_replace_update" id="tgl_replace_update" value="<?= $Detail_Replace['tgl_replace_update'] ?>" required>
 						</div>
 					</div>
 		
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="status" class="form-label">Status</label>
-							<select class="form-control" name="status" id="status" placeholder="Pilih Status...">
+							<select class="form-control" name="status" id="status" placeholder="Pilih Status..." required>
 								<?php
 								$status_options = ['Requested', 'Finished', 'Rejected'];
 								foreach ($status_options as $option) {
@@ -76,7 +76,7 @@
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="lokasi" class="form-label">Lokasi</label>
-							<input type="text" class="form-control" name="lokasi" id="keterangan" min="1"value="<?= $Detail_Replace['lokasi'] ?>">
+							<input type="text" class="form-control" name="lokasi" id="keterangan" min="1"value="<?= $Detail_Replace['lokasi'] ?>" required>
 						
 						</div>
 					</div>

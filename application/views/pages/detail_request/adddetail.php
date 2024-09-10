@@ -27,13 +27,13 @@
 					<div class="col-md-6">
                         <div class="mb-3">
                             <label for="lokasi" class="form-label">Lokasi</label>
-                            <input type="text" class="form-control" name="lokasi" id="lokasi" placeholder="Isi Lokasi...">
+                            <input type="text" class="form-control" name="lokasi" id="lokasi" placeholder="Isi Lokasi..." required>
                         </div>
                     </div>
 					<div class="col-md-6">
                         <div class="mb-3">
                             <label for="tgl_request_update" class="form-label">Waktu Update Request</label>
-                            <input type="datetime-local"  value="<?= date('Y-m-d\TH:i') ?>" class="form-control" name="tgl_request_update" id="tgl_request_update" placeholder="Isi tgl_request_update...">
+                            <input type="datetime-local"  value="<?= date('Y-m-d\TH:i') ?>" class="form-control" name="tgl_request_update" id="tgl_request_update" placeholder="Isi tgl_request_update..." required>
                         </div>
                     </div>
 					<div class="col-md-6">
@@ -51,7 +51,7 @@
 					<div class="col-md-6">
                         <div class="mb-3">
                             <label for="qtty" class="form-label">Quantity</label>
-                            <input type="number" class="form-control" name="qtty" id="qtty" placeholder="Isi Quantity...">
+                            <input type="number" class="form-control" name="qtty" id="qtty" placeholder="Isi Quantity..." required>
                         </div>
                     </div>
                     <div class="col-md-6">

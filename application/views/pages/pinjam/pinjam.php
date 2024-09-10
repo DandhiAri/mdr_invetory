@@ -47,6 +47,8 @@
 				<?php
                     $no = 1;
                     foreach ($Pinjam as $P) {
+						$timestamp = strtotime($P->wkt_pinjam);
+						$formatted_datetime = strftime('%d %B %Y %H:%M:%S',$timestamp);
 						$id = json_encode(strtoupper($P->id_pinjam));
                     ?>
                         <tr>
@@ -74,10 +76,10 @@
 								</div>
 							</td>
                             <td><?= $P->id_pinjam ?></td>
-                            <td><?= $P->nama_peminjam ?></td>
-                            <td><?= $P->nama_penerima ?></td>
+                            <td><b><?= $P->nama_peminjam ?></b></td>
+                            <td><b><?= $P->nama_penerima ?></b></td>
                             <td><?= $P->nama_pemberi ?></td>
-                            <td><?= $P->wkt_pinjam ?></td>                    
+                            <td><?= $formatted_datetime ?></td>                    
 							<td><?= $P->keterangan ?></td>
                             <td>
                                 <a href="<?= base_url('pinjam/edit_data/') . $P->id_pinjam ?>" class="btn btn-warning" title="Edit pinjam"><i class="ti ti-pencil"></i></a>
@@ -89,19 +91,21 @@
 								<p style="text-align:center;">
 									<a href="<?= base_url('detail_pinjam/tambah_detail/') . $P->id_pinjam  ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Detail Pinjam <?= $P->id_pinjam ?> </a>
 								</p>
+								<h5 style="text-align:center;">
+									Detail pinjam <b><?= $rp->id_pinjam ?></b> Table 
+								</h5>
 								<table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
 									<thead>
 										<tr>
 											<th>No</th>
-											<th>ID Pinjam</th>
 											<th>ID Barang</th>
 											<th>ID Detail Barang</th>
 											<th>Serial Code</th>
 											<th>Waktu Kembali</th>
 											<th>Quantity</th>
 											<th>Lokasi</th>
-											<th>Status</th>
 											<th>Keterangan</th>
+											<th>Status</th>
 											<th>Aksi</th>
 										</tr>
 									</thead>
@@ -109,18 +113,20 @@
 										<?php
 										$no = 1;
 										foreach ($Detail_pinjam as $dp) {
+											$timestamp = strtotime($dp->wkt_kembali);
+											$formatted_datetime = strftime('%d %B %Y %H:%M:%S',$timestamp);
 										?>
 											<tr>
 												<td><?= $no++ ?></td>
-												<td><?= $dp->id_pinjam ?></td>
 												<td><?= $dp->id_barang ?></td>
-												<td><?= $dp->id_detail_barang ?></td>
-												<td><?= $dp->serial_code ?></td>
-												<td><?= $dp->wkt_kembali ?></td>              
-												<td><?= $dp->qtty ?></td>
+												<td><b><?= $dp->id_detail_barang ?></b></td>
+												<td><b><?= $dp->serial_code ?></b></td>
+												<td><?= $formatted_datetime ?></td>              
+												<td style="text-align:right;"><?= $dp->qtty ?></td>
 												<td><?= $dp->lokasi ?></td>
-												<td><?= $dp->status ?></td>
 												<td><?= $dp->keterangan ?></td>
+												<td><p class="<?= $dp->status ?>"><?= $dp->status ?></p></td>
+
 												
 												<td>
 													<a href="<?= base_url('detail_pinjam/edit_data/') . $dp->id_detail_pinjam  ?>" class="btn btn-warning" title="Edit pinjam"><i class="ti ti-pencil"></i></a>

@@ -78,9 +78,9 @@
 								</div>
 							</td>
 							<td><?= $b->id_barang ?></td>
-							<td><?= $b->nama_barang ?></td>
+							<td><b><?= $b->nama_barang ?></b></td>
 							<td><?= $b->nama_jenis ?></td>
-							<td><?= $b->detail_count; ?></td>
+							<td style="text-align:right;"><?= $b->detail_count; ?></td>
 							<td><?= $b->nama_satuan ?></td>
 
 							<td>
@@ -93,21 +93,23 @@
 								<p style="text-align:center;">
 									<a href="<?= base_url('detail_barang/tambah/'). $b->id_barang  ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Detail Barang <?= $b->id_barang ?> </a>
 								</p>
-								<table style="background-color:#D3D3D3;" class="table table-bordered">
+								<h5 style="text-align:center;">
+									Detail Barang <b><?= $b->id_barang ?></b> Table 
+								</h5>
+								<table style="background-color:#DCDCDC;" class="table table-bordered">
 									<thead>
 										<tr>
 											<th>No</th>
-											<th>ID Barang</th>
 											<th>ID Detail Barang</th>
 											<th>ID Pengajuan</th>
 											<th>Serial Code</th>
 											<th>Quantity</th>
 											<th>Lokasi</th>
+											<th>Keterangan</th>
 											<?php if($b->nama_satuan == "Unit"){ ?>
 											<th>Nama PIC</th>
 											<th>Status</th>
 											<?php } ?>
-											<th>Keterangan</th>
 											<th>Aksi</th>
 										</tr>
 									</thead>
@@ -120,17 +122,16 @@
 										?>
 											<tr>
 												<td><?= $nom++ ?></td>
-												<td><?= $detail->id_barang ?></td>
-												<td><?= $detail->id_detail_barang ?></td>
+												<td><b><?= $detail->id_detail_barang ?></b></td>
 												<td><?= $detail->id_pengajuan ?></td>
-												<td><?= $detail->serial_code?></td>
-												<td><?= $detail->qtty?></td>
+												<td><b><?= $detail->serial_code?></b></td>
+												<td style="text-align:right;"><?= $detail->qtty?></td>
 												<td><?= $detail->lokasi?></td>
-												<?php if($b->nama_satuan == "Unit"){ ?>
-												<td><?= $detail->PIC ?></td>
-												<td><?= $detail->status ?></td>
-												<?php } ?>
 												<td><?= $detail->keterangan?></td>
+												<?php if($b->nama_satuan == "Unit"){ ?>
+												<td><b><?= $detail->PIC ?></b></td>
+												<td><p class='<?= $detail->status ?>'><?= $detail->status ?></p></td>
+												<?php } ?>
 												<td>
 													<a onclick=return href="<?= base_url('detail_barang/edit/') . $detail->id_detail_barang ?>" class="btn btn-warning" title="Edit"><i class="ti ti-pencil"></i></a>
 													<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('detail_barang/hapus_data/') . $detail->id_detail_barang.'/'.$detail->id_barang ?>"class="btn btn-danger" id="deletebarang" title="Hapus" style="cursor: pointer;"><i class="ti ti-trash"></i></button>

@@ -28,7 +28,7 @@ class Pinjam extends CI_Controller
         $data['user'] = $this->user;
 		
 		$config['base_url'] = base_url('pinjam/index/'); 
-		$config['per_page'] = 5;
+		$config['per_page'] = 10;
 		$config['uri_segment'] = 3;
 		
 		if ($this->input->post('keywordPin')){

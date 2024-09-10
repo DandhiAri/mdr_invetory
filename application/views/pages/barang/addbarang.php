@@ -19,15 +19,16 @@
             <form action="<?= base_url('Barang/proses_tambah') ?>" method="POST">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="mb-3">
+                        <div class="mb-3 <?= form_error('nama_barang') ? 'has-error' : '' ?>">
                             <label for="nama_barang" class="form-label">Nama Barang</label>
-                            <input type="text" class="form-control" name="nama_barang" id="nama_barang" placeholder="Masukkan nama barang..."> 
-                        </div>
+                            <input type="text" class="form-control" value="<?= set_value('nama_barang') ?>" name="nama_barang" id="nama_barang" placeholder="Masukkan nama barang..." required> 
+							<span><?= form_error('nama_barang') ?></span>
+						</div>
                     </div>
 					 <div class="col-md-6">
-                        <div class="mb-3">
+                        <div class="mb-3 <?= form_error('id_jenis') ? 'has-error' : '' ?>">
                             <label for="id_jenis" class="form-label">Jenis</label>
-                            <select class="form-control" name="id_jenis" id="id_jenis">
+                            <select class="form-control" name="id_jenis" id="id_jenis" required>
                                 <option value="">Pilih Jenis</option>
                                 <?php foreach ($jenis as $data) { ?>
                                     <option value="<?= $data['id_jenis'] ?>"><?= $data['nama_jenis'] ?></option>
@@ -36,9 +37,9 @@
                         </div>
                     </div>
 					<div class="col-md-6">
-                        <div class="mb-3">
+                        <div class="mb-3 <?= form_error('id_satuan') ? 'has-error' : '' ?>">
                             <label for="id_satuan" class="form-label">Satuan</label>
-                            <select class="form-control" name="id_satuan" id="id_satuan">
+                            <select class="form-control" name="id_satuan" id="id_satuan" required>
                                 <option value="">Pilih Satuan</option>
                                 <?php foreach ($satuan as $data) { ?>
                                     <option value="<?= $data['id_satuan'] ?>"><?= $data['nama_satuan'] ?></option>

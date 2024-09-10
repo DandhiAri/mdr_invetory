@@ -53,13 +53,13 @@
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="qtty" class="form-label">Quantity</label>
-							<input type="number" class="form-control" name="qtty" id="qtty" min="0" placeholder="Masukkan keterangan...">
+							<input type="number" class="form-control" name="qtty" id="qtty" min="0" placeholder="Masukkan Quantity..." required>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="lokasi" class="form-label">Lokasi</label>
-							<input type="text" class="form-control" name="lokasi" id="lokasi" placeholder="Masukkan lokasi...">
+							<input type="text" class="form-control" name="lokasi" id="lokasi" placeholder="Masukkan lokasi..." required>
 						</div>
 					</div>
 					<div class="col-md-6">

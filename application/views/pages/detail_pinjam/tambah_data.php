@@ -40,13 +40,13 @@
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="qtty" class="form-label">Quantity</label>
-							<input type="number" class="form-control" min="0" name="qtty" id="qtty" placeholder="Masukkan Kuantitas...">
+							<input type="number" class="form-control" min="0" name="qtty" id="qtty" placeholder="Masukkan Kuantitas..." required>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label class="form-label">Serial Code</label>
-							<select class="form-control" name="serial_code" id="showSerialCode">
+							<select class="form-control" name="serial_code" id="showSerialCode" required>
 								<option value="">Pilih Nomor Seri</option>
 								
 							</select>
@@ -56,7 +56,7 @@
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="lokasi" class="form-label">Lokasi</label>
-							<input type="text" class="form-control" name="lokasi" id="lokasi" placeholder="Masukkan Lokasi...">
+							<input type="text" class="form-control" name="lokasi" id="lokasi" placeholder="Masukkan Lokasi..." required>
 						</div>
 					</div>
 					<div class="col-md-6">

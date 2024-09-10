@@ -21,7 +21,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="nama_jenis" class="form-label">Jenis Barang</label>
-                            <input type="text" class="form-control" name="nama_jenis" id="nama_jenis" placeholder="Masukkan Jenis Barang..." value="<?= $Jenis['nama_jenis'] ?>">
+                            <input type="text" class="form-control" name="nama_jenis" id="nama_jenis" placeholder="Masukkan Jenis Barang..." value="<?= $Jenis['nama_jenis'] ?>" required>
                             <input type="hidden" name="id_jenis" id="id_jenis" value="<?= $Jenis['id_jenis'] ?>">
                         </div>
                     </div>

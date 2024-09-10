@@ -25,14 +25,14 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="nama_barang" class="form-label">Nama Barang</label>
-                            <input type="text" class="form-control" name="nama_barang" id="nama_barang" placeholder="Masukkan nama barang..." value="<?= $Barang['nama_barang'] ?>"> 
+                            <input type="text" class="form-control" name="nama_barang" id="nama_barang" placeholder="Masukkan nama barang..." value="<?= $Barang['nama_barang'] ?>" required> 
                             <input type="hidden" name="id_barang" id="id_barang" value="<?= $Barang['id_barang'] ?>">
                         </div>
                     </div>
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="id_jenis" class="form-label">Jenis</label>
-							<select class="form-control" name="id_jenis" id="id_jenis">
+							<select class="form-control" name="id_jenis" id="id_jenis" required>
 								<option value="" selected="selected" disabled="disabled">Pilih Jenis</option>
 								<?php foreach ($jenis as $data) { ?>
 									<option value="<?= $data['id_jenis'] ?>" <?= $data['id_jenis'] == $Barang['id_jenis'] ? "selected" : "" ?>>
@@ -45,7 +45,7 @@
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="id_satuan" class="form-label">Satuan</label>
-							<select class="form-control" name="id_satuan" id="id_satuan">
+							<select class="form-control" name="id_satuan" id="id_satuan" required>
 								<option value="" selected="selected" disabled="disabled">Pilih Satuan</option>
 								<?php foreach ($satuan as $data) { ?>
 									<option value="<?= $data['id_satuan'] ?>" <?= $data['id_satuan'] == $Barang['id_satuan'] ? "selected" : "" ?>>
