@@ -77,7 +77,7 @@ class Detail_Pinjam extends CI_Controller
 				"keterangan" => $this->input->post('keterangan'),
             );
 			if ($data['serial_code'] === "-"){
-				$data['serial_code'] = null;
+				$data['serial_code'] = "";
 			}
 			$id_pinjam = $data['id_pinjam'];
 			$data['id_detail_pinjam'] = $this->Mmain->autoId("detail_pinjam", "id_detail_pinjam", "DP", "DP" . "001", "001");
@@ -123,7 +123,7 @@ class Detail_Pinjam extends CI_Controller
 				"keterangan" => $this->input->post('keterangan'),
             );
 			if ($data['serial_code'] === "-"){
-				$data['serial_code'] = null;
+				$data['serial_code'] = "";
 			}
 			$query = $this->db->query("
 				SELECT qtty, status 

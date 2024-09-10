@@ -1,11 +1,13 @@
 <nav class="page-sidebar" id="sidebar">
 	<div id="sidebar-collapse">
-		<div class="admin-block d-flex">
-			<div>
+		<div class="admin-block d-flex mb-1 ">
+			<div >
 				<img src="<?= base_url('assets/img/users/') . $user['image']; ?>" width="45px" />
 			</div>
 			<div class="admin-info">
-				<div class="font-strong"><?= $user['name']; ?></div><small>Administrator</small></div>
+				<div class="font-strong"><?= $user['name']; ?></div>
+				<small>Administrator</small>
+			</div>
 		</div>
 		<ul class="side-menu metismenu">
 			<li>
@@ -15,7 +17,7 @@
 			</li>
 			<li class="heading">FEATURES</li>
 			<li>
-				<a href="#"><i class="sidebar-item-icon fa fa-bookmark"></i>
+				<a href="#"><i class="sidebar-item-icon fa fa-handshake-o"></i>
 					<span class="nav-label">Transaksi</span><i class="fa fa-angle-left arrow"></i></a>
 				<ul class="nav-2-level collapse">
 					<li>
@@ -33,7 +35,7 @@
 				</ul>
 			</li>
 			<li>
-				<a href="#" ><i class="sidebar-item-icon fa fa-edit"></i>
+				<a href="#" ><i class="sidebar-item-icon fa fa-trophy"></i>
 					<span class="nav-label">Barang</span><i class="fa fa-angle-left arrow"></i></a>
 				<ul class="nav-2-level collapse">
 					<li>

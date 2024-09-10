@@ -1,5 +1,5 @@
 <div class="page-heading">
-    <h1 class="page-title">Data Satuan Barang</h1>
+    <h1 class="page-title">Satuan Barang</h1>
 </div>
 <div class="page-content fade-in-up">
     <div class="ibox">

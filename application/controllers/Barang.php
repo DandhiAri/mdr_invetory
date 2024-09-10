@@ -34,7 +34,7 @@ class Barang extends CI_Controller
 		$data['user'] = $this->user;
 
 		$config['base_url'] = base_url('barang/index/'); 
-		$config['per_page'] = 6;
+		$config['per_page'] = 10;
 		$config['uri_segment'] = 3;
 
 		if ($this->input->post('keyword')){

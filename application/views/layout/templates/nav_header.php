@@ -1,10 +1,10 @@
 <header class="header">
 	<div class="page-brand">
-		<a class="link" href="#">
-			<span class="brand">Mangli Djaya Raya
-				<!--<span class="brand-tip">(Admin)</span>-->
+		<a class="link" href="<?= base_url('dashboard')?>">
+			<img src="<?= base_url("assets/img/mdr.png")?>" class="mr-2"  width="45px" alt="">
+			<span class="brand">Inventory IT
 			</span>
-			<span class="brand-mini"></span>
+			<!-- <span class="brand-mini"></span> -->
 		</a>
 	</div>
 	<div class="flexbox flex-1">

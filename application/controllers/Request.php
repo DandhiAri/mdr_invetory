@@ -137,10 +137,11 @@ class Request extends CI_Controller
 			}
 			if ($query->qtty !== null && $query->qtty > 0 && $sg->status !== "Finished") {
 				$data1["qtty"] = max($query->qtty - $sg->qtty, 0);
+			} 
+			if($data1 !== null ){
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
 			}
-
 			$this->Mmain->qUpdpart("detail_request", 'id_detail_request', $sg->id_detail_request, array_keys($data), array_values($data));
-			$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
 		}
 
 		if($status_get){
@@ -155,7 +156,7 @@ class Request extends CI_Controller
 
 	public function reject($id){
 		$data['status'] = "Rejected";
-		$status_get = $this->db->query('SELECT id_barang,qtty,id_detail_request,id_detail_barang FROM detail_request WHERE id_request = "'.$id.'"')->result();
+		$status_get = $this->db->query('SELECT  status,id_barang,qtty,id_detail_request,id_detail_barang FROM detail_request WHERE id_request = "'.$id.'"')->result();
 		
 		foreach ($status_get as $sg){
 			$query = $this->db->query("
@@ -170,10 +171,13 @@ class Request extends CI_Controller
 				$data1["PIC"] = null;
 				$data1["lokasi"] = "IT STOCKROOM";
 			}
-			$data1["qtty"] = max($query->qtty + $sg->qtty, 0);
-
+			if($sg->status === "Finished"){
+				$data1["qtty"] = max($query->qtty + $sg->qtty, 0);
+			}
+			if($data1 !== null ){
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
+			}
 			$this->Mmain->qUpdpart("detail_request", 'id_detail_request', $sg->id_detail_request, array_keys($data), array_values($data));
-			$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
 		}
 
 		if($status_get){

@@ -170,9 +170,10 @@ class Replace extends CI_Controller
 			if ($query->qtty !== null && $query->qtty > 0 && $sg->status !== "Finished") {
 				$data1["qtty"] = max($query->qtty - $sg->qtty, 0);
 			}
-
+			if($data1 !== null ){
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
+			}
 			$this->Mmain->qUpdpart("detail_ganti", 'id_detail_replace', $sg->id_detail_replace, array_keys($data), array_values($data));
-			$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
 		}
 
 		if($status_get){
@@ -201,10 +202,13 @@ class Replace extends CI_Controller
 				$data1["PIC"] = null;
 				$data1["lokasi"] = "IT STOCKROOM";
 			}
-			$data1["qtty"] = max($query->qtty + $sg->qtty, 0);
-
+			if($sg->status === "Finished"){
+				$data1["qtty"] = max($query->qtty + $sg->qtty, 0);
+			}
+			if($data1 !== null ){
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
+			}
 			$this->Mmain->qUpdpart("detail_ganti", 'id_detail_replace', $sg->id_detail_replace, array_keys($data), array_values($data));
-			$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
 		}
 
 		if($status_get){

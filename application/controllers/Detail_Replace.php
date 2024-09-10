@@ -90,7 +90,7 @@ class Detail_Replace extends CI_Controller
 				"keterangan" => $this->input->post('keterangan'),
             );
 			if ($data['serial_code'] === "-"){
-				$data['serial_code'] = null;
+				$data['serial_code'] = "";
 			}
 			$data['id_detail_replace'] = $this->Mmain->autoId("detail_ganti","id_detail_replace","DRT","DRT"."001","001");
 			
@@ -137,7 +137,7 @@ class Detail_Replace extends CI_Controller
 				'keterangan' => $this->input->post('keterangan'),
             );
 			if ($data['serial_code'] === "-"){
-				$data['serial_code'] = null;
+				$data['serial_code'] = "";
 			}
 			$query = $this->db->query("
 				SELECT *

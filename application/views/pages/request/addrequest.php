@@ -36,18 +36,13 @@
                             <input type="text" class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan keterangan...">
                         </div>
 					</div>
-					<div class="col-md-6">
-                        <div class="row">
-							<!-- <div><br></div> -->
-                            <div class="row float-right">
-                                <div class="col-md-12">
-									<a href="<?= base_url('request') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
-                                    <button type="submit" formaction="<?= base_url('Request/proses_tambah') ?>" class="btn btn-success" id="simpan" style="cursor: pointer;"><i class="ti ti-save"></i> Simpan</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
+				<div class="row float-right">
+					<div class="col-md-12">
+						<a href="<?= base_url('request') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
+						<button type="submit" formaction="<?= base_url('Request/proses_tambah') ?>" class="btn btn-success" id="simpan" style="cursor: pointer;"><i class="ti ti-save"></i> Simpan</button>
+					</div>
+				</div>
             </form>
         </div>
     </div>

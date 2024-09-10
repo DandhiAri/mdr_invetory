@@ -85,14 +85,13 @@ class Detail_request extends CI_Controller
 				"qtty" => $this->input->post('qtty'),
             );
 			if ($data['serial_code'] === "-"){
-				$data['serial_code'] = null;
+				$data['serial_code'] = "";
 			}
 			$id_detail_request = $this->Mmain->autoId("detail_request","id_detail_request","DRQ","DRQ"."001","001");
-			$serial = $data['serial_code'];
 			$data['id_detail_request'] = $id_detail_request;
 			$this->Mmain->qIns('detail_request', $data);
 
-			$this->m_detail_req->changeStatusRequest($data['id_request']);
+			// $this->m_detail_req->changeStatusRequest($data['id_request']);
 
 			$this->session->set_flashdata('success', 'Data Detail Request <strong>Berhasil</strong> Ditambahkan!');
 			redirect("request");
@@ -135,7 +134,7 @@ class Detail_request extends CI_Controller
 				"status" => $this->input->post('status'),
             );
 			if ($data['serial_code'] === "-"){
-				$data['serial_code'] = null;
+				$data['serial_code'] = "";
 			}
 			$query = $this->db->query("
 				SELECT qtty, status 
