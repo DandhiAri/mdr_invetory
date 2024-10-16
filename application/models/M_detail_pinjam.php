@@ -2,6 +2,25 @@
 
 class M_detail_pinjam extends CI_Model
 {
+	public function changeStatusPinjam($id){
+		$status_get = $this->db->query('SELECT status FROM detail_pinjam WHERE id_pinjam = "'.$id.'"')->result();
+		foreach ($status_get as $s){
+			$statuses[]= $s->status;
+		}
+		if (!empty($statuses)){
+			if (in_array("Requested", $statuses)) {
+				$stats['status'] = "Requested";
+			} elseif (count(array_unique($statuses)) === 1 && $statuses[0] === "Rejected") {
+				$stats['status'] = "Rejected";
+			} else {
+				$stats['status'] = "Finished";
+			}
+		} else {
+			$stats['status'] = "Requested";
+		}
+
+		$this->Mmain->qUpdpart("pinjam", "id_pinjam", $id, array_keys($stats), array_values($stats));
+	}
 	public function getBarang()
     {
         $query = $this->db->query("SELECT * FROM detail_barang ORDER BY id_detail_barang ASC");

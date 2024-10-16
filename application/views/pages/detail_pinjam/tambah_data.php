@@ -61,12 +61,6 @@
 					</div>
 					<div class="col-md-6">
 						<div class="mb-3">
-							<label for="wkt_kembali" class="form-label">Tgl Kembali</label>
-							<input type="datetime-local" class="form-control" name="wkt_kembali" id="wkt_kembali" type="text" class="form-control date" placeholder="Tanggal Kembali...">
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="mb-3">
 							<label for="keterangan" class="form-label">Keterangan</label>
 							<input type="text" class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan Keterangan...">
 						</div>

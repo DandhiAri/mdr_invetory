@@ -92,13 +92,23 @@ class M_detail_req extends CI_Model{
 		foreach ($status_get as $s){
 			$statuses[]= $s->status;
 		}
-		if (in_array("Requested", $statuses)) {
-			$stats['status'] = "Requested";
-		} elseif (count(array_unique($statuses)) === 1 && $statuses[0] === "Rejected") {
-			$stats['status'] = "Rejected";
+		if (!empty($statuses)){
+			if (in_array("Requested", $statuses)) {
+				$stats['status'] = "Requested";
+			} elseif (count(array_unique($statuses)) === 1 && $statuses[0] === "Rejected") {
+				$stats['status'] = "Rejected";
+			} else {
+				$stats['status'] = "Finished";
+			}
 		} else {
-			$stats['status'] = "Finished";
+			$stats['status'] = "Requested";
 		}
 		$this->Mmain->qUpdpart("request", "id_request", $id, array_keys($stats), array_values($stats));
 	}
+
+	public function get_position($id) {
+        $this->db->from('request');
+        $this->db->where('id_request <=', $id);
+        return $this->db->count_all_results();
+    }
 }

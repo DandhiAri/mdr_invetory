@@ -19,6 +19,8 @@ class Request extends CI_Controller
 		$this->load->library('form_validation');
 		$this->load->library('pagination');
 
+		$this->itemPerPage = 10;
+
 		if (!$this->session->userdata('email')){
 			redirect('auth');
 		}
@@ -31,8 +33,9 @@ class Request extends CI_Controller
         $data['title'] = 'Request';
         $data['user'] = $this->user;
 		
-		$config['base_url'] = base_url('request/index/'); 
+		$config['base_url'] = base_url('request/index/');
 		$config['per_page'] = 10;
+		$data['per_page'] = $config['per_page'];
 		$config['uri_segment'] = 3;
 		
 		if ($this->input->post('keywordReq')){
@@ -47,19 +50,30 @@ class Request extends CI_Controller
 		$key = $data['keywordReq'];
 		
 		$this->db->from('request');
-		if (!empty($data['keywordReq'])) {
-			$this->db->join('detail_request', 'request.id_request = detail_request.id_request', 'left');
+		if (!empty($key)) {
+			$this->db->like('request.nama', $key); 
+		}
+		$config['total_rows'] = $this->db->count_all_results();
+		$data['total_rows'] = $config['total_rows'];
+		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+
+		$this->db->select('request.*, detail_request.*'); 
+		$this->db->from('request');
+		$this->db->join('detail_request', 'request.id_request = detail_request.id_request', 'left');
+
+		if (!empty($key)) {
+			$this->db->group_start();
 			$this->db->like('detail_request.serial_code', $data['keywordReq']);
 			$this->db->or_like('detail_request.id_detail_barang', $data['keywordReq']);
             $this->db->or_like('request.nama', $data['keywordReq']);
-        }
-		
-		$config['total_rows'] = $this->db->count_all_results();
+			$this->db->group_end();
+		}
+	
+		$this->db->limit($config['per_page'], $data['page']);
+		$data['Request'] = $this->db->get()->result(); 
 
-		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$data['Request'] = $this->Mmain->getData('request',$data['keywordReq'], $config['per_page'], $data['page']);
 		$this->pagination->initialize($config);
-
-		$data['Request'] = $this->Mmain->getRequest($data['keywordReq'], $config['per_page'], $data['page']);
 		
 		if (!empty($key)) {
 			$res = $this->Mmain->qRead(
@@ -121,7 +135,7 @@ class Request extends CI_Controller
     }
 
 	public function accept($id){
-		$data['status'] = "Finished";
+		$data['status'] = $data2['status'] = "Finished";
 		$status_get = $this->db->query('SELECT id_barang,lokasi,qtty,status,id_detail_request,id_detail_barang FROM detail_request WHERE id_request = "'.$id.'"')->result();
 		foreach ($status_get as $sg){
 			$query = $this->db->query("
@@ -129,7 +143,7 @@ class Request extends CI_Controller
 				FROM detail_barang 
 				WHERE id_detail_barang = '".$sg->id_detail_barang."'
 			")->row();
-			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$sg->id_barang.'"')->row();
+			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$sg->id_barang.'"')->row()->id_satuan;
 			if($satuanBarang === "16"){
 				$data1["PIC"] = $this->db->query("SELECT nama FROM request WHERE id_request ='".$id."'")->row()->nama;
 				$data1["status"] = "In-Used";
@@ -138,10 +152,11 @@ class Request extends CI_Controller
 			if ($query->qtty !== null && $query->qtty > 0 && $sg->status !== "Finished") {
 				$data1["qtty"] = max($query->qtty - $sg->qtty, 0);
 			} 
-			if($data1 !== null ){
+			if(!empty($data1) ){
 				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
 			}
-			$this->Mmain->qUpdpart("detail_request", 'id_detail_request', $sg->id_detail_request, array_keys($data), array_values($data));
+			$data2['tgl_request_update'] = date('Y-m-d\TH:i');
+			$this->Mmain->qUpdpart("detail_request", 'id_detail_request', $sg->id_detail_request, array_keys($data2), array_values($data2));
 		}
 
 		if($status_get){
@@ -151,12 +166,14 @@ class Request extends CI_Controller
 			$this->session->set_flashdata('failed', 'Request Barang Gagal Diterima!');
 		}
 
-		redirect('request');
+		redirect('request/index/' . $this->get_page_for_id($id));
+		// redirect("request");
+
 	}
 
 	public function reject($id){
-		$data['status'] = "Rejected";
-		$status_get = $this->db->query('SELECT  status,id_barang,qtty,id_detail_request,id_detail_barang FROM detail_request WHERE id_request = "'.$id.'"')->result();
+		$data['status'] = $data2['status'] = "Rejected";
+		$status_get = $this->db->query('SELECT id_barang,lokasi,qtty,status,id_detail_request,id_detail_barang FROM detail_request WHERE id_request = "'.$id.'"')->result();
 		
 		foreach ($status_get as $sg){
 			$query = $this->db->query("
@@ -165,7 +182,7 @@ class Request extends CI_Controller
 				WHERE id_detail_barang = '".$sg->id_detail_barang."'
 			")->row();
 
-			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$sg->id_barang.'"')->row();
+			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$sg->id_barang.'"')->row()->id_satuan;
 			if($satuanBarang === "16"){
 				$data1["status"] = "Stored";
 				$data1["PIC"] = null;
@@ -174,10 +191,11 @@ class Request extends CI_Controller
 			if($sg->status === "Finished"){
 				$data1["qtty"] = max($query->qtty + $sg->qtty, 0);
 			}
-			if($data1 !== null ){
+			if(!empty($data1) ){
 				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
 			}
-			$this->Mmain->qUpdpart("detail_request", 'id_detail_request', $sg->id_detail_request, array_keys($data), array_values($data));
+			$data2['tgl_request_update'] = date('Y-m-d\TH:i');
+			$this->Mmain->qUpdpart("detail_request", 'id_detail_request', $sg->id_detail_request, array_keys($data2), array_values($data2));
 		}
 
 		if($status_get){
@@ -186,7 +204,7 @@ class Request extends CI_Controller
 		} else {
 			$this->session->set_flashdata('failed', 'Request Barang Gagal Ditolak!');
 		}
-		redirect('request');
+		redirect('request/index/' . $this->get_page_for_id($id));
 	}
 
     public function edit($id){
@@ -228,25 +246,27 @@ class Request extends CI_Controller
 			} else {
 				$this->session->set_flashdata('failed', 'ID Detail Barang tidak ada!');
 			}
-			redirect('request');
+			redirect('request/index/' . $this->get_page_for_id($id));
+			// redirect("request");
 		}
 	}
 
     public function hapus_data($id)
 	{
-		$data = $this->db->query("SELECT * FROM detail_request WHERE id_request = '".$id."'")->row();
-		$query = $this->db->query("SELECT * FROM detail_barang WHERE id_detail_barang = '".$data->id_detail_barang."'")->row();
-		$barang = $this->db->query("SELECT * FROM barang WHERE id_barang = '".$query->id_barang."'")->row();
-		if ($data->status == "Finished") {
-			if($barang->id_satuan === "16"){
-				$data1["status"] = "Stored";
-				$data1["PIC"] = null;
-				$data1["lokasi"] = "IT STOCKROOM";
+		$data = $this->db->query("SELECT * FROM detail_request WHERE id_request = '".$id."'")->result();
+		foreach ($data as $dt){
+			$query = $this->db->query("SELECT * FROM detail_barang WHERE id_detail_barang = '".$dt->id_detail_barang."'")->row();
+			$barang = $this->db->query("SELECT * FROM barang WHERE id_barang = '".$query->id_barang."'")->row();
+			if ($dt->status == "Finished") {
+				if($barang->id_satuan === "16"){
+					$data1["status"] = "Stored";
+					$data1["PIC"] = null;
+					$data1["lokasi"] = "IT STOCKROOM";
+				}
+				$data1["qtty"] = $query->qtty + $dt->qtty;
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $dt->id_detail_barang, array_keys($data1), array_values($data1));
 			}
-			$data1["qtty"] = $query->qtty + $data->qtty;
-			$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data->id_detail_barang, array_keys($data1), array_values($data1));
 		}
-
 		$this->Mmain->qDel("detail_request", "id_request", $id);
 		$this->Mmain->qDel("request", "id_request", $id);
 
@@ -255,6 +275,20 @@ class Request extends CI_Controller
 		} else {
 			$this->session->set_flashdata('failed', 'Data Request <strong>Gagal</strong> Dihapus!');
 		}
-		redirect("request");
+		redirect('request/index/' . $this->get_page_for_id($id));
+		// redirect("request");
+
+	}
+
+	private function get_page_for_id($id) {
+		if (!empty($this->session->userdata('keywordReq'))){
+			$keyword = $this->session->userdata('keywordReq');
+		}
+		$position = $this->Mmain->getData('request', $keyword, null, null, $id, true);
+		if ($position === 0) {
+			return false;
+		}
+		$per_page = 10;
+		return floor(($position - 1) / $per_page) * $per_page;
 	}
 }

@@ -22,7 +22,6 @@ class Detail_Replace extends CI_Controller
    		}
 		
 		$this->form_validation->set_rules('id_replace', 'ID Replace', 'required');
-		$this->form_validation->set_rules('tgl_replace_update', 'Waktu Update Replace', 'required');
 		$this->form_validation->set_rules('id_barang', 'ID Barang', 'required');
 		$this->form_validation->set_rules('id_detail_barang', 'ID Detail Barang', 'required');
 		$this->form_validation->set_rules('qtty', 'Quantity Replace', 'required|integer');
@@ -81,7 +80,6 @@ class Detail_Replace extends CI_Controller
         } else {
             $data = array(
 				"id_replace" => $this->input->post('id_replace'),
-				"tgl_replace_update" => $this->input->post('tgl_replace_update'),
 				"id_barang" => $this->input->post('id_barang'),
 				"id_detail_barang" => $this->input->post('id_detail_barang'),
 				"qtty" => $this->input->post('qtty'),
@@ -93,10 +91,13 @@ class Detail_Replace extends CI_Controller
 				$data['serial_code'] = "";
 			}
 			$data['id_detail_replace'] = $this->Mmain->autoId("detail_ganti","id_detail_replace","DRT","DRT"."001","001");
-			
+			$data['tgl_replace_update'] = date('Y-m-d\TH:i');
 			$this->Mmain->qIns('detail_ganti', $data);
+			
+			$this->M_detail_replace->changeStatusReplace($data['id_replace']);
+
 			$this->session->set_flashdata('success', 'Data Detail Replace <strong>Berhasil</strong> Ditambahkan!');
-			redirect("replace");
+			redirect('replace/index/' . $this->get_page_for_id($data['id_replace']));
         }
     }
 
@@ -127,7 +128,6 @@ class Detail_Replace extends CI_Controller
         } else {
             $data = array(
                 'id_replace' => $this->input->post('id_replace'),
-				'tgl_replace_update' => $this->input->post('tgl_replace_update'),
 				'id_barang' => $this->input->post('id_barang'),
 				'qtty' => $this->input->post('qtty'),
 				'serial_code' => $this->input->post('serial_code'),
@@ -149,7 +149,7 @@ class Detail_Replace extends CI_Controller
 				FROM detail_ganti 
 				WHERE id_detail_replace = '".$id."'
 			")->row();
-			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$query->id_barang.'"')->row();
+			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$data['id_barang'].'"')->row();
 
 			if (($query1->status == 'Requested' || $query1->status == 'Rejected') && $data['status'] == 'Finished') {
 				if($satuanBarang === "16"){
@@ -191,7 +191,7 @@ class Detail_Replace extends CI_Controller
 			$this->M_detail_replace->changeStatusReplace($data['id_replace']);
 
 			$this->session->set_flashdata('success', 'Data Detail Replace <strong>Berhasil</strong> Diubah!');
-			redirect("replace");
+			redirect('replace/index/' . $this->get_page_for_id($data['id_replace']));
         }
 	}
    public function del_replace($id)
@@ -204,7 +204,7 @@ class Detail_Replace extends CI_Controller
 			if ($barang->id_satuan === "16"){
 				$data1["status"] = "Stored";
 				$data1["PIC"] = "";
-				$data1["lokasi"] ="IT-STOCKROOM";
+				$data1["lokasi"] ="IT STOCKROOM";
 			}
 			$data1["qtty"] = $query->qtty + $data->qtty;
 			$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data->id_detail_barang, array_keys($data1), array_values($data1));
@@ -219,7 +219,19 @@ class Detail_Replace extends CI_Controller
 		} else {
 			$this->session->set_flashdata('error', 'Data Detail Replace <strong>Gagal</strong> Dihapus!');
 		}
+		redirect('replace/index/' . $this->get_page_for_id($data->id_replace));
+	}
+
+	private function get_page_for_id($id) {
+		if (!empty($this->session->userdata('keywordRep'))){
+			$keyword = $this->session->userdata('keywordRep');
+		}
+		$position = $this->Mmain->getData('replace', $keyword, null, null, $id, true);
+		if ($position === 0) {
+			return false;
+		}
+		$per_page = 10;
+		return floor(($position - 1) / $per_page) * $per_page;
 		
-		redirect("replace");
 	}
 }

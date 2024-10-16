@@ -35,6 +35,7 @@ class Barang extends CI_Controller
 
 		$config['base_url'] = base_url('barang/index/'); 
 		$config['per_page'] = 10;
+		$data['per_page'] = $config['per_page'];
 		$config['uri_segment'] = 3;
 
 		if ($this->input->post('keyword')){
@@ -50,18 +51,28 @@ class Barang extends CI_Controller
 		$key = $data['keyword'];
 
 		$this->db->from('barang');
-		if(!empty($key)){
-			$this->db->join('detail_barang', 'barang.id_barang = detail_barang.id_barang', 'left');
+		if (!empty($key)) {
+			$this->db->like('barang.nama_barang', $key); 
+		}
+		$config['total_rows'] = $this->db->count_all_results(); 
+		$data['total_rows'] = $config['total_rows'];
+		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+
+		$this->db->select('barang.*, detail_barang.*'); 
+		$this->db->from('barang');
+		$this->db->join('detail_barang', 'barang.id_barang = detail_barang.id_barang', 'left');
+
+		if (!empty($key)) {
+			$this->db->group_start();
 			$this->db->like('detail_barang.serial_code', $key);
 			$this->db->or_like('detail_barang.id_barang', $key);
 			$this->db->or_like('detail_barang.id_detail_barang', $key);
-			$this->db->or_like('barang.nama_barang', $key);
+			$this->db->group_end();
 		}
+	
+		$this->db->limit($config['per_page'], $data['page']);
+		$data['Barang'] = $this->db->get()->result(); 
 		
-		$config['total_rows'] = $this->db->count_all_results();
-		
-		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-
 		$data['Barang'] = $this->Mmain->getBarang($key, $config['per_page'], $data['page']);
 		$this->pagination->initialize($config);
 		$data['pagination'] = $this->pagination->create_links();
@@ -172,21 +183,24 @@ class Barang extends CI_Controller
             );
 			$this->Mmain->qUpdpart("barang", 'id_barang', $id, array_keys($data), array_values($data));
 			$this->session->set_flashdata('success', 'Data <strong>Berhasil</strong> Diubah!');
-			redirect('barang');
+			redirect('barang/index/' . $this->get_page_for_id($id));
 		}
 	}
 
 	public function hapus_data($id)
-	{
+	{		
+		$this->Mmain->qDel("detail_request","id_barang",$id);
+		$this->Mmain->qDel("detail_ganti","id_barang",$id);
+		$this->Mmain->qDel("detail_pinjam","id_barang",$id);
 		$result1 = $this->Mmain->qDel("detail_barang","id_barang",$id);
 		$result2 = $this->Mmain->qDel("barang","id_barang",$id);
 
 		if (!$result1 && !$result2) {
 			$this->session->set_flashdata('success', 'Data Barang <strong>Berhasil</strong> Dihapus!');
-			redirect('barang');
+			redirect('barang/index/' . $this->get_page_for_id($id));
 		} else {
 			$this->session->set_flashdata('failed', 'Data Barang <strong>Gagal</strong> Dihapus!');
-			redirect('barang');
+			redirect('barang/index/' . $this->get_page_for_id($id));
 		}
 	}
 	
@@ -205,4 +219,16 @@ class Barang extends CI_Controller
 		
 		echo $retval;
 	}
+
+	private function get_page_for_id($id) {
+		if (!empty($this->session->userdata('keyword'))){
+			$keyword = $this->session->userdata('keyword');
+		}
+        $position = $this->Mmain->getBarang($keyword, null, null, $id, true);
+		if ($position === 0) {
+			return false;
+		}
+        $per_page = 10;
+        return floor(($position - 1) / $per_page) * $per_page;
+    }
 }

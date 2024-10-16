@@ -15,6 +15,13 @@
 				</form>
 			</div> 
         </div>
+		<?php
+		if($keywordJEN){
+		?>
+			<p style="padding:7px 0 0 1.2em;">Keyword yang sedang dicari : <b><?= $keywordJEN ?></b></p>
+		<?php
+		}
+		?>
 		<?php if ($this->session->flashdata('failed')): ?>
 				<div class="warn err">
 					<div class="msg" onclick="warnError()">

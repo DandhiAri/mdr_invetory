@@ -14,6 +14,7 @@
 					<button type="submit" style="cursor: pointer;" class="btn btn-danger" name="reset" value="1"><i class="fa fa-refresh"></i></button>
 				</form>
 			</div> 
+			<?= $pagination ?>
         </div>		
 		<?php
 		if($keywordReq){
@@ -109,12 +110,10 @@
 								<thead>
 								<tr>
 									<th>No</th>
-									<th>ID Detail Request</th>
-									<th>ID Barang</th>
-									<th>ID Detail Barang</th>
-									<th>Serial Code</th>
-									<th>Lokasi</th>
+									<th>ID</th>
+									<th>Detail Barang</th>
 									<th>Quantity</th>
+									<th>Lokasi</th>
 									<th>Keterangan</th>
 									<th>Waktu Update</th>
 									<th>Status</th>
@@ -122,21 +121,26 @@
 								</tr>
 									<?php 
 									$no = 1;
+									$hasData = false;
 									foreach($Detail_Request as $dr){
-										
 										if($dr->id_request === $r->id_request){
-										?>
+										$hasData = true;
+									?>
 										<tr>
 											<td><?= $no++ ?></td>
 											<td><b><?= $dr->id_detail_request ?></b></td>
-											<td><?= $dr->id_barang ?></td>
-											<td><b><?= $dr->id_detail_barang ?></b></td>
-											<td><b><?= $dr->serial_code ?></b></td>
-											<td><?= $dr->lokasi ?></td>
+											<td width="20%">
+												<ul style="text-align:left; list-style:none; margin:0 0 0 0; padding:0; white-space: nowrap;">
+													<li><b>ID Barang : </b><?= $dr->id_barang ?></li>
+													<li><b>ID Detail Barang : </b> <?= $dr->id_detail_barang ?></li>
+													<li><b>SN : </b><?= !empty($dr->serial_code)  ? $dr->serial_code : "<i>NULL</i>" ?></li>
+												</ul>
+											</td>
 											<td style="text-align:right;"><?= $dr->qtty ?></td>
+											<td ><b><?= $dr->lokasi ?></b></td>
 											<td><?= $dr->keterangan?></td>
 											<td><?= $dr->tgl_request_update ?></td>
-											<td><p class="<?= $r->status ?>"><?= $r->status ?></p></td>
+											<td><p class="<?= $dr->status ?>"><?= $dr->status ?></p></td>
 											<td>
 												
 												<a href="<?= base_url('detail_request/edit/') . $dr->id_detail_request ?>" class="btn btn-warning" title="Edit"><i class="ti ti-pencil"></i></a>
@@ -144,8 +148,17 @@
 											</td>
 										</tr>
 									<?php 
-										}
+										} 
 									} 
+									if (!$hasData) {
+									?>
+										<td colspan="20">
+											<div class="null-result-container">
+												<p class="null-result">Tidak Ada Data untuk Ditampilkan :(</p>
+											</div>
+										</td>
+									<?php
+									}
 									?>
 								</thead>
 							</table>
@@ -154,7 +167,12 @@
 					<?php } ?>
 				</thead>
 			</table>
-			<?= $pagination ?>
+			<div style="display:flex; justify-content:space-between;">
+				<p>
+					Show <?= count($Request) ?> of <?= $total_rows ?> Data Request
+				</p>
+				<?= $pagination ?>
+			</div
 		</div>
 	</div>
 </div>

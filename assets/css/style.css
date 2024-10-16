@@ -94,6 +94,9 @@ table{
 	padding-top: 20px;
 	font-size: 20px;
 }
+.Requested, .Finished, .In-Used, .Rejected, .Stored{
+	margin :0;
+}
 .Requested{
 	color: rgb(132, 141, 0);
 	background-color: rgba(255, 251, 30, 0.151);
@@ -118,3 +121,4 @@ table{
 	border-radius: 1em;
 	/* padding: 2px; */
 }
+

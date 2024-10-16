@@ -68,7 +68,6 @@ class Detail_request extends CI_Controller
             $this->session->set_flashdata('error', 'Tambah data hanya untuk admin!');
             redirect('dashboard');
 		}
-		$this->form_validation->set_rules('tgl_request_update', 'Update Tanggal Request', 'required');
 
 		if ($this->form_validation->run() == FALSE) {
             $this->session->set_flashdata('failed', validation_errors());
@@ -79,7 +78,6 @@ class Detail_request extends CI_Controller
 				"keterangan" => $this->input->post('keterangan'),
 				"id_barang" => $this->input->post('id_barang'),
 				"id_detail_barang" => $this->input->post('id_detail_barang'),
-				"tgl_request_update" => $this->input->post('tgl_request_update'),
 				"serial_code" => $this->input->post('serial_code'),
 				"lokasi" => $this->input->post('lokasi'),
 				"qtty" => $this->input->post('qtty'),
@@ -89,12 +87,15 @@ class Detail_request extends CI_Controller
 			}
 			$id_detail_request = $this->Mmain->autoId("detail_request","id_detail_request","DRQ","DRQ"."001","001");
 			$data['id_detail_request'] = $id_detail_request;
+			$data['tgl_request_update'] = date('Y-m-d\TH:i');
+			
 			$this->Mmain->qIns('detail_request', $data);
-
-			// $this->m_detail_req->changeStatusRequest($data['id_request']);
+			$this->m_detail_req->changeStatusRequest($data['id_request']);
 
 			$this->session->set_flashdata('success', 'Data Detail Request <strong>Berhasil</strong> Ditambahkan!');
-			redirect("request");
+			redirect('request/index/' . $this->get_page_for_id($data['id_request']));
+			// redirect("request");
+
         }
     }
 
@@ -146,7 +147,7 @@ class Detail_request extends CI_Controller
 				FROM detail_request 
 				WHERE id_detail_request = '".$id."'
 			")->row();
-			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$query->id_barang.'"')->row();
+			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$data['id_barang'].'"')->row()->id_satuan;
 
 			if (($query1->status == 'Requested' || $query1->status == 'Rejected') && $data['status'] == 'Finished') {
 				if($satuanBarang === "16"){
@@ -185,14 +186,14 @@ class Detail_request extends CI_Controller
 			$data['tgl_request_update'] = date('Y-m-d\TH:i');
 			$this->Mmain->qUpdpart("detail_request", 'id_detail_request', $id, array_keys($data), array_values($data)); 
 
-			$this->m_detail_req->changeStatusRequest($data['id_request']);
+			$this->m_detail_req->changeStatusRequest($data['id_request']); 
 
 			$this->session->set_flashdata('success', 'Data Detail Request <strong>Berhasil</strong> Diubah!');
-			redirect("request");
+			redirect('request/index/' . $this->get_page_for_id($data['id_request']));
+			// redirect("request");
+
         }
 	}
-	
-	
 
     public function hapus_data($id,$idRequest)
 	{
@@ -220,6 +221,20 @@ class Detail_request extends CI_Controller
 			$this->session->set_flashdata('error', 'Data Detail Request <strong>Gagal</strong> Dihapus!');
 		}
 		
-		redirect("request");
+		redirect('request/index/' . $this->get_page_for_id($data->id_request));
+		// redirect("request");
+
+	}
+
+	private function get_page_for_id($id) {
+		if (!empty($this->session->userdata('keywordReq'))){
+			$keyword = $this->session->userdata('keywordReq');
+		}
+		$position = $this->Mmain->getData('request', $keyword, null, null, $id, true);
+		if ($position === 0) {
+			return false;
+		}
+		$per_page = 10;
+		return floor(($position - 1) / $per_page) * $per_page;
 	}
 }

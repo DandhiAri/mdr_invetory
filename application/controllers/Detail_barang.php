@@ -105,7 +105,7 @@ class Detail_barang extends CI_Controller
             $this->session->set_flashdata('success', 'Detail Barang sudah ditambahkan');
 			$total_items = $this->db->count_all('barang');
 
-			redirect('barang');
+			redirect('barang/index/' . $this->get_page_for_id($data["id_barang"]));
         }
     }
 
@@ -154,19 +154,33 @@ class Detail_barang extends CI_Controller
 		$this->Mmain->qUpdpart("detail_barang", 'id_detail_barang', $id, array_keys($data), array_values($data));
 
 		$this->session->set_flashdata('success', 'Detail Barang berhasil diedit');
-		redirect("barang"); 
+		redirect('barang/index/' . $this->get_page_for_id($data["id_barang"]));
 	}
 
     public function hapus_data($id,$idBarang)
 	{
+		$this->Mmain->qDel("detail_request","id_detail_barang",$id);
+		$this->Mmain->qDel("detail_ganti","id_detail_barang",$id);
+		$this->Mmain->qDel("detail_pinjam","id_detail_barang",$id);
 		$result = $this->Mmain->qDel("detail_barang","id_detail_barang",$id);
 
 		if (!$result) {
 			$this->session->set_flashdata('success', 'Data <strong>Berhasil</strong> Dihapus!');
-			redirect("barang");
+			redirect('barang/index/' . $this->get_page_for_id($idBarang));
 		} else {
 			$this->session->set_flashdata('failed', 'Data <strong>Gagal</strong> Dihapus!');
-			redirect("barang");
+			redirect('barang/index/' . $this->get_page_for_id($idBarang));
 		}
 	}  
+	private function get_page_for_id($id) {
+		if (!empty($this->session->userdata('keyword'))){
+			$keyword = $this->session->userdata('keyword');
+		}
+        $position = $this->Mmain->getBarang($keyword, null, null, $id, true);
+		if ($position === 0) {
+			return false;
+		}
+        $per_page = 10;
+        return floor(($position - 1) / $per_page) * $per_page;
+    }
 }

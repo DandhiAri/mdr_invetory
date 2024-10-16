@@ -21,6 +21,7 @@
 					<button type="submit" style="cursor: pointer;" class="btn btn-danger" name="reset" value="1"><i class="fa fa-refresh"></i></button>
 				</form>
 			</div> 
+			<?= $pagination ?>
         </div>
        
 		<div class="ibox-body">
@@ -106,10 +107,8 @@
 									<thead>
 										<tr>
 											<th>No</th>
-											<th>ID Detail Replace</th>
-											<th>ID Barang</th>
-											<th>ID Detail Barang</th>
-											<th>Serial Code</th>
+											<th>ID</th>
+											<th>Detail Barang</th>
 											<th>Quantity</th>
 											<th>Lokasi</th>
 											<th>Keterangan</th>
@@ -119,15 +118,21 @@
 										</tr>
 										<?php 
 										$no = 1;
+										$hasData = false;
 										foreach($Detail_Replace as $d){
 											if($d->id_replace === $rp->id_replace){
+											$hasData = true;
 											?>
 											<tr>
 												<td><?= $no++ ?></td>
 												<td><b><?= $d->id_detail_replace ?></b></td>
-												<td><?= $d->id_barang ?></td>
-												<td><b><?= $d->id_detail_barang ?></b></td>
-												<td><b><?= $d->serial_code ?></b></td>
+												<td width="20%">
+													<ul style="text-align:left; list-style:none; margin:0 0 0 0; padding:0;">
+														<li><b>ID Barang : </b><?= $d->id_barang ?></li>
+														<li><b>ID Detail Barang : </b> <?= $d->id_detail_barang ?></li>
+														<li><b>SN : </b><?= !empty($d->serial_code)  ? $d->serial_code : "<i>NULL</i>" ?></li>
+													</ul>
+												</td>
 												<td style="text-align:right;"><?= $d->qtty ?></td>
 												<td><?= $d->lokasi ?></td>
 												<td><?= $d->keterangan ?></td>
@@ -140,10 +145,18 @@
 											</tr>
 										<?php 
 											}
-										} 
+										}
+										if (!$hasData) {
+										?>
+											<td colspan="20">
+												<div class="null-result-container">
+													<p class="null-result">Tidak Ada Data untuk Ditampilkan :(</p>
+												</div>
+											</td>
+										<?php
+										}
 										?>
 									</thead>
-									<!-- <?= $pagination1; ?> -->
 								</table>
 							</td>
 						</tr>
@@ -152,6 +165,7 @@
 			</table>
 			<?= $pagination ?>
 		</div>
+		
 	</div>
 </div>
 

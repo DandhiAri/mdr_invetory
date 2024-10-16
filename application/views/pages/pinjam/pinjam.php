@@ -14,6 +14,7 @@
 					<button type="submit" style="cursor: pointer;" class="btn btn-danger" name="reset" value="1"><i class="fa fa-refresh"></i></button>
 				</form>
 			</div> 
+			<?= $pagination ?>
 		</div>
         <div class="ibox-body">
 			<?php if ($this->session->flashdata('success')): ?>
@@ -35,10 +36,10 @@
                         <th>No</th>
 						<th>Detail Pinjam</th>
                         <th>ID Pinjam</th>
-                        <th>PIC</th>
-                        <th>Nama Penerima</th>
-                        <th>Nama Pemberi</th>
+                       	<th>Nama Tersangka</th>
                         <th>Waktu Pinjam</th>
+                        <th>Status Pinjam</th>
+                        <th>Action Status</th>
                         <th>Keterangan</th>
                         <th>Aksi</th>
                     </tr>
@@ -76,10 +77,19 @@
 								</div>
 							</td>
                             <td><?= $P->id_pinjam ?></td>
-                            <td><b><?= $P->nama_peminjam ?></b></td>
-                            <td><b><?= $P->nama_penerima ?></b></td>
-                            <td><?= $P->nama_pemberi ?></td>
-                            <td><?= $formatted_datetime ?></td>                    
+							<td width="20%">
+								<ul style="text-align:left; list-style:none; margin:0 0 0 0; padding:0;">
+									<li><b>Nama PIC : </b><?= $P->nama_peminjam ?></li>
+									<li><b>Nama Penerima : </b> <?= $P->nama_penerima ?></li>
+									<li><b>Nama Pemberi :</b> <?= $P->nama_pemberi ?></li>
+								</ul>
+							</td>
+                            <td><?= $formatted_datetime ?></td> 
+							<td><p class='<?= $P->status ?>'><?= $P->status ?></p></td>
+							<td>
+								<a href="<?= base_url('Pinjam/accept/') . $P->id_pinjam ?>" title="Finished/Menerima replace semua barang" class="btn btn-success"><i class="fa fa-check"></i></a>
+								<a href="<?= base_url('Pinjam/reject/') . $P->id_pinjam ?>" title="Rejected/Menolak replace semua barang" class="btn btn-danger"><i class="fa fa-remove"></i></a>
+							</td>                 
 							<td><?= $P->keterangan ?></td>
                             <td>
                                 <a href="<?= base_url('pinjam/edit_data/') . $P->id_pinjam ?>" class="btn btn-warning" title="Edit pinjam"><i class="ti ti-pencil"></i></a>
@@ -92,19 +102,17 @@
 									<a href="<?= base_url('detail_pinjam/tambah_detail/') . $P->id_pinjam  ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Detail Pinjam <?= $P->id_pinjam ?> </a>
 								</p>
 								<h5 style="text-align:center;">
-									Detail pinjam <b><?= $rp->id_pinjam ?></b> Table 
+									Detail pinjam <b><?= $P->id_pinjam ?></b> Table 
 								</h5>
 								<table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
 									<thead>
 										<tr>
 											<th>No</th>
-											<th>ID Barang</th>
-											<th>ID Detail Barang</th>
-											<th>Serial Code</th>
-											<th>Waktu Kembali</th>
+											<th>Detail Barang</th>
 											<th>Quantity</th>
 											<th>Lokasi</th>
 											<th>Keterangan</th>
+											<th>Waktu Kembali</th>
 											<th>Status</th>
 											<th>Aksi</th>
 										</tr>
@@ -112,28 +120,46 @@
 									<tbody>
 										<?php
 										$no = 1;
+										$hasData = false;
 										foreach ($Detail_pinjam as $dp) {
-											$timestamp = strtotime($dp->wkt_kembali);
-											$formatted_datetime = strftime('%d %B %Y %H:%M:%S',$timestamp);
+											if($dp->id_pinjam === $P->id_pinjam){
+												$hasData = true;
+												$timestamp = strtotime($dp->wkt_kembali);
+												$formatted_datetime = strftime('%d %B %Y %H:%M:%S',$timestamp);
 										?>
 											<tr>
 												<td><?= $no++ ?></td>
-												<td><?= $dp->id_barang ?></td>
-												<td><b><?= $dp->id_detail_barang ?></b></td>
-												<td><b><?= $dp->serial_code ?></b></td>
-												<td><?= $formatted_datetime ?></td>              
+												<td width="20%">
+													<ul style="text-align:left; list-style:none; margin:0 0 0 0; padding:0;">
+														<li><b>ID Barang : </b><?= $dp->id_barang ?></li>
+														<li><b>ID Detail Barang : </b> <?= $dp->id_detail_barang ?></li>
+														<li><b>SN : </b><?= !empty($dp->serial_code)  ? $dp->serial_code : "<i>NULL</i>" ?></li>
+													</ul>
+												</td>
 												<td style="text-align:right;"><?= $dp->qtty ?></td>
 												<td><?= $dp->lokasi ?></td>
 												<td><?= $dp->keterangan ?></td>
+												<td><?= $formatted_datetime ?></td>
 												<td><p class="<?= $dp->status ?>"><?= $dp->status ?></p></td>
-
-												
 												<td>
 													<a href="<?= base_url('detail_pinjam/edit_data/') . $dp->id_detail_pinjam  ?>" class="btn btn-warning" title="Edit pinjam"><i class="ti ti-pencil"></i></a>
 													<a href="<?= base_url('detail_pinjam/hapus/') . $dp->id_detail_pinjam.'/'.$dp->id_pinjam  ?>" class="btn btn-danger" onclick="confirm('Apakah anda yakin ingin menghapus?')" id="delete" title="Hapus" style="cursor: pointer;"><i class="ti ti-trash"></i></button>
 												</td>
 											</tr>
-										<?php } ?>
+										<?php 
+											}
+										}
+										if (!$hasData) {
+										?>
+											<td colspan="20">
+												<div class="null-result-container">
+													<p class="null-result">Tidak Ada Data untuk Ditampilkan :(</p>
+													<hr>
+												</div>
+											</td>
+										<?php
+										}
+										?>
 									</tbody>
 								</table>
 							</td>

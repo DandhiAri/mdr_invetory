@@ -10,28 +10,37 @@ class mMain  extends CI_Model
     }
 
 
-    function autoid($tbl0, $pk0, $defid, $defval, $defno) //tbl0=table name, pk0=flag pk, defid=
+    function autoid($tbl0, $pk0, $defid, $defval, $defno)   
+	// $tbl0: Nama tabel
+    // $pk0: Nama kolom primary key
+    // $defid: Prefix untuk ID (misalnya 'BRG' untuk barang)
+    // $defval: Nilai default (format lengkap ID, misalnya 'BRG001')
+    // $defno: Bagian angka dari ID default (misalnya '001')
     {
-        if (isset($defno) && strlen($defno) > 0)
+        if (isset($defno) && strlen($defno) > 0){
             $no = substr($defval, 0, strlen($defval) - strlen($defno));
-        else
+		}else{
             $no = "";
+		}
+		
+		$query = $this->db->query("SELECT $pk0 FROM $tbl0 WHERE $pk0 LIKE '$defid%' ORDER BY $pk0 DESC LIMIT 1");
+    
+		if ($query->num_rows() > 0) {
+			$tempurut = $query->row()->$pk0;
+			$pj = strlen($defval) - strlen($no);
+			$no1 = intval(substr($tempurut, strlen($no))) + 1;
+			$max_number = pow(10, strlen($defno)) - 1;
+			if ($no1 > $max_number) {
+				$pj++;
+				$no1 = 1;
+			}
+			$id1 = $no . sprintf("%0" . $pj . "d", $no1);
+		} else {
+			$id1 = $defval;
+		}
 
-        $id1 = 0;
-        $query = $this->db->query("SELECT $pk0 FROM $tbl0 where $pk0 like '" . $defid . "%' order by $pk0 desc LIMIT 1 ");
-        if ($query->num_rows() > 0) {
-            foreach ($query->result() as $row) {
-                $tempurut = $row->$pk0;
-            }
-            $pj = strlen($defval) - strlen($no);
-            $no1 = substr($tempurut, strlen($no), strlen($defno)) + 1;
-            $id1 = $no . sprintf("%0" . $pj . "s", $no1);
-        } else {
-            $id1 = $defval;
-        }
-
-        return $id1;
-    }
+		return $id1;
+	}
 
 	public function getIdBarang($id) {
         return $this->db->get_where('barang', ['id_barang' => $id])->row_array();
@@ -85,81 +94,134 @@ class mMain  extends CI_Model
 		$this->db->insert($tbq, $valq);
     }
 
-	public function getBarang($keyword=null, $limit, $start) {
+	public function getBarang($keyword = null, $limit = null, $start = null, $id = null, $with_position = false) {
         $this->db->select('barang.*, 
-			jenis.nama_jenis, 
-			satuan.nama_satuan, 
-			SUM(detail_barang.qtty) AS detail_count,
-			SUM(CASE WHEN detail_barang.status = "Stored" THEN 1 ELSE 0 END) AS stored_count'
-		);
-        $this->db->from('barang');
-        $this->db->join('jenis', 'barang.id_jenis = jenis.id_jenis');
-        $this->db->join('satuan', 'barang.id_satuan = satuan.id_satuan');	
+        jenis.nama_jenis, 
+        satuan.nama_satuan, 
+        SUM(detail_barang.qtty) AS detail_count');
+
+		$this->db->from('barang');
+		$this->db->join('jenis', 'barang.id_jenis = jenis.id_jenis');
+		$this->db->join('satuan', 'barang.id_satuan = satuan.id_satuan');
 		$this->db->join('detail_barang', 'barang.id_barang = detail_barang.id_barang', 'left');
+		
+		if ($with_position) {
+			if ($keyword) {
+				$this->db->join('(SELECT barang.id_barang FROM barang LEFT JOIN detail_barang ON barang.id_barang = detail_barang.id_barang WHERE detail_barang.serial_code LIKE "%'.$keyword.'%" OR barang.nama_barang LIKE "%'.$keyword.'%" GROUP BY barang.id_barang) as b2', 'b2.id_barang <= barang.id_barang', 'left');
+			} else {
+				$this->db->join('barang as b2', 'b2.id_barang <= barang.id_barang', 'left');
+			}
+			$this->db->select('COUNT(DISTINCT b2.id_barang) as position');
+		}
+
 		if ($keyword) {
+			$this->db->group_start();
 			$this->db->like('detail_barang.serial_code', $keyword);
 			$this->db->or_like('detail_barang.id_barang', $keyword);
 			$this->db->or_like('detail_barang.id_detail_barang', $keyword);
 			$this->db->or_like('barang.nama_barang', $keyword);
 			$this->db->or_like('jenis.nama_jenis', $keyword);
+			$this->db->group_end();
 		}
-		$this->db->group_by('barang.id_barang, detail_barang.id_barang');
-		$this->db->order_by('id_barang', 'ASC');
-        $this->db->limit($limit, $start); 
-        $query = $this->db->get();
-        return $query->result();
+
+		$this->db->group_by('barang.id_barang');
+		$this->db->order_by('barang.id_barang', 'ASC');
+
+		if ($id !== null) {
+			$this->db->having('barang.id_barang', $id);
+		}
+
+		if ($limit !== null && $start !== null) {
+			$this->db->limit($limit, $start);
+		}
+
+		$query = $this->db->get();
+
+		if ($id !== null) {
+			$result = $query->row();
+			return $result ? $result->position : 0;
+		}
+
+		return $query->result();
     }
 
-	public function getRequest($keyword=null, $limit, $start) {
-        $this->db->select('request.*');
-        $this->db->from('request');
-		$this->db->join('detail_request', 'request.id_request = detail_request.id_request', 'left');
-		if ($keyword) {
-			$this->db->like('detail_request.serial_code', $keyword);
-			$this->db->or_like('detail_request.id_detail_barang', $keyword);
-			$this->db->or_like('request.nama', $keyword);
+	public function getData($type, $keyword = null, $limit = null, $start = null, $id = null, $with_position = false, $sort_order = 'asc') {
+		$config = [
+			'request' => [
+				'main_table' => 'request',
+				'detail_table' => 'detail_request',
+				'id_field' => 'id_request',
+				'name_field' => 'nama',
+				'additional_like_field' => 'id_detail_barang'
+			],
+			'replace' => [
+				'main_table' => 'ganti',
+				'detail_table' => 'detail_ganti',
+				'id_field' => 'id_replace',
+				'name_field' => 'nama',
+				'additional_like_field' => 'id_detail_barang'
+			],
+			'pinjam' => [
+				'main_table' => 'pinjam',
+				'detail_table' => 'detail_pinjam',
+				'id_field' => 'id_pinjam',
+				'name_field' => 'nama_peminjam',
+				'additional_like_field' => 'id_detail_barang'
+			]
+		];
+	
+		if (!isset($config[$type])) {
+			return false;
 		}
-		$this->db->group_by('request.id_request, detail_request.id_request');
-        $this->db->limit($limit, $start); 
-        $query = $this->db->get();
-        return $query->result();
-    }
+	
+		$conf = $config[$type];
 
-	public function getReplace($keyword=null, $limit, $start) {
-        $this->db->select('ganti.*');
-        $this->db->from('ganti');
-		$this->db->join('detail_ganti', 'ganti.id_replace = detail_ganti.id_replace', 'left');
-		if ($keyword) {
-			$this->db->like('detail_ganti.serial_code', $keyword);
-			$this->db->or_like('ganti.nama', $keyword);
+		$this->db->select($conf['main_table'] . '.*');
+		$this->db->from($conf['main_table']);
+		$this->db->join($conf['detail_table'], $conf['main_table'] . '.' . $conf['id_field'] . ' = ' . $conf['detail_table'] . '.' . $conf['id_field'], 'left');
+		if ($with_position) {
+			if ($keyword) {
+				$this->db->join('(
+					SELECT ' . $conf['id_field'] . ' 
+					FROM ' . $conf['main_table'] . ' 
+					LEFT JOIN ' . $conf['detail_table'] . ' ON ' . $conf['main_table'] . '.' . $conf['id_field'] . ' = ' . $conf['detail_table'] . '.' . $conf['id_field'] . 
+					' WHERE ' . $conf['detail_table'] . '.serial_code LIKE "%' . $keyword . '%" 
+					OR ' . $conf['main_table'] . '.' . $conf['name_field'] . ' LIKE "%' . $keyword . '%" ' . 
+					(isset($conf['additional_like_field']) ? 'OR ' . $conf['detail_table'] . '.' . $conf['additional_like_field'] . ' LIKE "%' . $keyword . '%" ' : '') . 
+					'GROUP BY ' . $conf['id_field'] . 
+				') as b2', 'b2.' . $conf['id_field'] . ' <= ' . $conf['main_table'] . '.' . $conf['id_field'], 'left');
+			} else {
+				$this->db->join($conf['main_table'] . ' as b2', 'b2.' . $conf['id_field'] . ' <= ' . $conf['main_table'] . '.' . $conf['id_field'], 'left');
+			}
+			$this->db->select('COUNT(DISTINCT b2.' . $conf['id_field'] . ') as position');
 		}
-		$this->db->group_by('ganti.id_replace, detail_ganti.id_replace');
-        $this->db->limit($limit, $start); 
-        $query = $this->db->get();
-        return $query->result();
-    }
-	public function getDetailReplace($id, $limit, $start) {
-        $this->db->select('detail_ganti.*');
-        $this->db->from('detail_ganti');
-        $this->db->where('id_replace', $id);
-        $this->db->limit($limit, $start);
-        $query = $this->db->get();
-        return $query->result();
-    }
-	public function getPinjam($keyword=null, $limit, $start) {
-        $this->db->select('pinjam.*');
-        $this->db->from('pinjam');
-		$this->db->join('detail_pinjam', 'pinjam.id_pinjam = detail_pinjam.id_pinjam', 'left');
-		if ($keyword) {
-			$this->db->like('detail_pinjam.serial_code', $keyword);
-			$this->db->or_like('pinjam.nama', $keyword);
-		}
-		$this->db->group_by('pinjam.id_pinjam, detail_pinjam.id_pinjam');
-        $this->db->limit($limit, $start); 
-        $query = $this->db->get();
-        return $query->result();
-    }
 
+		if ($keyword) {
+			$this->db->group_start();
+			$this->db->like($conf['detail_table'] . '.serial_code', $keyword);
+			$this->db->or_like($conf['main_table'] . '.' . $conf['name_field'], $keyword);
+			if ($conf['additional_like_field']) {
+				$this->db->or_like($conf['detail_table'] . '.' . $conf['additional_like_field'], $keyword);
+			}
+			$this->db->group_end();
+		}
+		$this->db->order_by($conf['id_field'], $sort_order);
+		$this->db->group_by($conf['main_table'] . '.' . $conf['id_field'] . ', ' . $conf['detail_table'] . '.' . $conf['id_field']);
+		$this->db->order_by($conf['main_table'] . '.' . $conf['id_field'], 'ASC');
+	
+		if ($limit !== null && $start !== null) {
+			$this->db->limit($limit, $start);
+		}
+	
+		$query = $this->db->get();
+
+		if ($id !== null && $with_position) {
+			$result = $query->row();
+			return $result ? $result->position : 0;
+		}
+	
+		return $query->result();
+	}
 	public function get_serial_codes($id_barang) {
         
         $this->db->select('serial_code, id_detail_barang, qtty, status');

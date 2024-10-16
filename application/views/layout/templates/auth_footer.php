@@ -1,11 +1,4 @@
-  <!-- CORE PLUGINS -->
-  <!-- <script src="<?= base_url('') ?>assets/vendors/jquery/dist/jquery.min.js" type="text/javascript"></script>
-    <script src="<?= base_url('') ?>assets/vendors/popper.js/dist/umd/popper.min.js" type="text/javascript"></script>
-    <script src="<?= base_url('') ?>assets/vendors/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script> -->
-    <!-- PAGE LEVEL PLUGINS -->
-    <!-- <script src="<?= base_url('') ?>assets/vendors/jquery-validation/dist/jquery.validate.min.js" type="text/javascript"></script> -->
-    <!-- CORE SCRIPTS-->
-    <!-- <script src="<?= base_url('') ?>assets/js/app.js" type="text/javascript"></script> -->
+
 <html>
     <!-- CORE PLUGINS-->
     <script src="<?= base_url('assets'); ?>./vendors/jquery/dist/jquery.min.js" type="text/javascript"></script>
@@ -44,13 +37,10 @@
             });
         });
     </script>
-	<br></br>
-	<br></br>
-	<br></br>
-    <footer class="page-footer">
+
+    <footer class="page-footer" style="position:absolute; bottom:0;">
         <div class="font-13">2024 © <b>PT Mangli Djaya Raya</b> </div>
         <a class="px-4" href="<?= base_url('assets'); ?>http://themeforest.net/item/adminca-responsive-bootstrap-4-3-angular-4-admin-dashboard-template/20912589" target="_blank"></a>
-        <!--<div class="to-top"><i class="fa fa-angle-double-up"></i></div>-->
     </footer>
 
 </html>

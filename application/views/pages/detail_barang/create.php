@@ -36,9 +36,9 @@
 										document.getElementById('serialEmpty').addEventListener('change', function() {
 											const inputField = document.getElementById('serial_code');
 											const ketInputField = document.getElementById('keterangan');
-
 											if (this.checked) {
 												inputField.setAttribute('readonly', 'readonly');
+												inputField.value = "";
 												ketInputField.value = 'TIDAK ADA SERIAL CODE';
 											} else {
 												inputField.removeAttribute('readonly');

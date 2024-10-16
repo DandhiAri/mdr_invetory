@@ -48,7 +48,7 @@ class Pinjam extends CI_Controller
 		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 		$this->pagination->initialize($config);
 
-		$data['Pinjam'] = $this->Mmain->getPinjam($data['keywordPin'], $config['per_page'], $data['page']);
+		$data['Pinjam'] = $this->Mmain->getData('pinjam',$data['keywordPin'], $config['per_page'], $data['page']);
 		
 		if (!empty($key)) {
 			$res = $this->Mmain->qRead(
@@ -106,9 +106,81 @@ class Pinjam extends CI_Controller
 			$this->Mmain->qIns("pinjam", $data);
 
 			$this->session->set_flashdata('success', 'Data Pinjam <strong>Berhasil</strong> Ditambahkan!');
-			redirect('pinjam');
+			redirect('Detail_Pinjam/tambah_detail/'.$data['id_pinjam']);
         }
     }
+
+	public function accept($id){
+		$data['status'] = $data2['status'] = "Finished";
+		$status_get = $this->db->query('SELECT id_barang,lokasi,qtty,status,id_detail_pinjam,id_detail_barang FROM detail_pinjam WHERE id_pinjam = "'.$id.'"')->result();
+		foreach ($status_get as $sg){
+			$query = $this->db->query("
+				SELECT qtty, status 
+				FROM detail_barang 
+				WHERE id_detail_barang = '".$sg->id_detail_barang."'
+			")->row();
+
+			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$sg->id_barang.'"')->row()->id_satuan;
+			if($satuanBarang === "16"){
+				$data1["PIC"] = $this->db->query("SELECT nama_peminjam FROM pinjam WHERE id_pinjam ='".$id."'")->row()->nama;
+				$data1["status"] = "In-Used";
+				$data1["lokasi"] = $sg->lokasi;
+			}
+			if ($query->qtty !== null && $query->qtty > 0 && $sg->status !== "Finished") {
+				$data1["qtty"] = max($query->qtty - $sg->qtty, 0);
+			}
+			if(!empty($data1)){
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
+			}
+			$data2['wkt_kembali'] = date('Y-m-d\TH:i');
+			$this->Mmain->qUpdpart("detail_pinjam", 'id_detail_pinjam', $sg->id_detail_pinjam, array_keys($data2), array_values($data2));
+		}
+
+		if($status_get){
+			$this->Mmain->qUpdpart("pinjam", 'id_pinjam', $id, array_keys($data), array_values($data));
+			$this->session->set_flashdata('success', 'Status Pinjam Barang Diterima!');
+		} else {
+			$this->session->set_flashdata('failed', 'Status Pinjam Barang Gagal Diproses!');
+		}
+
+		redirect('pinjam/index/' . $this->get_page_for_id($id));
+
+	}
+
+	public function reject($id){
+		$data['status'] = $data2['status'] = "Rejected";
+		$status_get = $this->db->query('SELECT id_barang,lokasi,qtty,status,id_detail_pinjam,id_detail_barang FROM detail_pinjam WHERE id_pinjam = "'.$id.'"')->result();
+		foreach ($status_get as $sg){
+			$query = $this->db->query("
+				SELECT qtty, status 
+				FROM detail_barang 
+				WHERE id_detail_barang = '".$sg->id_detail_barang."'
+			")->row();
+
+			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$sg->id_barang.'"')->row()->id_satuan;
+			if($satuanBarang === "16"){
+				$data1["status"] = "Stored";
+				$data1["PIC"] = null;
+				$data1["lokasi"] = "IT STOCKROOM";
+			}
+			if($sg->status === "Finished"){
+				$data1["qtty"] = max($query->qtty + $sg->qtty, 0);
+			}
+			if(!empty($data1)){
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
+			}
+			$this->Mmain->qUpdpart("detail_pinjam", 'id_detail_pinjam', $sg->id_detail_pinjam, array_keys($data2), array_values($data2));
+		}
+
+		if($status_get){
+			$this->Mmain->qUpdpart("pinjam", 'id_pinjam', $id, array_keys($data), array_values($data));
+			$this->session->set_flashdata('success', 'Status Pinjam Barang Ditolak!');
+		} else {
+			$this->session->set_flashdata('failed', 'Status Pinjam Barang Gagal Diproses!');
+		}
+		redirect('pinjam/index/' . $this->get_page_for_id($id));
+	}
+
     public function edit_data($id)
     {
         $data['title'] = 'Pinjam';
@@ -140,24 +212,25 @@ class Pinjam extends CI_Controller
 			$this->Mmain->qUpdpart('pinjam', 'id_pinjam', $id , array_keys($data) , array_values($data));
 
 			$this->session->set_flashdata('success', 'Data Pinjam <strong>Berhasil</strong> Diubah!');
-			redirect('pinjam');
+			redirect('pinjam/index/' . $this->get_page_for_id($id));
         }
 	}
 
     public function hapus_data($id)
     {
-		$data = $this->db->query("SELECT * FROM detail_pinjam WHERE id_pinjam = '".$id."'")->row();
-		$query = $this->db->query("SELECT * FROM detail_barang WHERE id_detail_barang = '".$data->id_detail_barang."'")->row();
-		$barang = $this->db->query("SELECT * FROM barang WHERE id_barang = '".$query->id_barang."'")->row();
-		
-		if ($data->status == "Finished") {
-			if($barang->id_satuan === "16"){
-				$data1["status"] = "Stored";
-				$data1["PIC"] = null;
-				$data1["lokasi"] = "IT STOCKROOM";
+		$data = $this->db->query("SELECT * FROM detail_pinjam WHERE id_pinjam = '".$id."'")->result();
+		foreach ($data as $dt){
+			$query = $this->db->query("SELECT * FROM detail_barang WHERE id_detail_barang = '".$dt->id_detail_barang."'")->row();
+			$barang = $this->db->query("SELECT * FROM barang WHERE id_barang = '".$query->id_barang."'")->row();
+			if ($dt->status == "Finished") {
+				if($barang->id_satuan === "16"){
+					$data1["status"] = "Stored";
+					$data1["PIC"] = null;
+					$data1["lokasi"] = "IT STOCKROOM";
+				}
+				$data1["qtty"] = $query->qtty + $dt->qtty;
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $dt->id_detail_barang, array_keys($data1), array_values($data1));
 			}
-			$data1["qtty"] = $query->qtty + $data->qtty;
-			$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data->id_detail_barang, array_keys($data1), array_values($data1));
 		}
 
 		$this->Mmain->qDel("detail_pinjam", "id_pinjam", $id);
@@ -168,7 +241,18 @@ class Pinjam extends CI_Controller
 		} else {
 			$this->session->set_flashdata('failed', 'Data Pinjam <strong>Gagal</strong> Dihapus!');
 		}
-		redirect("pinjam");
+		redirect('pinjam/index/' . $this->get_page_for_id($id));
     }
+	private function get_page_for_id($id) {
+		if (!empty($this->session->userdata('keywordPin'))){
+			$keyword = $this->session->userdata('keywordPin');
+		}
+		$position = $this->Mmain->getData('pinjam', $keyword, null, null, $id, true);
+		if ($position === 0) {
+			return false;
+		}
+		$per_page = 10;
+		return floor(($position - 1) / $per_page) * $per_page;
+	}
 }
 

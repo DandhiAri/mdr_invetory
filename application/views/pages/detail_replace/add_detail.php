@@ -27,12 +27,6 @@
 					</div>
 					<div class="col-md-6">
 						<div class="mb-3">
-							<label for="tgl_replace_update" class="form-label">Waktu Update Replace</label>
-							<input type="datetime-local" class="form-control" name="tgl_replace_update" id="tgl_replace_update" value="<?= date('Y-m-d\TH:i') ?>" required>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="mb-3">
 							<label  class="form-label">ID Barang</label>
 							<select class="form-control" name="id_barang" id="getIdBarang" required>
 								<option value="" >Pilih Barang</option>

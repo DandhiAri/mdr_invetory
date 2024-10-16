@@ -7,14 +7,18 @@ class M_detail_replace extends CI_Model
 		foreach ($status_get as $s){
 			$statuses[]= $s->status;
 		}
-		if (in_array("Requested", $statuses)) {
-			$stats['status'] = "Requested";
-		} elseif (count(array_unique($statuses)) === 1 && $statuses[0] === "Rejected") {
-			$stats['status'] = "Rejected";
+		if (!empty($statuses)){
+			if (in_array("Requested", $statuses)) {
+				$stats['status'] = "Requested";
+			} elseif (count(array_unique($statuses)) === 1 && $statuses[0] === "Rejected") {
+				$stats['status'] = "Rejected";
+			} else {
+				$stats['status'] = "Finished";
+			}
 		} else {
-			$stats['status'] = "Finished";
+			$stats['status'] = "Requested";
 		}
-		$this->Mmain->qUpdpart("request", "id_request", $id, array_keys($stats), array_values($stats));
+		$this->Mmain->qUpdpart("ganti", "id_replace", $id, array_keys($stats), array_values($stats));
 	}
 	
     function tampil_detail(){
@@ -29,18 +33,18 @@ class M_detail_replace extends CI_Model
 
         return $query;
      }
-     function tampil_data_detail(){
-       return $this->db->get('detail_ganti');
-        $query = $this->db->query("SELECT det.id_detail_replace, det.nama_replace, det.tgl_replace, det.id_barang, det.jml_replace, det.qty_replace, det.serial_code, det.status, det.keterangan 
-        FROM detail_ganti det INNER JOIN barang b ON det.id_barang = b.id_barang"); //WHERE det.id_barang = '$id'
-        
-        if ($query->num_rows() == 0) {
-            $query = [];
-        } else {
-            $query = $query->result_array();
-        }
+	function tampil_data_detail(){
+      	return $this->db->get('detail_ganti');
+		$query = $this->db->query("SELECT det.id_detail_replace, det.nama_replace, det.tgl_replace, det.id_barang, det.jml_replace, det.qty_replace, det.serial_code, det.status, det.keterangan 
+		FROM detail_ganti det INNER JOIN barang b ON det.id_barang = b.id_barang"); //WHERE det.id_barang = '$id'
+		
+		if ($query->num_rows() == 0) {
+			$query = [];
+		} else {
+			$query = $query->result_array();
+		}
 
-        return $query;
+		return $query;
     }
 	
 	public function getseri()
@@ -74,44 +78,46 @@ class M_detail_replace extends CI_Model
         return $this->db->insert($this->_table->$data);
         }
 		
-        function edit_detail($id)
-        {
-            $query = $this->db->query("SELECT * FROM detail_ganti WHERE id_detail_replace = '$id'");
-        
-            if ($query->num_rows() == 0) {
-                $query = [];
-            } else {
-                $query = $query->row_array();
-            }
-        
-            return $query;
-        }
+	function edit_detail($id)
+	{
+		$query = $this->db->query("SELECT * FROM detail_ganti WHERE id_detail_replace = '$id'");
+	
+		if ($query->num_rows() == 0) {
+			$query = [];
+		} else {
+			$query = $query->row_array();
+		}
+	
+		return $query;
+	}
 		
 		
-        public function edit_detail_replace($data)
-        {
-            $this->db->set('nama_replace', $data['nama_replace']);
-            $this->db->set('tgl_replace', $data['tgl_replace']);
-            $this->db->set('jml_replace', $data['jml_replace']);
-            $this->db->set('qty_replace', $data['qty_replace']);
-            $this->db->set('status', $data['status']);
-            $this->db->set('keterangan', $data['keterangan']);
-            $this->db->where('id_detail_replace', $data['id_detail_replace']);
+	public function edit_detail_replace($data)
+	{
+		$this->db->set('nama_replace', $data['nama_replace']);
+		$this->db->set('tgl_replace', $data['tgl_replace']);
+		$this->db->set('jml_replace', $data['jml_replace']);
+		$this->db->set('qty_replace', $data['qty_replace']);
+		$this->db->set('status', $data['status']);
+		$this->db->set('keterangan', $data['keterangan']);
+		$this->db->where('id_detail_replace', $data['id_detail_replace']);
+	
+		return $this->db->update('detail_ganti');
+	}
         
-            return $this->db->update('detail_ganti');
-        }
-        
-		 function update_data($where,$data,$table){
+	function update_data($where,$data,$table){
         $this->db->where($where);
         $this->db->update($table,$data);
     } 
-       public function del_replace($id)
-        {
-            $this->db->where('id_detail_replace', $id);
-            return $this->db->delete('detail_ganti');
-        }
-    
-    
-    
-    
+	public function del_replace($id)
+	{
+		$this->db->where('id_detail_replace', $id);
+		return $this->db->delete('detail_ganti');
+	}
+
+	public function get_position($id) {
+		$this->db->from('ganti');
+		$this->db->where('id_replace <=', $id);
+		return $this->db->count_all_results();
+	}
 }

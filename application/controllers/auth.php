@@ -15,30 +15,25 @@ class auth extends CI_Controller
 		if ($this->session->userdata('email')) {
             redirect('dashboard');
         }
-        $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
+        $this->form_validation->set_rules('name', 'Username', 'trim|required');
         $this->form_validation->set_rules('password', 'Password', 'trim|required|required');
         if ($this->form_validation->run() == false) {
             $data['title'] = 'Login Page';
-            $this->load->view('layout/templates/auth_header', $data);
-            $this->load->view('auth/login');
-            $this->load->view('layout/templates/auth_footer');
-            
+			$data['content'] = $this->load->view('auth/login', $data, true);
+            $this->load->view('layout/master_auth_layout.php',$data);
         } else {
-            //validasion succes
             $this->_login();
         }
     }
 
     private function _login()
     {
-        $email = $this->input->post('email');
+        $name = $this->input->post('name');
         $password = $this->input->post('password');
 
-        $user = $this->db->get_where('user', ['email' => $email])->row_array();
+        $user = $this->db->get_where('user', ['name' => $name])->row_array();
         if ($user) {
-            //usernya ada
             if ($user['is_active'] == 1) {
-                //cek password
                 if (password_verify($password, $user['password'])) {
                     $data = [
                         'email' => $user['email'],
@@ -52,7 +47,7 @@ class auth extends CI_Controller
                 }
             }
         } else {
-            $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Email Tidak Teregistrasi!</div>');
+            $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Username Tidak Teregistrasi!</div>');
             redirect('auth');
         }
     }

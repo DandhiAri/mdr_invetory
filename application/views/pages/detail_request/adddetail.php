@@ -32,12 +32,6 @@
                     </div>
 					<div class="col-md-6">
                         <div class="mb-3">
-                            <label for="tgl_request_update" class="form-label">Waktu Update Request</label>
-                            <input type="datetime-local"  value="<?= date('Y-m-d\TH:i') ?>" class="form-control" name="tgl_request_update" id="tgl_request_update" placeholder="Isi tgl_request_update..." required>
-                        </div>
-                    </div>
-					<div class="col-md-6">
-                        <div class="mb-3">
                             <label  class="form-label">ID Barang</label>
 							<select class="form-control" name="id_barang" id="getIdBarang" required>
 								<option value="" >Pilih Barang</option>

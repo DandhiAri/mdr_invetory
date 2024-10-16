@@ -10,6 +10,7 @@ class Replace extends CI_Controller
 		date_default_timezone_set('Asia/Jakarta');
 
         $this->load->model('m_replace');
+        $this->load->model('M_detail_replace');
 		$this->load->model('m_detail_barang');
         $this->load->model('Mmain');
         $this->load->helper('url');
@@ -32,7 +33,13 @@ class Replace extends CI_Controller
 		$config['base_url'] = base_url('replace/index/'); 
 		$config['per_page'] = 10;
 		$config['uri_segment'] = 3;
-		
+
+		$sort_by = $this->input->get('sort_by') ? $this->input->get('sort_by') : 'id_replace';
+        $sort_order = $this->input->get('sort_order') ? $this->input->get('sort_order') : 'asc';
+
+		$data['sort_by'] = $sort_by;
+        $data['sort_order'] = $sort_order;
+
 		if ($this->input->post('keywordRep')){
 			$data['keywordRep'] = $this->input->post('keywordRep');
 			$this->session->set_userdata('keywordRep',$data['keywordRep']);
@@ -47,10 +54,12 @@ class Replace extends CI_Controller
 
 		$this->db->from('ganti');
 		$config['total_rows'] = $this->db->count_all_results();
+
+		$this->session->set_userdata("total_rows",$config['total_rows']);
 		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 		$this->pagination->initialize($config);
 
-		$data['Replace'] = $this->Mmain->getReplace($data['keywordRep'], $config['per_page'], $data['page']);
+		$data['Replace'] = $this->Mmain->getData('replace', $data['keywordRep'], $config['per_page'], $data['page']);
 
 		if (!empty($key)) {
 			$res = $this->Mmain->qRead(
@@ -108,7 +117,7 @@ class Replace extends CI_Controller
 
 			$this->Mmain->qIns("ganti", $data);
 			$this->session->set_flashdata('success', 'Data Replace <strong>Berhasil</strong> Ditambahkan!');
-       		redirect('Detail_Replace/tambah_data_detail/'.$id.'');
+       		redirect('Detail_Replace/tambah_data_detail/'.$id);
 		}
     }
     
@@ -146,14 +155,13 @@ class Replace extends CI_Controller
 			$this->Mmain->qUpdpart("ganti", 'id_replace', $id, array_keys($data), array_values($data));
 
 			$this->session->set_flashdata('success', 'Data <strong>Berhasil</strong> Diubah!');
-			redirect('replace');
-
+			redirect('replace/index/' . $this->get_page_for_id($id));
 		}
 	}
     
 	public function accept($id){
-		$data['status'] = "Finished";
-		$status_get = $this->db->query('SELECT lokasi,qtty,status,id_detail_replace,id_detail_barang FROM detail_ganti WHERE id_replace = "'.$id.'"')->result();
+		$data['status'] = $data2['status'] = "Finished";
+		$status_get = $this->db->query('SELECT id_barang,lokasi,qtty,status,id_detail_replace,id_detail_barang FROM detail_ganti WHERE id_replace = "'.$id.'"')->result();
 		foreach ($status_get as $sg){
 			$query = $this->db->query("
 				SELECT qtty, status 
@@ -161,7 +169,7 @@ class Replace extends CI_Controller
 				WHERE id_detail_barang = '".$sg->id_detail_barang."'
 			")->row();
 
-			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$sg->id_barang.'"')->row();
+			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$sg->id_barang.'"')->row()->id_satuan;
 			if($satuanBarang === "16"){
 				$data1["PIC"] = $this->db->query("SELECT nama FROM ganti WHERE id_replace ='".$id."'")->row()->nama;
 				$data1["status"] = "In-Used";
@@ -170,10 +178,11 @@ class Replace extends CI_Controller
 			if ($query->qtty !== null && $query->qtty > 0 && $sg->status !== "Finished") {
 				$data1["qtty"] = max($query->qtty - $sg->qtty, 0);
 			}
-			if($data1 !== null ){
+			if(!empty($data1)){
 				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
 			}
-			$this->Mmain->qUpdpart("detail_ganti", 'id_detail_replace', $sg->id_detail_replace, array_keys($data), array_values($data));
+			$data2['tgl_replace_update'] = date('Y-m-d\TH:i');
+			$this->Mmain->qUpdpart("detail_ganti", 'id_detail_replace', $sg->id_detail_replace, array_keys($data2), array_values($data2));
 		}
 
 		if($status_get){
@@ -183,12 +192,13 @@ class Replace extends CI_Controller
 			$this->session->set_flashdata('failed', 'Status Replace Barang Gagal Diproses!');
 		}
 
-		redirect('replace');
+		redirect('replace/index/' . $this->get_page_for_id($id));
+
 	}
 
 	public function reject($id){
-		$data['status'] = "Rejected";
-		$status_get = $this->db->query('SELECT qtty,id_detail_replace,id_detail_barang FROM detail_ganti WHERE id_replace = "'.$id.'"')->result();
+		$data['status'] = $data2['status'] = "Rejected";
+		$status_get = $this->db->query('SELECT id_barang,lokasi,qtty,status,id_detail_replace,id_detail_barang FROM detail_ganti WHERE id_replace = "'.$id.'"')->result();
 		foreach ($status_get as $sg){
 			$query = $this->db->query("
 				SELECT qtty, status 
@@ -196,7 +206,7 @@ class Replace extends CI_Controller
 				WHERE id_detail_barang = '".$sg->id_detail_barang."'
 			")->row();
 
-			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$sg->id_barang.'"')->row();
+			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$sg->id_barang.'"')->row()->id_satuan;
 			if($satuanBarang === "16"){
 				$data1["status"] = "Stored";
 				$data1["PIC"] = null;
@@ -205,10 +215,11 @@ class Replace extends CI_Controller
 			if($sg->status === "Finished"){
 				$data1["qtty"] = max($query->qtty + $sg->qtty, 0);
 			}
-			if($data1 !== null ){
+			if(!empty($data1)){
 				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
 			}
-			$this->Mmain->qUpdpart("detail_ganti", 'id_detail_replace', $sg->id_detail_replace, array_keys($data), array_values($data));
+			$data2['tgl_replace_update'] = date('Y-m-d\TH:i');
+			$this->Mmain->qUpdpart("detail_ganti", 'id_detail_replace', $sg->id_detail_replace, array_keys($data2), array_values($data2));
 		}
 
 		if($status_get){
@@ -217,27 +228,25 @@ class Replace extends CI_Controller
 		} else {
 			$this->session->set_flashdata('failed', 'Status Replace Barang Gagal Diproses!');
 		}
-		redirect('replace');
+		redirect('replace/index/' . $this->get_page_for_id($id));
 	}
-
-
 
     public function hapus_replace($id)
     {
-		$data = $this->db->query("SELECT * FROM detail_ganti WHERE id_replace = '".$id."'")->row();
-		$query = $this->db->query("SELECT * FROM detail_barang WHERE id_detail_barang = '".$data->id_detail_barang."'")->row();
-		$barang = $this->db->query("SELECT * FROM barang WHERE id_barang = '".$query->id_barang."'")->row();
-		
-		if ($data->status == "Finished") {
-			if($barang->id_satuan === "16"){
-				$data1["status"] = "Stored";
-				$data1["PIC"] = "";
-				$data1["lokasi"] ="IT STOCKROOM";
+		$data = $this->db->query("SELECT * FROM detail_ganti WHERE id_replace = '".$id."'")->result();
+		foreach ($data as $dt){
+			$query = $this->db->query("SELECT * FROM detail_barang WHERE id_detail_barang = '".$dt->id_detail_barang."'")->row();
+			$barang = $this->db->query("SELECT * FROM barang WHERE id_barang = '".$query->id_barang."'")->row();
+			if ($dt->status == "Finished") {
+				if($barang->id_satuan === "16"){
+					$data1["status"] = "Stored";
+					$data1["PIC"] = null;
+					$data1["lokasi"] = "IT STOCKROOM";
+				}
+				$data1["qtty"] = $query->qtty + $dt->qtty;
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $dt->id_detail_barang, array_keys($data1), array_values($data1));
 			}
-			$data1["qtty"] = $query->qtty + $data->qtty;
-			$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data->id_detail_barang, array_keys($data1), array_values($data1));
 		}
-
 		$this->Mmain->qDel("detail_ganti", "id_replace", $id);
 		$this->Mmain->qDel("ganti", "id_replace", $id);
 
@@ -246,6 +255,19 @@ class Replace extends CI_Controller
 		} else {
 			$this->session->set_flashdata('failed', 'Data Replace <strong>Gagal</strong> Dihapus!');
 		}
-		redirect("replace");
+		redirect('replace/index/' . $this->get_page_for_id($id));
     }
+	
+	private function get_page_for_id($id) {
+		if (!empty($this->session->userdata('keywordRep'))){
+			$keyword = $this->session->userdata('keywordRep');
+		}
+		$position = $this->Mmain->getData('replace', $keyword, null, null, $id, true);
+		if ($position === 0) {
+			return false;
+		}
+		$per_page = 10;
+		return floor(($position - 1) / $per_page) * $per_page;
+		
+	}
 }

@@ -14,6 +14,7 @@
 					<button type="submit" style="cursor: pointer;" class="btn btn-danger" name="reset" value="1"><i class="fa fa-refresh"></i></button>
 				</form>
 			</div> 
+			<?= $pagination ?>
         </div>
 		<?php
 		if($keyword){
@@ -116,9 +117,10 @@
 									<tbody>
 										<?php 
 										$nom = 1;
-										// var_dump($DetailBarang);
+										$hasData = false;
 										foreach($DetailBarang as $detail){
 											if($detail->id_barang === $b->id_barang){
+											$hasData = true;
 										?>
 											<tr>
 												<td><?= $nom++ ?></td>
@@ -139,6 +141,15 @@
 											</tr>
 										<?php 
 											}
+										}
+										if (!$hasData) {
+										?>
+											<td colspan="20">
+												<div class="null-result-container">
+													<p class="null-result">Tidak Ada Data untuk Ditampilkan :(</p>
+												</div>
+											</td>
+										<?php
 										}
 										?>
 									</tbody>
@@ -166,7 +177,12 @@
 					<?php } ?>
 				</thead>
 			</table>
-			<?= $pagination ?>
+			<div style="display:flex; justify-content:space-between;">
+				<p>
+					Show <?= count($Barang) ?> of <?= $total_rows ?> Barang
+				</p>
+				<?= $pagination ?>
+			</div>
 		</div>
 	</div>
 </div>

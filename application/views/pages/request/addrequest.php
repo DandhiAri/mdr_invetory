@@ -16,21 +16,23 @@
 			</div>
 		<?php endif; ?>
         <div class="ibox-body">
-            <form action="<?= base_url('Request/proses_tambah') ?>" method="POST">
+            <form id="add-request" action="<?= base_url('Request/proses_tambah') ?>" method="POST">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="form-group col-md-6">
                         <div class="mb-3">
                             <label for="nama" class="form-label">Nama PIC Request</label>
-                            <input type="text" class="form-control" name="nama" id="nama" placeholder="Masukkan nama..."> 
+                            <input type="text" class="form-control" name="nama" id="nama" placeholder="Masukkan nama...">
+							<?= form_error('nama', '<small class="text-danger pl-3">', '</small>'); ?>
+							
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="form-group col-md-6">
                         <div class="mb-3">
                             <label for="tgl_request" class="form-label">Tanggal Request</label>
                             <input type="date" class="form-control" name="tgl_request" id="tgl_request" >
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="form-group col-md-6">
                         <div class="mb-3">
                             <label for="keterangan" class="form-label">Keterangan Request</label>
                             <input type="text" class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan keterangan...">

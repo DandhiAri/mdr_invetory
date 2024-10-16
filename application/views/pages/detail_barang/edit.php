@@ -68,7 +68,7 @@
                     </div>
 					<div class="col-md-6">
 						<label for="id_pengajuan" class="form-label">Pengajuan</label>
-						<select class="form-control" name="id_pengajuan" id="id_pengajuan" required>
+						<select class="form-control" name="id_pengajuan" id="id_pengajuan">
 							<option value="" selected="selected">Pilih Pengajuan</option>
 							<?php foreach ($pengajuan as $data) { ?>
 								<option value="<?= $data->id_pengajuan ?>" <?= $data->id_pengajuan == $Detail_Barang['lokasi'] ? "selected" : "" ?>>

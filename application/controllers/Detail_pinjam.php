@@ -25,7 +25,6 @@ class Detail_Pinjam extends CI_Controller
 		$this->form_validation->set_rules('id_detail_barang', 'ID Detail Barang','required');
 		$this->form_validation->set_rules('qtty', 'Quantity', 'required|integer');
 		$this->form_validation->set_rules('lokasi', 'Lokasi', 'required');
-		$this->form_validation->set_rules('wkt_kembali', 'Waktu Kembali', 'required');
     }
 	
 	public function init($id)
@@ -73,7 +72,6 @@ class Detail_Pinjam extends CI_Controller
 				"serial_code" => $this->input->post('serial_code'),
 				"qtty" => $this->input->post('qtty'),
 				"lokasi" => $this->input->post('lokasi'),
-				"wkt_kembali" => $this->input->post('wkt_kembali'),
 				"keterangan" => $this->input->post('keterangan'),
             );
 			if ($data['serial_code'] === "-"){
@@ -83,8 +81,11 @@ class Detail_Pinjam extends CI_Controller
 			$data['id_detail_pinjam'] = $this->Mmain->autoId("detail_pinjam", "id_detail_pinjam", "DP", "DP" . "001", "001");
 			
 			$this->Mmain->qIns('detail_pinjam', $data);
+
+			$this->M_detail_pinjam->changeStatusPinjam($data['id_pinjam']);
+
 			$this->session->set_flashdata('success', 'Data Detail Pinjam <strong>Berhasil</strong> Ditambahkan!');
-			redirect("pinjam");
+			redirect('pinjam/index/' . $this->get_page_for_id($data["id_pinjam"]));
         }
     }
 
@@ -118,7 +119,6 @@ class Detail_Pinjam extends CI_Controller
 				"serial_code" => $this->input->post('serial_code'),
 				"qtty" => $this->input->post('qtty'),
 				"lokasi" => $this->input->post('lokasi'),
-				"wkt_kembali" => $this->input->post('wkt_kembali'),
 				'status'=> $this->input->post('status'),
 				"keterangan" => $this->input->post('keterangan'),
             );
@@ -135,7 +135,7 @@ class Detail_Pinjam extends CI_Controller
 				FROM detail_pinjam
 				WHERE id_detail_pinjam = '".$id."'
 			")->row();
-			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$query->id_barang.'"')->row();
+			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$data['id_barang'].'"')->row()->id_satuan;
 
 			if (($query1->status == 'Requested' || $query1->status == 'Rejected') && $data['status'] == 'Finished') {
 				if($satuanBarang === "16"){
@@ -148,7 +148,8 @@ class Detail_Pinjam extends CI_Controller
 				}
 
 				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
-			
+				$data['wkt_kembali'] = date('Y-m-d\TH:i');
+
 			} elseif ($query1->status == 'Finished' && ($data['status'] == 'Rejected' || $data['status'] == 'Requested')) {
 				if($satuanBarang === "16"){
 					$data1["status"] = "Stored";
@@ -160,6 +161,8 @@ class Detail_Pinjam extends CI_Controller
 				}
 
 				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
+				$data['wkt_kembali'] = "";
+				
 			} elseif ($data['status'] == 'Finished' && $query1->status == 'Finished' ){
 				if($satuanBarang === "16"){
 					$data1["lokasi"] = $data['lokasi'];
@@ -170,10 +173,13 @@ class Detail_Pinjam extends CI_Controller
 				}
 				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
 			}
+
 			$this->Mmain->qUpdpart("detail_pinjam", 'id_detail_pinjam', $id, array_keys($data), array_values($data)); 
 
+			$this->M_detail_pinjam->changeStatusPinjam($data['id_pinjam']);
+
 			$this->session->set_flashdata('success', 'Data Detail Pinjam <strong>Berhasil</strong> Diubah!');
-			redirect("pinjam");
+			redirect('pinjam/index/' . $this->get_page_for_id($data["id_pinjam"]));
         }
 	}
 
@@ -193,13 +199,26 @@ class Detail_Pinjam extends CI_Controller
 		}
 
 		$result = $this->Mmain->qDel("detail_pinjam", "id_detail_pinjam", $id);
+		
+		$this->M_detail_pinjam->changeStatusPinjam($data->id_pinjam);
 
 		if (!$result) {
 			$this->session->set_flashdata('success', 'Data Detail Pinjam <strong>Berhasil</strong> Dihapus!');
 		} else {
 			$this->session->set_flashdata('failed', 'Data Detail Pinjam <strong>Gagal</strong> Dihapus!');
 		}
-		redirect("pinjam");
+		redirect('pinjam/index/' . $this->get_page_for_id($data->id_pinjam));
+	}
+	private function get_page_for_id($id) {
+		if (!empty($this->session->userdata('keywordPin'))){
+			$keyword = $this->session->userdata('keywordPin');
+		}
+		$position = $this->Mmain->getData('pinjam', $keyword, null, null, $id, true);
+		if ($position === 0) {
+			return false;
+		}
+		$per_page = 10;
+		return floor(($position - 1) / $per_page) * $per_page;
 	}
 }
 
