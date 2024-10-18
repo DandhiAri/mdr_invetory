@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width initial-scale=1.0">
     <title>Admin | Dashboard</title>
+    <link rel="icon" href="<?= base_url('assets/img/mdr.png') ?>" type="image/png">
 	<!-- CSS SENDIRI KALAU PINGIN NGUBAH-->
     <link href="<?= base_url('assets'); ?>/css/style.css" rel="stylesheet" />
     <!-- GLOBAL MAINLY STYLES-->

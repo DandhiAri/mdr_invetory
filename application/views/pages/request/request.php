@@ -112,10 +112,11 @@
 									<th>No</th>
 									<th>ID</th>
 									<th>Detail Barang</th>
-									<th>Quantity</th>
+									<th>Jumlah</th>
 									<th>Lokasi</th>
 									<th>Keterangan</th>
 									<th>Waktu Update</th>
+									<th>Made By</th>
 									<th>Status</th>
 									<th>Action</th>
 								</tr>
@@ -129,7 +130,7 @@
 										<tr>
 											<td><?= $no++ ?></td>
 											<td><b><?= $dr->id_detail_request ?></b></td>
-											<td width="20%">
+											<td>
 												<ul style="text-align:left; list-style:none; margin:0 0 0 0; padding:0; white-space: nowrap;">
 													<li><b>ID Barang : </b><?= $dr->id_barang ?></li>
 													<li><b>ID Detail Barang : </b> <?= $dr->id_detail_barang ?></li>
@@ -140,9 +141,15 @@
 											<td ><b><?= $dr->lokasi ?></b></td>
 											<td><?= $dr->keterangan?></td>
 											<td><?= $dr->tgl_request_update ?></td>
+											<td style="white-space:nowrap; font-size:13px;">
+												<ul style="list-style:none; margin:0; padding:0;">
+													<li>Created : <b><?= !empty($dr->user_create)  ? $dr->user_create : "<i>NULL</i>" ?></b></li>
+													<li>Updated : <b><?= !empty($dr->user_update)  ? $dr->user_update : "<i>NULL</i>" ?></b></li>
+												</ul>
+											</td>
 											<td><p class="<?= $dr->status ?>"><?= $dr->status ?></p></td>
+
 											<td>
-												
 												<a href="<?= base_url('detail_request/edit/') . $dr->id_detail_request ?>" class="btn btn-warning" title="Edit"><i class="ti ti-pencil"></i></a>
 												<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('detail_request/hapus_data/') . $dr->id_detail_request.'/'.$dr->id_request ?>"class="btn btn-danger" id="deleterequest" title="Hapus" style="cursor: pointer;"><i class="ti ti-trash"></i>
 											</td>

@@ -93,7 +93,8 @@ class Detail_Replace extends CI_Controller
 			$data['id_detail_replace'] = $this->Mmain->autoId("detail_ganti","id_detail_replace","DRT","DRT"."001","001");
 			$data['tgl_replace_update'] = date('Y-m-d\TH:i');
 			$this->Mmain->qIns('detail_ganti', $data);
-			
+			$data['user_create'] = $this->user['name'];
+
 			$this->M_detail_replace->changeStatusReplace($data['id_replace']);
 
 			$this->session->set_flashdata('success', 'Data Detail Replace <strong>Berhasil</strong> Ditambahkan!');
@@ -156,6 +157,7 @@ class Detail_Replace extends CI_Controller
 					$data1["PIC"] = $this->db->query("SELECT nama FROM ganti WHERE id_replace ='".$data['id_replace']."'")->row()->nama;
 					$data1["status"] = "In-Used";
 					$data1["lokasi"] = $data['lokasi'];
+					$data1['id_transaksi'] = $id;
 				}
 				if ($query->qtty !== null && $query->qtty > 0) {
 					$data1["qtty"] = max($query->qtty - $data['qtty'], 0);
@@ -168,6 +170,7 @@ class Detail_Replace extends CI_Controller
 					$data1["status"] = "Stored";
 					$data1["PIC"] = null;
 					$data1["lokasi"] = "IT STOCKROOM";
+					$data1['id_transaksi'] = "";
 				}
 				if ($query1->status == "Finished"){
 					$data1["qtty"] = max($query->qtty + $data['qtty'], 0);

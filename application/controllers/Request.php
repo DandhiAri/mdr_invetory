@@ -65,6 +65,7 @@ class Request extends CI_Controller
 			$this->db->group_start();
 			$this->db->like('detail_request.serial_code', $data['keywordReq']);
 			$this->db->or_like('detail_request.id_detail_barang', $data['keywordReq']);
+			$this->db->or_like('detail_request.id_detail_request', $data['keywordReq']);
             $this->db->or_like('request.nama', $data['keywordReq']);
 			$this->db->group_end();
 		}
@@ -127,6 +128,7 @@ class Request extends CI_Controller
             );
 			$id = $this->Mmain->autoId("request","id_request","RQ","RQ"."001","001");
 			$data['id_request'] = $id;
+			
 			$this->Mmain->qIns('request', $data);
 
             $this->session->set_flashdata('success', 'Data Request sudah ditambahkan');
@@ -148,6 +150,7 @@ class Request extends CI_Controller
 				$data1["PIC"] = $this->db->query("SELECT nama FROM request WHERE id_request ='".$id."'")->row()->nama;
 				$data1["status"] = "In-Used";
 				$data1["lokasi"] = $sg->lokasi;
+				$data1["id_transaksi"] = $sg->id_detail_request;
 			}
 			if ($query->qtty !== null && $query->qtty > 0 && $sg->status !== "Finished") {
 				$data1["qtty"] = max($query->qtty - $sg->qtty, 0);
@@ -156,6 +159,7 @@ class Request extends CI_Controller
 				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
 			}
 			$data2['tgl_request_update'] = date('Y-m-d\TH:i');
+			$data2['user_update'] = $this->user['name'];
 			$this->Mmain->qUpdpart("detail_request", 'id_detail_request', $sg->id_detail_request, array_keys($data2), array_values($data2));
 		}
 
@@ -187,6 +191,7 @@ class Request extends CI_Controller
 				$data1["status"] = "Stored";
 				$data1["PIC"] = null;
 				$data1["lokasi"] = "IT STOCKROOM";
+				$data1["id_transaksi"] = "";
 			}
 			if($sg->status === "Finished"){
 				$data1["qtty"] = max($query->qtty + $sg->qtty, 0);
@@ -195,6 +200,7 @@ class Request extends CI_Controller
 				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
 			}
 			$data2['tgl_request_update'] = date('Y-m-d\TH:i');
+			$data2['user_update'] = $this->user['name'];
 			$this->Mmain->qUpdpart("detail_request", 'id_detail_request', $sg->id_detail_request, array_keys($data2), array_values($data2));
 		}
 
@@ -262,6 +268,7 @@ class Request extends CI_Controller
 					$data1["status"] = "Stored";
 					$data1["PIC"] = null;
 					$data1["lokasi"] = "IT STOCKROOM";
+					$data1['id_transaksi'] = "";
 				}
 				$data1["qtty"] = $query->qtty + $dt->qtty;
 				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $dt->id_detail_barang, array_keys($data1), array_values($data1));

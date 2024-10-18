@@ -88,7 +88,8 @@ class Detail_request extends CI_Controller
 			$id_detail_request = $this->Mmain->autoId("detail_request","id_detail_request","DRQ","DRQ"."001","001");
 			$data['id_detail_request'] = $id_detail_request;
 			$data['tgl_request_update'] = date('Y-m-d\TH:i');
-			
+			$data['user_create'] = $this->user['name'];
+
 			$this->Mmain->qIns('detail_request', $data);
 			$this->m_detail_req->changeStatusRequest($data['id_request']);
 
@@ -154,6 +155,7 @@ class Detail_request extends CI_Controller
 					$data1["PIC"] = $this->db->query("SELECT nama FROM request WHERE id_request ='".$data['id_request']."'")->row()->nama;
 					$data1["status"] = "In-Used";
 					$data1["lokasi"] = $data['lokasi'];
+					$data1['id_transaksi'] = $id;
 				}
 				if ($query->qtty !== null && $query->qtty > 0) {
 					$data1["qtty"] = max($query->qtty - $data['qtty'], 0);
@@ -166,6 +168,7 @@ class Detail_request extends CI_Controller
 					$data1["status"] = "Stored";
 					$data1["PIC"] = "";
 					$data1["lokasi"] = "IT-STOCKROOM";
+					$data1['id_transaksi'] = "";
 				}
 				if ($query1->status == "Finished"){
 					$data1["qtty"] = max($query->qtty + $data['qtty'], 0);
@@ -184,6 +187,7 @@ class Detail_request extends CI_Controller
 			}
 
 			$data['tgl_request_update'] = date('Y-m-d\TH:i');
+			$data['user_update'] = $this->user['name'];
 			$this->Mmain->qUpdpart("detail_request", 'id_detail_request', $id, array_keys($data), array_values($data)); 
 
 			$this->m_detail_req->changeStatusRequest($data['id_request']); 
@@ -206,6 +210,7 @@ class Detail_request extends CI_Controller
 				$data1["status"] = "Stored";
 				$data1["PIC"] = "";
 				$data1["lokasi"] ="IT-STOCKROOM";
+				$data1['id_transaksi'] = "";
 			}
 			$data1["qtty"] = $query->qtty + $data->qtty;
 			$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data->id_detail_barang, array_keys($data1), array_values($data1));
@@ -222,8 +227,6 @@ class Detail_request extends CI_Controller
 		}
 		
 		redirect('request/index/' . $this->get_page_for_id($data->id_request));
-		// redirect("request");
-
 	}
 
 	private function get_page_for_id($id) {

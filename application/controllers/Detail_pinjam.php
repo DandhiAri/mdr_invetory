@@ -142,6 +142,7 @@ class Detail_Pinjam extends CI_Controller
 					$data1["PIC"] = $this->db->query("SELECT nama_peminjam FROM pinjam WHERE id_pinjam ='".$data['id_pinjam']."'")->row()->nama_peminjam;
 					$data1["status"] = "In-Used";
 					$data1["lokasi"] = $data['lokasi'];
+					$data1["id_transaksi"] = $id;
 				}
 				if ($query->qtty !== null && $query->qtty > 0) {
 					$data1["qtty"] = max($query->qtty - $data['qtty'], 0);
@@ -155,6 +156,7 @@ class Detail_Pinjam extends CI_Controller
 					$data1["status"] = "Stored";
 					$data1["PIC"] = "";
 					$data1["lokasi"] = "IT-STOCKROOM";
+					$data1["id_transaksi"] = "";
 				}
 				if ($query1->status == "Finished"){
 					$data1["qtty"] = max($query->qtty + $data['qtty'], 0);

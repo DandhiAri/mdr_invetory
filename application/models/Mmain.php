@@ -152,21 +152,30 @@ class mMain  extends CI_Model
 				'detail_table' => 'detail_request',
 				'id_field' => 'id_request',
 				'name_field' => 'nama',
-				'additional_like_field' => 'id_detail_barang'
+				'like_field1' => 'id_detail_barang',
+				'like_field2' => 'id_detail_request',
+				'like_field3' => 'id_barang'
+
 			],
 			'replace' => [
 				'main_table' => 'ganti',
 				'detail_table' => 'detail_ganti',
 				'id_field' => 'id_replace',
 				'name_field' => 'nama',
-				'additional_like_field' => 'id_detail_barang'
+				'like_field1' => 'id_detail_barang',
+				'like_field2' => 'id_detail_replace',
+				'like_field3' => 'id_barang'
+
 			],
 			'pinjam' => [
 				'main_table' => 'pinjam',
 				'detail_table' => 'detail_pinjam',
 				'id_field' => 'id_pinjam',
 				'name_field' => 'nama_peminjam',
-				'additional_like_field' => 'id_detail_barang'
+				'like_field1' => 'id_detail_barang',
+				'like_field2' => 'id_detail_pinjam',
+				'like_field3' => 'id_barang'
+
 			]
 		];
 	
@@ -182,27 +191,29 @@ class mMain  extends CI_Model
 		if ($with_position) {
 			if ($keyword) {
 				$this->db->join('(
-					SELECT ' . $conf['id_field'] . ' 
+					SELECT ' . $conf['main_table'] . '.' . $conf['id_field'] . ' 
 					FROM ' . $conf['main_table'] . ' 
-					LEFT JOIN ' . $conf['detail_table'] . ' ON ' . $conf['main_table'] . '.' . $conf['id_field'] . ' = ' . $conf['detail_table'] . '.' . $conf['id_field'] . 
+					LEFT JOIN ' . $conf['detail_table'] . ' 
+					ON ' . $conf['main_table'] . '.' . $conf['id_field'] . ' = ' . $conf['detail_table'] . '.' . $conf['id_field'] . 
 					' WHERE ' . $conf['detail_table'] . '.serial_code LIKE "%' . $keyword . '%" 
 					OR ' . $conf['main_table'] . '.' . $conf['name_field'] . ' LIKE "%' . $keyword . '%" ' . 
-					(isset($conf['additional_like_field']) ? 'OR ' . $conf['detail_table'] . '.' . $conf['additional_like_field'] . ' LIKE "%' . $keyword . '%" ' : '') . 
-					'GROUP BY ' . $conf['id_field'] . 
-				') as b2', 'b2.' . $conf['id_field'] . ' <= ' . $conf['main_table'] . '.' . $conf['id_field'], 'left');
+					'OR ' . $conf['detail_table'] . '.' . $conf['like_field1'] . ' LIKE "%' . $keyword . '%" 
+					OR ' . $conf['detail_table'] . '.' . $conf['like_field2'] . ' LIKE "%' . $keyword . '%" 
+					OR ' . $conf['detail_table'] . '.' . $conf['like_field3'] . ' LIKE "%' . $keyword . '%" 
+					GROUP BY ' . $conf['main_table'] . '.' . $conf['id_field'] . 
+				') as b3', 'b3.' . $conf['id_field'] . ' <= ' . $conf['main_table'] . '.' . $conf['id_field'], 'left');
 			} else {
-				$this->db->join($conf['main_table'] . ' as b2', 'b2.' . $conf['id_field'] . ' <= ' . $conf['main_table'] . '.' . $conf['id_field'], 'left');
+				$this->db->join($conf['main_table'] . ' as b3', 'b3.' . $conf['id_field'] . ' <= ' . $conf['main_table'] . '.' . $conf['id_field'], 'left');
 			}
-			$this->db->select('COUNT(DISTINCT b2.' . $conf['id_field'] . ') as position');
+			$this->db->select('COUNT(DISTINCT b3.' . $conf['id_field'] . ') as position');
 		}
-
 		if ($keyword) {
 			$this->db->group_start();
-			$this->db->like($conf['detail_table'] . '.serial_code', $keyword);
-			$this->db->or_like($conf['main_table'] . '.' . $conf['name_field'], $keyword);
-			if ($conf['additional_like_field']) {
-				$this->db->or_like($conf['detail_table'] . '.' . $conf['additional_like_field'], $keyword);
-			}
+				$this->db->like($conf['detail_table'] . '.serial_code', $keyword);
+				$this->db->or_like($conf['detail_table'] . '.' . $conf['like_field1'], $keyword);
+				$this->db->or_like($conf['detail_table'] . '.' . $conf['like_field2'], $keyword);
+				$this->db->or_like($conf['detail_table'] . '.' . $conf['like_field3'], $keyword);
+				$this->db->or_like($conf['main_table'] . '.' . $conf['name_field'], $keyword);
 			$this->db->group_end();
 		}
 		$this->db->order_by($conf['id_field'], $sort_order);

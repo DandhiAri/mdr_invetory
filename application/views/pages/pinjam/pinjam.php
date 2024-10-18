@@ -113,6 +113,7 @@
 											<th>Lokasi</th>
 											<th>Keterangan</th>
 											<th>Waktu Kembali</th>
+											<th>Made By</th>
 											<th>Status</th>
 											<th>Aksi</th>
 										</tr>
@@ -140,6 +141,12 @@
 												<td><?= $dp->lokasi ?></td>
 												<td><?= $dp->keterangan ?></td>
 												<td><?= $formatted_datetime ?></td>
+												<td style="white-space:nowrap; font-size:13px;">
+													<ul style="list-style:none; margin:0; padding:0;">
+														<li>Created : <b><?= !empty($dp->user_create)  ? $dp->user_create : "<i>NULL</i>" ?></b></li>
+														<li>Updated : <b><?= !empty($dp->user_update)  ? $dp->user_update : "<i>NULL</i>" ?></b></li>
+													</ul>
+												</td>
 												<td><p class="<?= $dp->status ?>"><?= $dp->status ?></p></td>
 												<td>
 													<a href="<?= base_url('detail_pinjam/edit_data/') . $dp->id_detail_pinjam  ?>" class="btn btn-warning" title="Edit pinjam"><i class="ti ti-pencil"></i></a>

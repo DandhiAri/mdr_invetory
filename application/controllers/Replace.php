@@ -174,6 +174,7 @@ class Replace extends CI_Controller
 				$data1["PIC"] = $this->db->query("SELECT nama FROM ganti WHERE id_replace ='".$id."'")->row()->nama;
 				$data1["status"] = "In-Used";
 				$data1["lokasi"] = $sg->lokasi;
+				$data1["id_transaksi"] = $sg->id_detail_replace;
 			}
 			if ($query->qtty !== null && $query->qtty > 0 && $sg->status !== "Finished") {
 				$data1["qtty"] = max($query->qtty - $sg->qtty, 0);
@@ -182,6 +183,7 @@ class Replace extends CI_Controller
 				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
 			}
 			$data2['tgl_replace_update'] = date('Y-m-d\TH:i');
+			$data2['user_update'] = $this->user['name'];
 			$this->Mmain->qUpdpart("detail_ganti", 'id_detail_replace', $sg->id_detail_replace, array_keys($data2), array_values($data2));
 		}
 
@@ -211,6 +213,7 @@ class Replace extends CI_Controller
 				$data1["status"] = "Stored";
 				$data1["PIC"] = null;
 				$data1["lokasi"] = "IT STOCKROOM";
+				$data1["id_transaksi"] = "";
 			}
 			if($sg->status === "Finished"){
 				$data1["qtty"] = max($query->qtty + $sg->qtty, 0);
@@ -219,6 +222,7 @@ class Replace extends CI_Controller
 				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
 			}
 			$data2['tgl_replace_update'] = date('Y-m-d\TH:i');
+			$data2['user_update'] = $this->user['name'];
 			$this->Mmain->qUpdpart("detail_ganti", 'id_detail_replace', $sg->id_detail_replace, array_keys($data2), array_values($data2));
 		}
 

@@ -90,7 +90,7 @@
 							</td>
 						</tr>
 						<tr style="display:none;" id="toggleDiv-<?= $b->id_barang ?>" class=" nested-table-container" width="100%">
-							<td colspan='8'>
+							<td colspan='20'>
 								<p style="text-align:center;">
 									<a href="<?= base_url('detail_barang/tambah/'). $b->id_barang  ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Detail Barang <?= $b->id_barang ?> </a>
 								</p>
@@ -104,11 +104,12 @@
 											<th>ID Detail Barang</th>
 											<th>ID Pengajuan</th>
 											<th>Serial Code</th>
-											<th>Quantity</th>
+											<th>Jumlah</th>
 											<th>Lokasi</th>
 											<th>Keterangan</th>
+											<th>Created At</th>
 											<?php if($b->nama_satuan == "Unit"){ ?>
-											<th>Nama PIC</th>
+											<th>Transaksi</th>
 											<th>Status</th>
 											<?php } ?>
 											<th>Aksi</th>
@@ -128,10 +129,16 @@
 												<td><?= $detail->id_pengajuan ?></td>
 												<td><b><?= $detail->serial_code?></b></td>
 												<td style="text-align:right;"><?= $detail->qtty?></td>
-												<td><?= $detail->lokasi?></td>
+												<td><b><?= $detail->lokasi?></b></td>
 												<td><?= $detail->keterangan?></td>
+												<td><?= $detail->created_at ?></td>
 												<?php if($b->nama_satuan == "Unit"){ ?>
-												<td><b><?= $detail->PIC ?></b></td>
+												<td >
+													<ul style="text-align:left; list-style:none; margin:0; padding:0; white-space:nowrap; font-size:13px;">
+														<li>Nama PIC : <b><?= !empty($detail->PIC)  ? $detail->PIC : "<i>NULL</i>" ?></b></li>
+														<li>ID Transaksi : <b><?= !empty($detail->id_transaksi)  ? $detail->id_transaksi : "<i>NULL</i>" ?></b></li>
+													</ul>
+												</td>
 												<td><p class='<?= $detail->status ?>'><?= $detail->status ?></p></td>
 												<?php } ?>
 												<td>

@@ -113,6 +113,7 @@
 											<th>Lokasi</th>
 											<th>Keterangan</th>
 											<th>Waktu Update</th>
+											<th>Made By</th>
 											<th>Status</th>
 											<th>Aksi</th>
 										</tr>
@@ -137,6 +138,12 @@
 												<td><?= $d->lokasi ?></td>
 												<td><?= $d->keterangan ?></td>
 												<td><?= $d->tgl_replace_update ?></td>
+												<td style="white-space:nowrap; font-size:13px;">
+													<ul style="list-style:none; margin:0; padding:0;">
+														<li>Created : <b><?= !empty($d->user_create)  ? $d->user_create : "<i>NULL</i>" ?></b></li>
+														<li>Updated : <b><?= !empty($d->user_update)  ? $d->user_update : "<i>NULL</i>" ?></b></li>
+													</ul>
+												</td>
 												<td><p class="<?= $d->status ?>"><?= $d->status ?></p></td>
 												<td>
 													<a href="<?= base_url('Detail_Replace/edit_detail/') . $d->id_detail_replace ?>" class="btn btn-warning"><i class="fa fa-pencil"></i></a>
