@@ -8,14 +8,21 @@
                 <a href="<?= base_url('Pinjam/tambah_pinjam') ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Pinjam</a>
             </div>
 			<div class="col-md-5">
-				<form action="<?= base_url('replace'); ?>" style="display:flex;" method="post">
-					<input type="text" class="form-control" name="keywordRep" placeholder="Nama Barang, Serial Code, ID Pengajuan.....">
+				<form action="<?= base_url('pinjam'); ?>" style="display:flex;" method="post">
+					<input type="text" class="form-control" name="keywordPin" placeholder="Nama Barang, Serial Code, ID Pengajuan.....">
 					<button type="submit" name="submit" class="btn btn-primary" style="cursor: pointer;"><i class="ti ti-search"></i></button>
 					<button type="submit" style="cursor: pointer;" class="btn btn-danger" name="reset" value="1"><i class="fa fa-refresh"></i></button>
 				</form>
 			</div> 
 			<?= $pagination ?>
 		</div>
+		<?php
+		if($keywordPin){
+		?>
+			<p style="padding:7px 0 0 1.2em;">Keyword yang sedang dicari : <b><?= $keywordPin ?></b></p>
+		<?php
+		}
+		?>
         <div class="ibox-body">
 			<?php if ($this->session->flashdata('success')): ?>
 				<div class="warn succ">
@@ -93,7 +100,7 @@
 							<td><?= $P->keterangan ?></td>
                             <td>
                                 <a href="<?= base_url('pinjam/edit_data/') . $P->id_pinjam ?>" class="btn btn-warning" title="Edit pinjam"><i class="ti ti-pencil"></i></a>
-                                <a href="<?= base_url('pinjam/hapus_data/') . $P->id_pinjam ?>" class="btn btn-danger" onclick="confirm('Apakah anda yakin ingin menghapus?')" id="deletesatuan" title="Hapus satuan" style="cursor: pointer;"><i class="ti ti-trash"></i></button>
+                                <a href="<?= base_url('pinjam/hapus_data/') . $P->id_pinjam ?>" class="btn btn-danger" onclick="return confirm('Apakah anda yakin ingin menghapus?')" id="deletesatuan" title="Hapus satuan" style="cursor: pointer;"><i class="ti ti-trash"></i></button>
                             </td>
                         </tr>
 						<tr style="display:none;" id="toggleDiv-<?= $P->id_pinjam ?>" class=" nested-table-container" width="100%">
@@ -108,6 +115,7 @@
 									<thead>
 										<tr>
 											<th>No</th>
+											<th>ID</th>
 											<th>Detail Barang</th>
 											<th>Quantity</th>
 											<th>Lokasi</th>
@@ -130,7 +138,8 @@
 										?>
 											<tr>
 												<td><?= $no++ ?></td>
-												<td width="20%">
+												<td><?= $dp->id_detail_pinjam ?></td>
+												<td>
 													<ul style="text-align:left; list-style:none; margin:0 0 0 0; padding:0;">
 														<li><b>ID Barang : </b><?= $dp->id_barang ?></li>
 														<li><b>ID Detail Barang : </b> <?= $dp->id_detail_barang ?></li>
@@ -140,7 +149,7 @@
 												<td style="text-align:right;"><?= $dp->qtty ?></td>
 												<td><?= $dp->lokasi ?></td>
 												<td><?= $dp->keterangan ?></td>
-												<td><?= $formatted_datetime ?></td>
+												<td><?= !empty($dp->wkt_kembali)? $dp->wkt_kembali : "<b> BELUM KEMBALI </b>" ?></td>
 												<td style="white-space:nowrap; font-size:13px;">
 													<ul style="list-style:none; margin:0; padding:0;">
 														<li>Created : <b><?= !empty($dp->user_create)  ? $dp->user_create : "<i>NULL</i>" ?></b></li>
@@ -150,7 +159,7 @@
 												<td><p class="<?= $dp->status ?>"><?= $dp->status ?></p></td>
 												<td>
 													<a href="<?= base_url('detail_pinjam/edit_data/') . $dp->id_detail_pinjam  ?>" class="btn btn-warning" title="Edit pinjam"><i class="ti ti-pencil"></i></a>
-													<a href="<?= base_url('detail_pinjam/hapus/') . $dp->id_detail_pinjam.'/'.$dp->id_pinjam  ?>" class="btn btn-danger" onclick="confirm('Apakah anda yakin ingin menghapus?')" id="delete" title="Hapus" style="cursor: pointer;"><i class="ti ti-trash"></i></button>
+													<a href="<?= base_url('detail_pinjam/hapus/') . $dp->id_detail_pinjam.'/'.$dp->id_pinjam  ?>" class="btn btn-danger" onclick="return confirm('Apakah anda yakin ingin menghapus?')" id="delete" title="Hapus" style="cursor: pointer;"><i class="ti ti-trash"></i></button>
 												</td>
 											</tr>
 										<?php 

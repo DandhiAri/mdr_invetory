@@ -85,16 +85,10 @@
                     </div>
 					<div class="col-md-6">
 						<div class="mb-3">
-							<label for="PIC" class="form-label">Nama PIC</label>
-                            <input type="text" class="form-control" name="PIC" id="PIC" placeholder="Masukkan PIC..." value="<?= $Detail_Barang['PIC'] ?>">
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="mb-3">
 							<label for="status" class="form-label">Status</label>
-							<select class="form-control" name="status" id="status" placeholder="Pilih Status...">
+							<select class="form-control" name="status" id="status" placeholder="Pilih Status..." required>
 								<?php
-								$status_options = ['Stored','In-Used'];
+								$status_options = ['Stored', 'In-Used'];
 								foreach ($status_options as $option) {
 									$selected = ($Detail_Barang['status'] == $option) ? 'selected' : '';
 									echo "<option value='$option' $selected>$option</option>";

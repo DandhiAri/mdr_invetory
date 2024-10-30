@@ -78,8 +78,8 @@ class Detail_Pinjam extends CI_Controller
 				$data['serial_code'] = "";
 			}
 			$id_pinjam = $data['id_pinjam'];
-			$data['id_detail_pinjam'] = $this->Mmain->autoId("detail_pinjam", "id_detail_pinjam", "DP", "DP" . "001", "001");
-			
+			$data['id_detail_pinjam'] = $this->Mmain->autoId("detail_pinjam", "id_detail_pinjam", "DPJ", "DPJ" . "001", "001");
+			$data['user_create'] = $this->user['name'];
 			$this->Mmain->qIns('detail_pinjam', $data);
 
 			$this->M_detail_pinjam->changeStatusPinjam($data['id_pinjam']);
@@ -117,6 +117,7 @@ class Detail_Pinjam extends CI_Controller
 				"id_detail_barang" => $this->input->post('id_detail_barang'),
 				"id_pinjam" => $this->input->post('id_pinjam'),
 				"serial_code" => $this->input->post('serial_code'),
+				"wkt_kembali" => $this->input->post('wkt_kembali'),
 				"qtty" => $this->input->post('qtty'),
 				"lokasi" => $this->input->post('lokasi'),
 				'status'=> $this->input->post('status'),
@@ -147,10 +148,9 @@ class Detail_Pinjam extends CI_Controller
 				if ($query->qtty !== null && $query->qtty > 0) {
 					$data1["qtty"] = max($query->qtty - $data['qtty'], 0);
 				}
-
-				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
-				$data['wkt_kembali'] = date('Y-m-d\TH:i');
-
+				if(empty($data['wkt_kembali'])){
+					$data['wkt_kembali'] = date('Y-m-d\TH:i');
+				}
 			} elseif ($query1->status == 'Finished' && ($data['status'] == 'Rejected' || $data['status'] == 'Requested')) {
 				if($satuanBarang === "16"){
 					$data1["status"] = "Stored";
@@ -161,26 +161,29 @@ class Detail_Pinjam extends CI_Controller
 				if ($query1->status == "Finished"){
 					$data1["qtty"] = max($query->qtty + $data['qtty'], 0);
 				}
-
-				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
-				$data['wkt_kembali'] = "";
+				$data['wkt_kembali'] = null;
 				
 			} elseif ($data['status'] == 'Finished' && $query1->status == 'Finished' ){
 				if($satuanBarang === "16"){
 					$data1["lokasi"] = $data['lokasi'];
 				}
-				if ($query->qtty !== null && $query->qtty > 0 && $query->qtty !== $data['qtty']) {
-					$awalNilai = max($query->qtty + $query1->qtty, 0);
-					$data1["qtty"] = max($awalNilai - $data['qtty'], 0);
-				}
-				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
+				$doneData = true;
 			}
 
-			$this->Mmain->qUpdpart("detail_pinjam", 'id_detail_pinjam', $id, array_keys($data), array_values($data)); 
-
-			$this->M_detail_pinjam->changeStatusPinjam($data['id_pinjam']);
-
-			$this->session->set_flashdata('success', 'Data Detail Pinjam <strong>Berhasil</strong> Diubah!');
+			if(!empty($data1) || isset($doneData)){
+				if(!empty($data1)){
+					$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
+				}
+				$data['user_update'] = $this->user['name'];
+				$this->Mmain->qUpdpart("detail_pinjam", 'id_detail_pinjam', $id, array_keys($data), array_values($data)); 
+	
+				$this->M_detail_pinjam->changeStatusPinjam($data['id_pinjam']);
+	
+				$this->session->set_flashdata('success', 'Data Detail Pinjam <strong>Berhasil</strong> Diubah!');
+			} else {
+				$this->session->set_flashdata('failed', 'Data Detail Pinjam <strong>Gagal</strong> Diubah!');
+			}
+			
 			redirect('pinjam/index/' . $this->get_page_for_id($data["id_pinjam"]));
         }
 	}
@@ -211,6 +214,7 @@ class Detail_Pinjam extends CI_Controller
 		}
 		redirect('pinjam/index/' . $this->get_page_for_id($data->id_pinjam));
 	}
+
 	private function get_page_for_id($id) {
 		if (!empty($this->session->userdata('keywordPin'))){
 			$keyword = $this->session->userdata('keywordPin');

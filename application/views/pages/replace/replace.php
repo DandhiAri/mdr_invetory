@@ -23,7 +23,13 @@
 			</div> 
 			<?= $pagination ?>
         </div>
-       
+		<?php
+		if($keywordRep){
+		?>
+			<p style="padding:7px 0 0 1.2em;">Keyword yang sedang dicari : <b><?= $keywordRep ?></b></p>
+		<?php
+		}
+		?>
 		<div class="ibox-body">
 			<?php if ($this->session->flashdata('success')): ?>
 				<div class="warn succ">

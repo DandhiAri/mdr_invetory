@@ -172,7 +172,7 @@ class Pinjam extends CI_Controller
 			if(!empty($data1)){
 				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
 			}
-			$data2['wkt_kembali'] = "";
+			$data2['wkt_kembali'] = null;
 			$data2['user_update'] = $this->user['name'];
 			$this->Mmain->qUpdpart("detail_pinjam", 'id_detail_pinjam', $sg->id_detail_pinjam, array_keys($data2), array_values($data2));
 		}

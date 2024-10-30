@@ -195,12 +195,13 @@ class mMain  extends CI_Model
 					FROM ' . $conf['main_table'] . ' 
 					LEFT JOIN ' . $conf['detail_table'] . ' 
 					ON ' . $conf['main_table'] . '.' . $conf['id_field'] . ' = ' . $conf['detail_table'] . '.' . $conf['id_field'] . 
-					' WHERE ' . $conf['detail_table'] . '.serial_code LIKE "%' . $keyword . '%" 
-					OR ' . $conf['main_table'] . '.' . $conf['name_field'] . ' LIKE "%' . $keyword . '%" ' . 
-					'OR ' . $conf['detail_table'] . '.' . $conf['like_field1'] . ' LIKE "%' . $keyword . '%" 
+					' WHERE ' . $conf['detail_table'] . '.serial_code LIKE "%' . $keyword . '%"
+					OR ' . $conf['detail_table'] . '.' . $conf['like_field1'] . ' LIKE "%' . $keyword . '%" 
 					OR ' . $conf['detail_table'] . '.' . $conf['like_field2'] . ' LIKE "%' . $keyword . '%" 
-					OR ' . $conf['detail_table'] . '.' . $conf['like_field3'] . ' LIKE "%' . $keyword . '%" 
-					GROUP BY ' . $conf['main_table'] . '.' . $conf['id_field'] . 
+					OR ' . $conf['detail_table'] . '.' . $conf['like_field3'] . ' LIKE "%' . $keyword . '%"
+					OR ' . $conf['main_table'] . '.' . $conf['id_field'] . ' LIKE "%' . $keyword . '%"
+					OR ' . $conf['main_table'] . '.' . $conf['name_field'] . ' LIKE "%' . $keyword . '%" ' . 
+					'GROUP BY ' . $conf['main_table'] . '.' . $conf['id_field'] . 
 				') as b3', 'b3.' . $conf['id_field'] . ' <= ' . $conf['main_table'] . '.' . $conf['id_field'], 'left');
 			} else {
 				$this->db->join($conf['main_table'] . ' as b3', 'b3.' . $conf['id_field'] . ' <= ' . $conf['main_table'] . '.' . $conf['id_field'], 'left');
@@ -214,6 +215,7 @@ class mMain  extends CI_Model
 				$this->db->or_like($conf['detail_table'] . '.' . $conf['like_field2'], $keyword);
 				$this->db->or_like($conf['detail_table'] . '.' . $conf['like_field3'], $keyword);
 				$this->db->or_like($conf['main_table'] . '.' . $conf['name_field'], $keyword);
+				$this->db->or_like($conf['main_table'] . '.' . $conf['id_field'], $keyword);
 			$this->db->group_end();
 		}
 		$this->db->order_by($conf['id_field'], $sort_order);

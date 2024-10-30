@@ -15,7 +15,14 @@
 				</form>
 			</div> 
         </div>
-		<?= $keywordPNJ ?> 
+		<?php
+		if($keywordPNJ){
+		?>
+			<p style="padding:7px 0 0 1.2em;">Keyword yang sedang dicari : <b><?= $keywordPNJ ?></b></p>
+		<?php
+		}
+		?>
+
 		<?php if ($this->session->flashdata('failed')): ?>
 			<div class="warn err">
 				<div class="msg" onclick="warnError()">
@@ -67,11 +74,10 @@
 											</div>
 										</div>
 									</div>
-									
 								</td>
 								<td>
 									<a href="<?= base_url('pengajuan/edit_data/' . $S->id_pengajuan) ?>" class="btn btn-warning" title="Edit satuan"><i class="ti ti-pencil"></i></a>
-									<a href="<?= base_url('pengajuan/hapus_data/' . $S->id_pengajuan) ?>" class="btn btn-danger" onclick="confirm('Apakah anda yakin ingin menghapus?')" id="deletesatuan" title="Hapus satuan" style="cursor: pointer;"><i class="ti ti-trash"></i></button>
+									<a href="<?= base_url('pengajuan/hapus_data/' . $S->id_pengajuan) ?>" class="btn btn-danger" onclick="return confirm('Apakah anda yakin ingin menghapus?')" id="deletesatuan" title="Hapus satuan" style="cursor: pointer;"><i class="ti ti-trash"></i></button>
 								</td>
 							</tr>
 					<?php } ?>	

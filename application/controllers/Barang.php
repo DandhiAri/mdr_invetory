@@ -194,13 +194,13 @@ class Barang extends CI_Controller
 		$this->Mmain->qDel("detail_pinjam","id_barang",$id);
 		$result1 = $this->Mmain->qDel("detail_barang","id_barang",$id);
 		$result2 = $this->Mmain->qDel("barang","id_barang",$id);
-
+		$lastID = $id;
 		if (!$result1 && !$result2) {
 			$this->session->set_flashdata('success', 'Data Barang <strong>Berhasil</strong> Dihapus!');
-			redirect('barang/index/' . $this->get_page_for_id($id));
+			redirect('barang/index/' . $this->get_page_for_id($lastID));
 		} else {
 			$this->session->set_flashdata('failed', 'Data Barang <strong>Gagal</strong> Dihapus!');
-			redirect('barang/index/' . $this->get_page_for_id($id));
+			redirect('barang/index/' . $this->get_page_for_id($lastID));
 		}
 	}
 	

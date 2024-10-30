@@ -72,7 +72,7 @@ class Pengajuan extends CI_Controller
 			redirect($_SERVER['HTTP_REFERER']);
 		} else {
 			$config['upload_path'] = './assets/img/bukti/invoice/';
-			$config['allowed_types'] = 'gif|jpg|png|pdf';
+			$config['allowed_types'] = 'jpeg||jpg|png';
 			$config['max_size'] = 10000;
 
 			if (!is_dir($config['upload_path'])) {

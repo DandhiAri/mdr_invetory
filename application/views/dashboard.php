@@ -102,9 +102,9 @@
 	</div>
 </div>
 <div class="row">
-	<div class="col">
+	<!-- <div class="col">
 		<canvas id="DognutChart" width="100%"></canvas>
-	</div>
+	</div> -->
 	<div class="col">
 		<canvas id="RequestChart" width="100%"></canvas>
 	</div>

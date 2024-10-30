@@ -21,25 +21,25 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="nama_peminjam" class="form-label">Nama Peminjam</label>
-                            <input type="text" class="form-control" name="nama_peminjam" id="nama_peminjam" placeholder="Masukkan Nama Peminjam...">
+                            <input type="text" class="form-control" name="nama_peminjam" id="nama_peminjam" placeholder="Masukkan Nama Peminjam..." required>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="nama_penerima" class="form-label">Nama Penerima</label>
-                            <input type="text" class="form-control" name="nama_penerima" id="nama_penerima" placeholder="Masukkan Nama Penerima...">
+                            <input type="text" class="form-control" name="nama_penerima" id="nama_penerima" placeholder="Masukkan Nama Penerima..." required>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="nama_pemberi" class="form-label">Nama Pemberi</label>
-                            <input type="text" class="form-control" name="nama_pemberi" id="nama_pemberi" placeholder="Masukkan Nama Pemberi...">
+                            <input type="text" class="form-control" name="nama_pemberi" id="nama_pemberi" placeholder="Masukkan Nama Pemberi..." required>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="wkt_pinjam" class="form-label">Tgl Pinjam</label>
-                            <input type="datetime-local" class="form-control" name="wkt_pinjam" id="wkt_pinjam" placeholder="Masukkan Tgl Pinjam...">
+                            <label for="wkt_pinjam" class="form-label">Waktu Pinjam</label>
+                            <input type="datetime-local" class="form-control" name="wkt_pinjam" id="wkt_pinjam" placeholder="Masukkan Tgl Pinjam..." required>
                         </div>
 					</div>
                     <div class="col-md-6">

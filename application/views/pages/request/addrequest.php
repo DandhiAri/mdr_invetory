@@ -21,7 +21,7 @@
                     <div class="form-group col-md-6">
                         <div class="mb-3">
                             <label for="nama" class="form-label">Nama PIC Request</label>
-                            <input type="text" class="form-control" name="nama" id="nama" placeholder="Masukkan nama...">
+                            <input type="text" class="form-control" name="nama" id="nama" placeholder="Masukkan nama..." required>
 							<?= form_error('nama', '<small class="text-danger pl-3">', '</small>'); ?>
 							
                         </div>
@@ -29,7 +29,7 @@
                     <div class="form-group col-md-6">
                         <div class="mb-3">
                             <label for="tgl_request" class="form-label">Tanggal Request</label>
-                            <input type="date" class="form-control" name="tgl_request" id="tgl_request" >
+                            <input type="date" class="form-control" name="tgl_request" id="tgl_request" required>
                         </div>
                     </div>
                     <div class="form-group col-md-6">

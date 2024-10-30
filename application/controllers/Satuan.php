@@ -38,10 +38,10 @@ class Satuan extends CI_Controller
 
 		$key = $data['keywordSAT'];
 
-		$this->db->from('jenis');
+		$this->db->from('satuan');
 
 		if(!empty($key)){
-			$this->db->like('jenis.nama_jenis', $key);
+			$this->db->like('satuan.nama_satuan', $key);
 		}
 
 		$config['total_rows'] = $this->db->count_all_results();

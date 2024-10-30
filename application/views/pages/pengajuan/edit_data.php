@@ -35,6 +35,7 @@
 								<p>Data ini tidak punya bukti invoice pengajuan.</p>
 							<?php } ?>
 							<input type="file" class="form-control" size="20" name="invoice" id="invoice">
+							<p style="font-size:13px;">requirement type file upload : <b>jpg, jpeg dan png</b> </p>
 						</div>
 					</div>
 				</div>

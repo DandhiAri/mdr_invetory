@@ -38,18 +38,18 @@
 					</div>
 					<div class="col-md-6">
 						<div class="mb-3">
+							<label for="qtty" class="form-label">Jumlah</label>
+							<input type="number" class="form-control" name="qtty" id="qtty" placeholder="Masukkan Kuantitas Barang..." required>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="mb-3">
 							<label class="form-label">Serial Number</label>
 							<select class="form-control" name="serial_code" id="showSerialCode" required>
 								<option value="">Pilih Nomor Seri</option>
 								
 							</select>
 							<input type="text" name="id_detail_barang" id="id_detail_barang" hidden>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="mb-3">
-							<label for="qtty" class="form-label">Jumlah</label>
-							<input type="number" class="form-control" name="qtty" id="qtty" placeholder="Masukkan Kuantitas Barang..." required>
 						</div>
 					</div>
 					<div class="col-md-6">

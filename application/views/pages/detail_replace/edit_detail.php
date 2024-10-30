@@ -58,7 +58,6 @@
 							<input type="datetime-local" class="form-control" name="tgl_replace_update" id="tgl_replace_update" value="<?= $Detail_Replace['tgl_replace_update'] ?>" required>
 						</div>
 					</div>
-		
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="status" class="form-label">Status</label>

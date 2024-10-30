@@ -160,8 +160,6 @@ class Detail_request extends CI_Controller
 				if ($query->qtty !== null && $query->qtty > 0) {
 					$data1["qtty"] = max($query->qtty - $data['qtty'], 0);
 				}
-
-				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
 			
 			} elseif ($query1->status == 'Finished' && ($data['status'] == 'Rejected' || $data['status'] == 'Requested')) {
 				if($satuanBarang === "16"){
@@ -173,29 +171,28 @@ class Detail_request extends CI_Controller
 				if ($query1->status == "Finished"){
 					$data1["qtty"] = max($query->qtty + $data['qtty'], 0);
 				}
-
-				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
 			} elseif ($data['status'] == 'Finished' && $query1->status == 'Finished' ){
 				if($satuanBarang === "16"){
 					$data1["lokasi"] = $data['lokasi'];
 				}
-				if ($query->qtty !== null && $query->qtty > 0 && $query->qtty !== $data['qtty']) {
-					$awalNilai = max($query->qtty + $query1->qtty, 0);
-					$data1["qtty"] = max($awalNilai - $data['qtty'], 0);
-				}
-				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
+				$doneData = true;
 			}
+			if(!empty($data1) || isset($doneData)){
+				if(!empty($data1)){
+					$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
+				}
+				$data['tgl_request_update'] = date('Y-m-d\TH:i');
+				$data['user_update'] = $this->user['name'];
+				$this->Mmain->qUpdpart("detail_request", 'id_detail_request', $id, array_keys($data), array_values($data)); 
 
-			$data['tgl_request_update'] = date('Y-m-d\TH:i');
-			$data['user_update'] = $this->user['name'];
-			$this->Mmain->qUpdpart("detail_request", 'id_detail_request', $id, array_keys($data), array_values($data)); 
+				$this->m_detail_req->changeStatusRequest($data['id_request']); 
 
-			$this->m_detail_req->changeStatusRequest($data['id_request']); 
-
-			$this->session->set_flashdata('success', 'Data Detail Request <strong>Berhasil</strong> Diubah!');
+				$this->session->set_flashdata('success', 'Data Detail Request <strong>Berhasil</strong> Diubah!');
+			} else {
+				$this->session->set_flashdata('failed', 'Data Detail Request <strong>Gagal</strong> Diubah!');
+			}
+			
 			redirect('request/index/' . $this->get_page_for_id($data['id_request']));
-			// redirect("request");
-
         }
 	}
 

@@ -1,7 +1,7 @@
 <div class="content">
     <div class="brand">
         <br></br>
-        <h1 class="link" href="<?= base_url('auth') ?>">Inventory IT MDR</h1>
+        <h1 class="link" href="<?= base_url('auth') ?>">INIT MDR v0</h1>
     </div>
 
     <?= $this->session->flashdata('message') ?>

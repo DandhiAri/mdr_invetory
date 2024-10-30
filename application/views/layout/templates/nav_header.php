@@ -2,7 +2,7 @@
 	<div class="page-brand">
 		<a class="link" href="<?= base_url('dashboard')?>">
 			<img src="<?= base_url("assets/img/mdr.png")?>" class="mr-2"  width="45px" alt="">
-			<span class="brand">Inventory IT
+			<span class="brand">INIT v0
 			</span>
 			<!-- <span class="brand-mini"></span> -->
 		</a>

@@ -63,6 +63,12 @@
 						</div>
 					</div>
 					<div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="wkt_kembali" class="form-label">Waktu Kembali</label>
+                            <input type="datetime-local" class="form-control" name="wkt_kembali" id="wkt_kembali" value="<?= $Detail_pinjam['wkt_kembali'] ?>" placeholder="Masukkan Tgl Pinjam...">
+                        </div>
+					</div>
+					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="status" class="form-label">Status</label>
 							<select class="form-control" name="status" id="status" placeholder="Pilih Status..." required>
