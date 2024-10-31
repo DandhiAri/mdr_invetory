@@ -44,7 +44,21 @@ class Pinjam extends CI_Controller
 		$key = $data['keywordPin'];
 
 		$this->db->from('pinjam');
-		$config['total_rows'] = $this->db->count_all("pinjam");
+		$this->db->join('detail_pinjam', 'pinjam.id_pinjam = detail_pinjam.id_pinjam', 'left');
+
+		if (!empty($key)) {
+			$this->db->group_start();
+			$this->db->like('detail_pinjam.serial_code', $data['keywordPin']);
+			$this->db->or_like('detail_pinjam.id_detail_barang', $data['keywordPin']);
+			$this->db->or_like('detail_pinjam.id_detail_pinjam', $data['keywordPin']);
+            $this->db->or_like('pinjam.nama_peminjam', $data['keywordPin']);
+            $this->db->or_like('pinjam.id_pinjam', $data['keywordPin']);
+			$this->db->group_end();
+		}
+		
+		$this->db->select('COUNT(DISTINCT pinjam.id_pinjam) as total');
+		$query = $this->db->get();
+		$config['total_rows'] = $query->row()->total;
 		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 		$this->pagination->initialize($config);
 

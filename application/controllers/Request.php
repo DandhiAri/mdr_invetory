@@ -50,15 +50,6 @@ class Request extends CI_Controller
 		$key = $data['keywordReq'];
 		
 		$this->db->from('request');
-		if (!empty($key)) {
-			$this->db->like('request.nama', $key); 
-		}
-		$config['total_rows'] = $this->db->count_all_results();
-		$data['total_rows'] = $config['total_rows'];
-		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-
-		$this->db->select('request.*, detail_request.*'); 
-		$this->db->from('request');
 		$this->db->join('detail_request', 'request.id_request = detail_request.id_request', 'left');
 
 		if (!empty($key)) {
@@ -66,12 +57,16 @@ class Request extends CI_Controller
 			$this->db->like('detail_request.serial_code', $data['keywordReq']);
 			$this->db->or_like('detail_request.id_detail_barang', $data['keywordReq']);
 			$this->db->or_like('detail_request.id_detail_request', $data['keywordReq']);
-            $this->db->or_like('request.nama', $data['keywordReq']);
+			$this->db->or_like('request.nama', $data['keywordReq']);
+			$this->db->or_like('request.id_request',$data['keywordReq']);
 			$this->db->group_end();
 		}
-	
-		$this->db->limit($config['per_page'], $data['page']);
-		$data['Request'] = $this->db->get()->result(); 
+		
+		$this->db->select('COUNT(DISTINCT request.id_request) as total');
+		$query = $this->db->get();
+		$config['total_rows'] = $query->row()->total;
+		$data['total_rows'] = $config['total_rows'];
+		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 
 		$data['Request'] = $this->Mmain->getData('request',$data['keywordReq'], $config['per_page'], $data['page']);
 		$this->pagination->initialize($config);

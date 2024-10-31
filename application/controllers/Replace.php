@@ -53,15 +53,6 @@ class Replace extends CI_Controller
 		$key = $data['keywordRep'];
 
 		$this->db->from('ganti');
-		if (!empty($key)) {
-			$this->db->like('ganti.nama', $key); 
-		}
-		$config['total_rows'] = $this->db->count_all_results();
-		$data['total_rows'] = $config['total_rows'];
-		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-		
-		$this->db->select('ganti.*, detail_ganti.*'); 
-		$this->db->from('ganti');
 		$this->db->join('detail_ganti', 'ganti.id_replace = detail_ganti.id_replace', 'left');
 
 		if (!empty($key)) {
@@ -73,9 +64,12 @@ class Replace extends CI_Controller
             $this->db->or_like('ganti.id_replace', $data['keywordRep']);
 			$this->db->group_end();
 		}
-	
-		$this->db->limit($config['per_page'], $data['page']);
-		$data['Request'] = $this->db->get()->result(); 
+		
+		$this->db->select('COUNT(DISTINCT ganti.id_replace) as total');
+		$query = $this->db->get();
+		$config['total_rows'] = $query->row()->total;
+		$data['total_rows'] = $config['total_rows'];
+		$data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 
 		$data['Replace'] = $this->Mmain->getData('replace', $data['keywordRep'], $config['per_page'], $data['page']);
 		$this->pagination->initialize($config);
