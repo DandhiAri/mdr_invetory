@@ -26,6 +26,7 @@
                     <?= form_error('new_password2', '<small class="text-danger pl-3">', '</small>'); ?>
                 </div>
                 <div class="form-group">
+				<a href="<?= base_url('profile') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
                     <button type="submit" class="btn btn-primary">Change Password</button>
                 </div>
             </form>

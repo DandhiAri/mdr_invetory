@@ -23,7 +23,12 @@
 		table{
 			text-align: center;	
 			vertical-align: middle;
+			width: 100%;
+			/* display: flex; */
+  			overflow-x: auto;
+  			/* white-space: nowrap; */
 		}
+
 		.table thead th{
 			text-align: center;
 		}

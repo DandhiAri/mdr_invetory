@@ -37,8 +37,8 @@
 					</div>
 				</div>
 			<?php endif;?>
-			<table style="align-items:center; text-align:center;" class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
-				<thead>
+			<table  style=" align-items:center; text-align:center;" class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
+				<thead >
 					<tr>
 						<th>No</th>
 						<th>Detail Request</th>
@@ -106,7 +106,7 @@
 							<h5 style="text-align:center;">
 								Detail Request <b><?= $r->id_request ?></b> Table 
 							</h5>
-							<table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
+							<table class="overflow-x:scroll; table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
 								<thead>
 								<tr>
 									<th>No</th>

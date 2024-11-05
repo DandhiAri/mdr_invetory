@@ -42,6 +42,7 @@
 
             <div class="form-group row justify-content-end">
                 <div class="col-sm-10">
+					<a href="<?= base_url('profile') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>
                     <button type="submit" class="btn btn-primary">Edit</button>
 					<!--<button onclick=return href="<?= base_url('user/edit') ?>" class="btn btn-warning" style="cursor: pointer;"><i class="ti ti-pencil"></i> Edit</button>-->
                 </div>
