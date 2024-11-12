@@ -25,12 +25,6 @@
 							<input type="date" class="form-control" name="tgl_replace" id="tgl_replace" value="<?= $Replace['tgl_replace'] ?>">
 						</div>
 					</div>
-					<div class="col-md-6">
-						<div class="mb-3">
-							<label for="keterangan" class="form-label">keterangan</label>
-							<input type="text" class="form-control" name="keterangan" id="keterangan" min="1"value="<?= $Replace['keterangan'] ?>">
-						</div>
-					</div>
 				</div>
 				<div class="row float-right">
 					<div class="col-md-12">

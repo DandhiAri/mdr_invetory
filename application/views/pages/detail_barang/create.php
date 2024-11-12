@@ -63,12 +63,12 @@
 						</div>
 					</div>
 					<div class="col-md-6">
-						<label for="Pengajuan" class="form-label">Pengajuan</label><br>
+						<label for="no_surat_pengajuan" class="form-label">Nomer Surat Pengajuan</label><br>
 						<div class="input-group">
-							<select class="form-control" name="id_pengajuan" id="getIdPengajuan">
+							<select class="form-control" name="no_surat_pengajuan" id="getIdPengajuan">
 								<option value="" >Pilih ID pengajuan</option>
 								<?php foreach ($pengajuan as $b){ ?>
-									<option value="<?= $b->id_pengajuan ?>"><?= $b->id_pengajuan ?></option>
+									<option value="<?= $b->no_surat ?>"><?= $b->no_surat ?></option>
 								<?php } ?>
 							</select>
 						</div>

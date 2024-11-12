@@ -67,12 +67,12 @@
                         </div>
                     </div>
 					<div class="col-md-6">
-						<label for="id_pengajuan" class="form-label">Pengajuan</label>
-						<select class="form-control" name="id_pengajuan" id="id_pengajuan">
+						<label for="no_surat_pengajuan" class="form-label">Pengajuan</label>
+						<select class="form-control" name="no_surat_pengajuan" id="getIdPengajuan">
 							<option value="" selected="selected">Pilih Pengajuan</option>
 							<?php foreach ($pengajuan as $data) { ?>
-								<option value="<?= $data->id_pengajuan ?>" <?= $data->id_pengajuan == $Detail_Barang['lokasi'] ? "selected" : "" ?>>
-									<?= $data->id_pengajuan ?>
+								<option value="<?= $data->no_surat ?>" <?= $data->no_surat == $Detail_Barang['no_surat_pengajuan'] ? "selected" : "" ?>>
+									<?= $data->no_surat ?>
 								</option>
 							<?php } ?>
 						</select>

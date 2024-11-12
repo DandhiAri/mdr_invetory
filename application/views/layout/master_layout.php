@@ -55,6 +55,12 @@
 		.sorted.desc:after {
 			content: ' ▼';
 		}
+		.btn-disabled{
+			border: 1px solid #999999;
+			background-color: #cccccc;
+			color: #666666;
+			pointer-events:none;
+		}
 	</style>
 </head>
 
@@ -119,7 +125,7 @@
 										var displayValue = serialCode.serial_code ? serialCode.serial_code : "TIDAK ADA SERIAL CODE";
 										var valueNull = serialCode.serial_code ? serialCode.serial_code : "-";
 
-										$serialCodeSelect.append('<option value="' + valueNull + '" ' + isSelected + '>' + serialCode.id_detail_barang + "|" + displayValue + '</option>');
+										$serialCodeSelect.append('<option value="' + valueNull + '" ' + isSelected + '>' + serialCode.id_detail_barang + "|" + displayValue + " (" + serialCode.qtty + ")" + '</option>');
 									}
 								});
 								

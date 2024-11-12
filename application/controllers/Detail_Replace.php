@@ -150,7 +150,7 @@ class Detail_Replace extends CI_Controller
 				FROM detail_ganti 
 				WHERE id_detail_replace = '".$id."'
 			")->row();
-			$doneData = false;
+			
 			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$data['id_barang'].'"')->row();
 
 			if (($query1->status == 'Requested' || $query1->status == 'Rejected') && $data['status'] == 'Finished') {
@@ -163,11 +163,6 @@ class Detail_Replace extends CI_Controller
 				if ($query->qtty !== null && $query->qtty > 0) {
 					$data1["qtty"] = max($query->qtty - $data['qtty'], 0);
 				}
-
-				if(!empty($data1)){
-					$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
-					$doneData = true;
-				}
 			} elseif ($query1->status == 'Finished' && ($data['status'] == 'Rejected' || $data['status'] == 'Requested')) {
 				if($satuanBarang === "16"){
 					$data1["status"] = "Stored";
@@ -179,30 +174,22 @@ class Detail_Replace extends CI_Controller
 					$data1["qtty"] = max($query->qtty + $data['qtty'], 0);
 				}
 
-				if(!empty($data1)){
-					$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
-					$doneData = true;
-				}
 			} elseif ($query1->status == 'Finished' &&  $data['status'] == 'Finished'){
 				if($satuanBarang === "16"){
 					$data1["lokasi"] = $data['lokasi'];
 				}
-				if(!empty($data1)){
-					$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
-				}
-				$doneData = true;
 			}
-			if (isset($doneData)){
-				$data['tgl_replace_update'] = date('Y-m-d\TH:i');
-				$data['user_update'] = $this->user['name'];
-				$this->Mmain->qUpdpart("detail_ganti", 'id_detail_replace', $id, array_keys($data), array_values($data)); 
-	
-				$this->M_detail_replace->changeStatusReplace($data['id_replace']);
-	
-				$this->session->set_flashdata('success', 'Data Detail Replace <strong>Berhasil</strong> Diubah!');
-			} else {
-				$this->session->set_flashdata('failed', 'Data Detail Replace <strong>Gagal</strong> Diubah!');
+
+			if(!empty($data1)){
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
 			}
+			$data['tgl_replace_update'] = date('Y-m-d\TH:i');
+			$data['user_update'] = $this->user['name'];
+			$this->Mmain->qUpdpart("detail_ganti", 'id_detail_replace', $id, array_keys($data), array_values($data)); 
+
+			$this->M_detail_replace->changeStatusReplace($data['id_replace']);
+
+			$this->session->set_flashdata('success', 'Data Detail Replace <strong>Berhasil</strong> Diubah!');
 
 			redirect('replace/index/' . $this->get_page_for_id($data['id_replace']));
         }

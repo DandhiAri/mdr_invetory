@@ -124,7 +124,6 @@ class Replace extends CI_Controller
 			$data = array(
 				"nama" => $this->input->post('nama'),
 				"tgl_replace" => $this->input->post('tgl_replace'),
-				"keterangan" => $this->input->post('keterangan'),
 			);
 			
 			$id = $this->Mmain->autoId("ganti","id_replace","R","R"."001","001");
@@ -165,7 +164,6 @@ class Replace extends CI_Controller
 			$data = [
 				'nama' => $this->input->post('nama'),
 				'tgl_replace' => $this->input->post('tgl_replace'),
-				'keterangan' => $this->input->post('keterangan'),
 			];
 
 			$this->Mmain->qUpdpart("ganti", 'id_replace', $id, array_keys($data), array_values($data));

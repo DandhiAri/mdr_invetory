@@ -31,13 +31,6 @@
 							<input type="date" class="form-control" name="tgl_replace" id="tgl_replace" value="<?= date('Y-m-d')?>" required>
 						</div>
 					</div>
-					<div class="col-md-6">
-							<div class="mb-3">
-								<label for="keterangan" class="form-label">Keterangan</label>
-								<input type="text" class="form-control" name="keterangan" id="nama" placeholder="Masukkan Keterangan...">
-							</div>
-						</div>
-					</div>
 				</div>
 				<div class="row float-right">
 					<div class="col-md-12">

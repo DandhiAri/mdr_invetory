@@ -18,6 +18,7 @@ class Request extends CI_Controller
         $this->load->helper('url');
 		$this->load->library('form_validation');
 		$this->load->library('pagination');
+		$this->load->library('pdfgenerator');
 
 		$this->itemPerPage = 10;
 
@@ -27,6 +28,7 @@ class Request extends CI_Controller
 		$this->form_validation->set_rules('nama', 'Nama PIC', 'required');
         $this->form_validation->set_rules('tgl_request', 'Tanggal Request', 'required');
 	}
+
 
     public function index()
     {
@@ -93,6 +95,68 @@ class Request extends CI_Controller
 		$this->load->view('layout/master_layout',$data);
     }
 
+	private function idNomerSurat($tbl0, $pk0, $prefix, $suffix, $defno) {
+		$month = date('n');
+		$roman_month = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"][$month - 1];
+		$year = date('y');
+		$base_id = "{$prefix}-{$suffix}-{$roman_month}-{$year}";
+		$query = $this->db->query("SELECT $pk0 FROM $tbl0 WHERE $pk0 LIKE '{$prefix}-%-{$suffix}-{$roman_month}-{$year}' ORDER BY $pk0 DESC LIMIT 1");
+		
+		if ($query->num_rows() > 0) {
+			$last_id = $query->row()->$pk0;
+			$last_number = (int) substr($last_id, strlen($prefix) + 1, strlen($last_id) - strlen($base_id) - 1);
+			$next_number = $last_number + 1;
+			$formatted_number = str_pad($next_number, strlen($defno), '0', STR_PAD_LEFT);
+			$new_id = "{$prefix}-{$formatted_number}-{$suffix}-{$roman_month}-{$year}";
+		} else {
+			$new_id = "{$prefix}-" . str_pad($defno, strlen($defno), '0', STR_PAD_LEFT) . "-{$suffix}-{$roman_month}-{$year}";
+		}
+		return $new_id;
+	}
+
+	public function viewSuratJalan($no_surat) {
+		$data['user'] = $this->user;
+		$data['title'] = $no_surat;
+
+		$data['request'] = $this->db->query('SELECT tgl_request,id_request,nama FROM request WHERE no_surat LIKE "'.$no_surat.'"')->row();
+		$data['detail_request'] = $this->db->query('SELECT detail_request.*, barang.nama_barang FROM detail_request INNER JOIN barang ON barang.id_barang = detail_request.id_barang WHERE detail_request.id_request = "' . $data['request']->id_request . '"')->result();
+		$data['barang'] = $this->db->query('SELECT * FROM barang')->result();
+
+
+		$id = $data['request']->id_request;
+		$data3['status'] = $data2['status'] = "Finished";
+		$status_get = $this->db->query('SELECT id_barang,lokasi,qtty,status,id_detail_request,id_detail_barang FROM detail_request WHERE id_request = "'.$id.'"')->result();
+		foreach ($status_get as $sg){
+			$query = $this->db->query("
+				SELECT qtty, status 
+				FROM detail_barang 
+				WHERE id_detail_barang = '".$sg->id_detail_barang."'
+			")->row();
+			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$sg->id_barang.'"')->row()->id_satuan;
+			if($satuanBarang === "16"){
+				$data1["PIC"] = $this->db->query("SELECT nama FROM request WHERE id_request ='".$id."'")->row()->nama;
+				$data1["status"] = "In-Used";
+				$data1["lokasi"] = $sg->lokasi;
+				$data1["id_transaksi"] = $sg->id_detail_request;
+			}
+			if ($query->qtty !== null && $query->qtty > 0 && $sg->status !== "Finished") {
+				$data1["qtty"] = max($query->qtty - $sg->qtty, 0);
+			} 
+			if(!empty($data1) ){
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $sg->id_detail_barang, array_keys($data1), array_values($data1));
+			}
+			$data2['tgl_request_update'] = date('Y-m-d\TH:i');
+			$data2['user_update'] = $this->user['name'];
+			$this->Mmain->qUpdpart("detail_request", 'id_detail_request', $sg->id_detail_request, array_keys($data2), array_values($data2));
+			$this->Mmain->qUpdpart("request", 'id_request', $id, array_keys($data3), array_values($data3));
+		}
+
+
+        $html = $this->load->view('layout/pdfLayout/suratJalan', $data, true);
+        $this->pdfgenerator->generate($html, $data['title']);
+    }
+
+
     public function tambah()
     {
         $data['title'] = 'Request';
@@ -119,13 +183,11 @@ class Request extends CI_Controller
             $data = array(
                 'nama' => $this->input->post('nama'),
                 'tgl_request' => $this->input->post('tgl_request'),
-                'keterangan' => $this->input->post('keterangan'),
             );
-			$id = $this->Mmain->autoId("request","id_request","RQ","RQ"."001","001");
-			$data['id_request'] = $id;
+			$data['id_request'] = $id = $this->Mmain->autoId("request","id_request","RQ","RQ"."001","001");
+			$data['no_surat'] = $this->idNomerSurat('request', 'no_surat', 'MDR-DN', 'SC', '001');
 			
 			$this->Mmain->qIns('request', $data);
-
             $this->session->set_flashdata('success', 'Data Request sudah ditambahkan');
 			redirect('detail_request/tambah/'.$id);
         }
@@ -232,9 +294,9 @@ class Request extends CI_Controller
 			$data = [
 				'nama' => $this->input->post('nama'),
 				'tgl_request' => $this->input->post('tgl_request'),
-				'keterangan' => $this->input->post('keterangan'),
+				'no_surat' => $this->input->post('no_surat'),
 			];
-
+			$data['no_surat'] = $this->idNomerSurat('request', 'no_surat', 'MDR-DN', 'SC', '001');
 			$dereq = $this->db->query("SELECT * FROM detail_request WHERE id_request = '".$id."'")->row();
 			$query = $this->db->query("SELECT * FROM detail_barang WHERE id_detail_barang = '".$dereq->id_detail_barang."'")->row();
 			if ($query) {
@@ -282,6 +344,18 @@ class Request extends CI_Controller
 
 	}
 
+	public function suratJalan($id){
+		$barang = $this->db->query("SELECT * FROM barang WHERE id_barang ='".$id."'")->result();
+		$jumlahBarang = $this->db->query("SELECT * FROM detail_barang WHERE id_barang ='".$id."'")->result();
+		
+		$data['title'] = "Data Random";
+		$file_pdf = $data['title'];
+		$paper = 'A4';
+		$orientation = "landscape";
+		$html = $this->load->view('V_test_data', $data, true);
+		$this->pdfgenerator->generate($html, $file_pdf, $paper, $orientation);
+	}
+
 	private function get_page_for_id($id) {
 		if (!empty($this->session->userdata('keywordReq'))){
 			$keyword = $this->session->userdata('keywordReq');
@@ -293,4 +367,5 @@ class Request extends CI_Controller
 		$per_page = 10;
 		return floor(($position - 1) / $per_page) * $per_page;
 	}
+
 }

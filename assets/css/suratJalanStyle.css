@@ -1,0 +1,85 @@
+body {
+	font-family: Calibri, sans-serif;
+	font-size: 12px;
+	margin: 20px;
+}
+.container {
+	max-width: 100%;
+	margin: 0 auto;
+}
+.header {
+	text-align: left;
+	margin-bottom: 20px;
+}
+.header img {
+	/* max-width: 150px; */
+	width: 25em;
+	height: auto;
+}
+.doc-title, .doc-number {
+	font-size: 14px;		
+}
+.doc-title {
+	text-align: center;
+	background-color: #D6E0CC;
+	border : 1px solid #A8B98D;
+	padding: 8px;
+	font-weight: bold;
+}
+.doc-number {
+	text-align: center;
+	/* font-size: 11px; */
+	margin-top: 5px;
+	font-weight: bold;
+	margin-bottom:1.5cm;
+}
+.info-section {
+	margin-bottom: 20px;
+}
+.info-table {
+	width: 100%;
+	margin-bottom: 15px;
+}
+.info-table td:first-child {
+	width: 100px;
+}
+.info-table td {
+	padding: 3px;
+	vertical-align: top;
+}
+.main-table {
+	width: 100%;
+	border-collapse: collapse;
+	/* margin-bottom: 30px; */
+	margin: 3cm 0 4cm 0;
+}
+.main-table th,
+.main-table td {
+	border: 1px solid #000;
+	padding: 6px;
+}
+.main-table th {
+	background-color: #f5f5f5;
+	font-weight: bold;
+	text-align: center;
+}
+.signature-section {
+	margin-top: 50px;
+}
+.signature-table {
+	width: 100%;
+}
+.signature-table td {
+	width: 33.33%;
+	text-align: center;
+	padding: 10px;
+	vertical-align: top;
+}
+.signature-table td p {
+	margin-top: 7em;
+}
+.signature-line {
+	border-top: 1px solid #000;
+	width: 80%;
+	margin: 0 auto;
+}

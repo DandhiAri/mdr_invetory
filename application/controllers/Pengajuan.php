@@ -16,6 +16,7 @@ class Pengajuan extends CI_Controller
 			redirect('auth');
     	}
 		$this->form_validation->set_rules('tgl_pengajuan', 'Tanggal Pengajuan', 'required');
+		$this->form_validation->set_rules('no_surat', 'Nomer Surat', 'required');
 	}
 
 	public function index()
@@ -72,7 +73,7 @@ class Pengajuan extends CI_Controller
 			redirect($_SERVER['HTTP_REFERER']);
 		} else {
 			$config['upload_path'] = './assets/img/bukti/invoice/';
-			$config['allowed_types'] = 'jpeg||jpg|png';
+			$config['allowed_types'] = 'jpeg||jpg|png|pdf';
 			$config['max_size'] = 10000;
 
 			if (!is_dir($config['upload_path'])) {
@@ -90,6 +91,7 @@ class Pengajuan extends CI_Controller
 	
 				$data = array(
 					'tgl_pengajuan' => $this->input->post('tgl_pengajuan'),
+					'no_surat' => $this->input->post('no_surat'),
 					'invoice' => $invoice_file,
 				);
 	
@@ -123,14 +125,15 @@ class Pengajuan extends CI_Controller
 			redirect($_SERVER['HTTP_REFERER']);
         } else {
 			$data = array(
-                'tgl_pengajuan' => $this->input->post('nama_barang'),
+                'tgl_pengajuan' => $this->input->post('tgl_pengajuan'),
+				'no_surat' => $this->input->post('no_surat'),
                 'invoice' => $this->input->post('id_jenis'),
             );
 			
-			$this->Mmain->qUpdpart("barang", 'id_barang', $id, array_keys($data), array_values($data));
-			$this->Mmain->qIns('barang', $data);
+			$this->Mmain->qUpdpart("pengajuan", 'id_pengajuan', $id, array_keys($data), array_values($data));
+			$this->Mmain->qIns('pengajuan', $data);
 
-            $this->session->set_flashdata('success', 'Data Barang sudah ditambahkan');
+            $this->session->set_flashdata('success', 'Data Pengajuan sudah ditambahkan');
 			redirect('pengajuan');
         }
     }

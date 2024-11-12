@@ -17,6 +17,14 @@
 		<?php endif; ?>
         <form action="<?= base_url('Pengajuan/proses_tambah') ?>" enctype="multipart/form-data" method="POST">
             <div class="ibox-body">
+				<div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="no_surat" class="form-label">Nomer Surat Pengajuan</label>
+                            <input type="text" class="form-control" name="no_surat" id="no_surat">
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">

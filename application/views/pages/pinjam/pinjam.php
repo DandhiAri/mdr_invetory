@@ -46,8 +46,7 @@
                        	<th>Nama Tersangka</th>
                         <th>Waktu Pinjam</th>
                         <th>Status Pinjam</th>
-                        <th>Action Status</th>
-                        <th>Keterangan</th>
+                        <th>Status Action</th>
                         <th>Aksi</th>
                     </tr>
 				</thead>
@@ -97,7 +96,6 @@
 								<a href="<?= base_url('Pinjam/accept/') . $P->id_pinjam ?>" title="Finished/Menerima replace semua barang" class="btn btn-success"><i class="fa fa-check"></i></a>
 								<a href="<?= base_url('Pinjam/reject/') . $P->id_pinjam ?>" title="Rejected/Menolak replace semua barang" class="btn btn-danger"><i class="fa fa-remove"></i></a>
 							</td>                 
-							<td><?= $P->keterangan ?></td>
                             <td>
                                 <a href="<?= base_url('pinjam/edit_data/') . $P->id_pinjam ?>" class="btn btn-warning" title="Edit pinjam"><i class="ti ti-pencil"></i></a>
                                 <a href="<?= base_url('pinjam/hapus_data/') . $P->id_pinjam ?>" class="btn btn-danger" onclick="return confirm('Apakah anda yakin ingin menghapus?')" id="deletesatuan" title="Hapus satuan" style="cursor: pointer;"><i class="ti ti-trash"></i></button>
@@ -117,8 +115,8 @@
 											<th>No</th>
 											<th>ID</th>
 											<th>Detail Barang</th>
-											<th>Quantity</th>
-											<th>Lokasi</th>
+											<th>Jumlah</th>
+											<th>Tujuan</th>
 											<th>Keterangan</th>
 											<th>Waktu Kembali</th>
 											<th>Made By</th>

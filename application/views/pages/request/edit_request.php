@@ -31,12 +31,6 @@
                             <input type="date" class="form-control" name="tgl_request" id="tgl_request" value="<?= $Request['tgl_request'] ?>">
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="keterangan" class="form-label">Keterangan</label>
-                            <input type="text" class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan keterangan..." value="<?= $Request['keterangan'] ?>">
-                        </div>
-					</div>
 				</div>
 				<div class="row float-right">
 					<div class="col-md-12">

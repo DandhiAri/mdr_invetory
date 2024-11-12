@@ -102,7 +102,7 @@
 										<tr>
 											<th>No</th>
 											<th>ID Detail Barang</th>
-											<th>ID Pengajuan</th>
+											<th>Nomer Pengajuan</th>
 											<th>Serial Code</th>
 											<th>Jumlah</th>
 											<th>Lokasi</th>
@@ -126,7 +126,7 @@
 											<tr>
 												<td><?= $nom++ ?></td>
 												<td><b><?= $detail->id_detail_barang ?></b></td>
-												<td><?= $detail->id_pengajuan ?></td>
+												<td><?= $detail->no_surat_pengajuan ?></td>
 												<td><b><?= $detail->serial_code?></b></td>
 												<td style="text-align:right;"><?= $detail->qtty?></td>
 												<td><b><?= $detail->lokasi?></b></td>

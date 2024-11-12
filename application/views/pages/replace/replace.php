@@ -54,7 +54,6 @@
 						<th>Tanggal Replace</th>
 						<th>Status Replace</th>
 						<th>Status Action</th>
-						<th>Keterangan</th>
 						<th>Aksi</th>
 					</tr>
 					<?php 
@@ -95,7 +94,6 @@
 								<a href="<?= base_url('Replace/accept/') . $rp->id_replace ?>" title="Finished/Menerima replace semua barang" class="btn btn-success"><i class="fa fa-check"></i></a>
 								<a href="<?= base_url('Replace/reject/') . $rp->id_replace ?>" title="Rejected/Menolak replace semua barang" class="btn btn-danger"><i class="fa fa-remove"></i></a>
 							</td>
-							<td><?= $rp->keterangan ?></td>
 							<td>
 								<a href="<?= base_url('Replace/edit_replace/') . $rp->id_replace ?>" class="btn btn-warning"><i class="fa fa-pencil"></i></a>
 								<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('Replace/hapus_replace/') . $rp->id_replace ?>" class="btn btn-danger"><i class="fa fa-trash"></i></a>
@@ -115,8 +113,8 @@
 											<th>No</th>
 											<th>ID</th>
 											<th>Detail Barang</th>
-											<th>Quantity</th>
-											<th>Lokasi</th>
+											<th>Jumlah</th>
+											<th>Tujuan</th>
 											<th>Keterangan</th>
 											<th>Waktu Update</th>
 											<th>Made By</th>

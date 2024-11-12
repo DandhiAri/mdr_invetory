@@ -47,7 +47,6 @@
 						<th>Tanggal Request</th>
 						<th>Status Request</th>
 						<th>Status Action</th>
-						<th>Keterangan</th>
 						<th>Action</th>
 					</tr>
 					<?php 
@@ -80,7 +79,12 @@
 									</script>
 								</div>
 							</td>
-							<td><?= $r->id_request ?></td>
+							<td style="list-style-type:none; ">
+								<b>
+									<li><?= $r->id_request ?></li>
+									<li><?= $r->no_surat ?></li>
+								</b>
+							</td>
 							<td><b><?= $r->nama?></b></td>
 							<td><?= $formatted_date ?></td>
 							<td><p class="<?= $r->status ?>"><?= $r->status ?></p></td>
@@ -90,16 +94,16 @@
 									<a href="<?= base_url('request/reject/') . $r->id_request ?>" class="btn btn-danger" id="deleterequest" title="Rejected/Menolak request semua barang" style="cursor: pointer;"><i class="fa fa-remove"></i></a>
 								</div>
 							</td>
-							<td><?= $r->keterangan ?></td>
 							<td>
-								<div class="row" style="padding-bottom:10px; justify-content:center;">
+								<div class="row" style="justify-content:center;">
+									<a href="<?= isset($r->no_surat) ? base_url('request/viewSuratJalan/') . $r->no_surat : '#' ?>" class="btn <?= isset($r->no_surat) ? 'btn-primary' : 'btn-disabled' ?>" style="margin-right:5px;" title="Surat Jalan <?= $r->no_surat ?>"><i class="fa fa-file-text" ></i></a>
 									<a href="<?= base_url('request/edit/') . $r->id_request ?>" class="btn btn-warning" style="margin-right:5px;" title="Edit"><i class="ti ti-pencil"></i></a>
 									<a onclick="return confirm('Yakin ingin hapus?')" href="<?= base_url('request/hapus_data/') . $r->id_request ?>"class="btn btn-danger" id="deleterequest" title="Hapus" style="cursor: pointer;"><i class="ti ti-trash"></i></a>
 								</div>
 							</td>
 					</tr>
 					<tr style="display:none;" id="toggleDiv-<?= $r->id_request ?>" class=" nested-table-container" width="100%">
-						<td colspan='20'>
+						<td colspan='100'>
 							<p style="text-align:center;">
 								<a href="<?= base_url('detail_request/tambah/'). $r->id_request  ?>" class="btn btn-primary"><i class="ti ti-plus"></i> Tambah Detail Request <?= $r->id_request ?> </a>
 							</p>
@@ -113,7 +117,7 @@
 									<th>ID</th>
 									<th>Detail Barang</th>
 									<th>Jumlah</th>
-									<th>Lokasi</th>
+									<th>Tujuan</th>
 									<th>Keterangan</th>
 									<th>Waktu Update</th>
 									<th>Made By</th>

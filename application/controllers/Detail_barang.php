@@ -73,7 +73,6 @@ class Detail_barang extends CI_Controller
         $data['user'] = $this->user;
 		$data['Detail_Barang'] = $render->result();
 		$data['pengajuan'] = $this->Mmain->qRead("pengajuan")->result();
-        // $data['barang'] = $this->m_detail_barang->getBarang();
 		$data['content'] = $this->load->view('pages/detail_barang/create', $data, true);
         $this->load->view('layout/master_layout',$data);
     }
@@ -92,7 +91,7 @@ class Detail_barang extends CI_Controller
         } else {
             $data = array(
                 'id_barang' => $this->input->post('id_barang'),
-                'id_pengajuan' => $this->input->post('id_pengajuan'),
+                'no_surat_pengajuan' => $this->input->post('no_surat_pengajuan'),
                 'serial_code' => $this->input->post('serial_code'),
                 'lokasi' => $this->input->post('lokasi'),
 				'qtty' => $this->input->post('qtty'),

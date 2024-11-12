@@ -113,7 +113,6 @@ class Pinjam extends CI_Controller
 				'nama_penerima' => $this->input->post('nama_penerima'),
 				'nama_pemberi' => $this->input->post('nama_pemberi'),
 				'wkt_pinjam' => $this->input->post('wkt_pinjam'),
-				'keterangan' => $this->input->post('keterangan'),
 			];
 
 			$data['id_pinjam'] = $this->Mmain->autoId("pinjam", "id_pinjam", "PJ", "PJ" . "001", "001");
@@ -225,7 +224,6 @@ class Pinjam extends CI_Controller
 				'nama_penerima' => $this->input->post('nama_penerima'),
 				'nama_pemberi' => $this->input->post('nama_pemberi'),
 				'wkt_pinjam' => $this->input->post('wkt_pinjam'),
-				'keterangan' => $this->input->post('keterangan'),
 			];
 
 			$this->Mmain->qUpdpart('pinjam', 'id_pinjam', $id , array_keys($data) , array_values($data));

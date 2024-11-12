@@ -20,6 +20,14 @@
 				<div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
+                            <label for="no_surat" class="form-label">Nomer Surat Pengajuan</label>
+                            <input type="text" value="<?= $Pengajuan['no_surat']?>" class="form-control" name="no_surat" id="no_surat">
+                        </div>
+                    </div>
+                </div>
+				<div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
                             <label for="tgl_pengajuan" class="form-label">Tanggal Pengajuan</label>
                             <input type="date" value="<?= $Pengajuan['tgl_pengajuan'] ?>" class="form-control" name="tgl_pengajuan" id="tgl_pengajuan">
                         </div>
@@ -35,7 +43,7 @@
 								<p>Data ini tidak punya bukti invoice pengajuan.</p>
 							<?php } ?>
 							<input type="file" class="form-control" size="20" name="invoice" id="invoice">
-							<p style="font-size:13px;">requirement type file upload : <b>jpg, jpeg dan png</b> </p>
+							<p style="font-size:13px;">requirement type file upload : <b>pdf, jpg, dan png</b> </p>
 						</div>
 					</div>
 				</div>

@@ -137,7 +137,7 @@ class Detail_Pinjam extends CI_Controller
 				WHERE id_detail_pinjam = '".$id."'
 			")->row();
 			$satuanBarang = $this->db->query('SELECT id_satuan FROM barang WHERE id_barang ="'.$data['id_barang'].'"')->row()->id_satuan;
-
+			
 			if (($query1->status == 'Requested' || $query1->status == 'Rejected') && $data['status'] == 'Finished') {
 				if($satuanBarang === "16"){
 					$data1["PIC"] = $this->db->query("SELECT nama_peminjam FROM pinjam WHERE id_pinjam ='".$data['id_pinjam']."'")->row()->nama_peminjam;
@@ -167,22 +167,17 @@ class Detail_Pinjam extends CI_Controller
 				if($satuanBarang === "16"){
 					$data1["lokasi"] = $data['lokasi'];
 				}
-				$doneData = true;
-			}
+			} 
 
-			if(!empty($data1) || isset($doneData)){
-				if(!empty($data1)){
-					$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
-				}
-				$data['user_update'] = $this->user['name'];
-				$this->Mmain->qUpdpart("detail_pinjam", 'id_detail_pinjam', $id, array_keys($data), array_values($data)); 
-	
-				$this->M_detail_pinjam->changeStatusPinjam($data['id_pinjam']);
-	
-				$this->session->set_flashdata('success', 'Data Detail Pinjam <strong>Berhasil</strong> Diubah!');
-			} else {
-				$this->session->set_flashdata('failed', 'Data Detail Pinjam <strong>Gagal</strong> Diubah!');
+			if(!empty($data1)){
+				$this->Mmain->qUpdpart("detail_barang", "id_detail_barang", $data['id_detail_barang'], array_keys($data1), array_values($data1));
 			}
+			$data['user_update'] = $this->user['name'];
+			$this->Mmain->qUpdpart("detail_pinjam", 'id_detail_pinjam', $id, array_keys($data), array_values($data)); 
+
+			$this->M_detail_pinjam->changeStatusPinjam($data['id_pinjam']);
+
+			$this->session->set_flashdata('success', 'Data Detail Pinjam <strong>Berhasil</strong> Diubah!');
 			
 			redirect('pinjam/index/' . $this->get_page_for_id($data["id_pinjam"]));
         }

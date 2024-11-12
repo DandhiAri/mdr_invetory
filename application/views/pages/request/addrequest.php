@@ -32,12 +32,6 @@
                             <input type="date" class="form-control" name="tgl_request" id="tgl_request" required>
                         </div>
                     </div>
-                    <div class="form-group col-md-6">
-                        <div class="mb-3">
-                            <label for="keterangan" class="form-label">Keterangan Request</label>
-                            <input type="text" class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan keterangan...">
-                        </div>
-					</div>
                 </div>
 				<div class="row float-right">
 					<div class="col-md-12">

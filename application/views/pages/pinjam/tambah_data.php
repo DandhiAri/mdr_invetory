@@ -42,12 +42,6 @@
                             <input type="datetime-local" class="form-control" name="wkt_pinjam" id="wkt_pinjam" placeholder="Masukkan Tgl Pinjam..." required>
                         </div>
 					</div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="keterangan" class="form-label">keterangan</label>
-                            <input type="text" class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan Keterangan...">
-                        </div>
-                    </div>
                 </div>
             </div>
 			<div class="row float-right">

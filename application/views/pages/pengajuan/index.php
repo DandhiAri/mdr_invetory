@@ -41,7 +41,8 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>ID Pengajuan</th>
+                        <th>ID </th>
+                        <th>Nomer Surat</th>
                         <th>Tgl Pengajuan</th>
                         <th>invoice</th>
                         <th>Aksi</th>
@@ -55,6 +56,7 @@
 							<tr>
 								<td><?= ++$page ?></td>
 								<td><b><?= $S->id_pengajuan ?></b></td>
+								<td><b><?= $S->no_surat ?></b></td>
 								<td><?= $S->tgl_pengajuan ?></td>
 								<td>
 									<button alt="Invoice" class="btn btn-success" style=" cursor: pointer;" data-toggle="modal" data-target="#invoiceModal-<?= $S->id_pengajuan ?>" onclick="showInvoice('')"> Show </button>
@@ -76,6 +78,7 @@
 									</div>
 								</td>
 								<td>
+									<a href="#" class="btn btn-primary" title="Download Dokumen"><i class="fa fa-download"></i></a>
 									<a href="<?= base_url('pengajuan/edit_data/' . $S->id_pengajuan) ?>" class="btn btn-warning" title="Edit satuan"><i class="ti ti-pencil"></i></a>
 									<a href="<?= base_url('pengajuan/hapus_data/' . $S->id_pengajuan) ?>" class="btn btn-danger" onclick="return confirm('Apakah anda yakin ingin menghapus?')" id="deletesatuan" title="Hapus satuan" style="cursor: pointer;"><i class="ti ti-trash"></i></button>
 								</td>

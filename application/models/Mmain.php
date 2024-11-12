@@ -97,7 +97,7 @@ class mMain  extends CI_Model
 	public function getBarang($keyword = null, $limit = null, $start = null, $id = null, $with_position = false) {
         $this->db->select('barang.*, 
         jenis.nama_jenis, 
-        satuan.nama_satuan, 
+        satuan.nama_satuan,
         SUM(detail_barang.qtty) AS detail_count');
 
 		$this->db->from('barang');
@@ -185,7 +185,7 @@ class mMain  extends CI_Model
 	
 		$conf = $config[$type];
 
-		$this->db->select($conf['main_table'] . '.*');
+		$this->db->select($conf['main_table'] . '.*' .(isset($conf['join_table']) ? ',' . $conf['join_table'] . '.' . $conf['join_field'] : ''));
 		$this->db->from($conf['main_table']);
 		$this->db->join($conf['detail_table'], $conf['main_table'] . '.' . $conf['id_field'] . ' = ' . $conf['detail_table'] . '.' . $conf['id_field'], 'left');
 		if ($with_position) {
