@@ -1,10 +1,8 @@
 <header class="header">
 	<div class="page-brand">
-		<a class="link" href="<?= base_url('dashboard')?>">
+		<a class="link" style="overflow:hidden;" href="<?= base_url('dashboard')?>">
 			<img src="<?= base_url("assets/img/mdr.png")?>" class="mr-2"  width="45px" alt="">
-			<span class="brand">INIT v0
-			</span>
-			<!-- <span class="brand-mini"></span> -->
+			<span class="brand">INIT v0</span>
 		</a>
 	</div>
 	<div class="flexbox flex-1">
@@ -13,14 +11,6 @@
 			<li>
 				<a class="nav-link sidebar-toggler js-sidebar-toggler"><i class="ti-menu"></i></a>
 			</li>
-			<!-- <li>
-				<form class="navbar-search" action="javascript:;">
-					<div class="rel">
-						<span class="search-icon"><i class="ti-search"></i></span>
-						<input class="form-control" placeholder="Search here...">
-					</div>
-				</form>
-			</li> -->
 		</ul>
 		<ul class="nav navbar-toolbar">
 			<li class="dropdown dropdown-user">

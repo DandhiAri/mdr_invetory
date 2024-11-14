@@ -49,6 +49,21 @@
 					</li>
 				</ul>
 			</li>
+			<li class="heading">Documentation</li>
+			<?php 
+			$documFile = "documentationINIT.pdf";
+			$ManuaFile = "manualINIT101.pdf";
+			?>
+			<li>
+				<a target="_blank" href=<?= base_url('Welcome/docum/'. $documFile); ?>><i class="sidebar-item-icon fa fa-file"></i>
+					<span class="nav-label">Documentation</span>
+				</a>
+			</li>
+			<li>
+				<a target="_blank" href=<?= base_url('Welcome/docum/'. $ManuaFile); ?>><i class="sidebar-item-icon fa fa-file"></i>
+					<span class="nav-label">Manual 101</span>
+				</a>
+			</li>
 		</ul>
 	</div>
 </nav>

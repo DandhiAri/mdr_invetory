@@ -18,5 +18,20 @@ class M_pengajuan extends CI_Model
         $this->db->where('id_pengajuan', $id);
         return $this->db->delete('pengajuan');
     }
+	public function unique_no_surat($no_surat)
+	{
+		$query = $this->db->get_where('pengajuan', ['no_surat' => $no_surat]); 
+		return $query->num_rows() === 0;
+	}
+	public function getOldInvoice($id_pengajuan)
+    {
+        $this->db->select('invoice');
+        $this->db->from('pengajuan');
+        $this->db->where('id_pengajuan', $id_pengajuan);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->row()->invoice;
+        }
+    }
 }
 

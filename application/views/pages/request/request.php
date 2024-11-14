@@ -9,7 +9,7 @@
             </div>
 			<div class="col-md-5">
 				<form action="<?= base_url('request'); ?>" style="display:flex;" method="post">
-					<input type="text" class="form-control" name="keywordReq" placeholder="Nama PIC, Serial Code, ID Pengajuan.....">
+					<input type="text" class="form-control" name="keywordReq" placeholder="Ketik keyword disini . . . . . . . . . . . . . . . . . . .">
 					<button type="submit" name="submit" class="btn btn-primary" style="cursor: pointer;"><i class="ti ti-search"></i></button>
 					<button type="submit" style="cursor: pointer;" class="btn btn-danger" name="reset" value="1"><i class="fa fa-refresh"></i></button>
 				</form>
@@ -19,7 +19,7 @@
 		<?php
 		if($keywordReq){
 		?>
-			<p style="padding:7px 0 0 1.2em;">Keyword yang sedang dicari : <b><?= $keywordReq ?></b></p>
+			<p class="key-show">Keyword yang sedang dicari : <b><?= $keywordReq ?></b></p>
 		<?php
 		}
 		?>
@@ -178,12 +178,12 @@
 					<?php } ?>
 				</thead>
 			</table>
-			<div style="display:flex; justify-content:space-between;">
+			<div class="rowCount">
 				<p>
 					Show <?= count($Request) ?> of <?= $total_rows ?> Data Request
 				</p>
 				<?= $pagination ?>
-			</div
+			</div>
 		</div>
 	</div>
 </div>

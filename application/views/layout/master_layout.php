@@ -8,7 +8,7 @@
     <title>Admin | Dashboard</title>
     <link rel="icon" href="<?= base_url('assets/img/mdr.png') ?>" type="image/png">
 	<!-- CSS SENDIRI KALAU PINGIN NGUBAH-->
-    <link href="<?= base_url('assets'); ?>/css/style.css" rel="stylesheet" />
+    <link href="<?= base_url('assets/css/style.css'); ?>" rel="stylesheet" />
     <!-- GLOBAL MAINLY STYLES-->
     <link href="<?= base_url('assets'); ?>/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="<?= base_url('assets'); ?>/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
@@ -24,9 +24,7 @@
 			text-align: center;	
 			vertical-align: middle;
 			width: 100%;
-			/* display: flex; */
-  			overflow-x: auto;
-  			/* white-space: nowrap; */
+			
 		}
 
 		.table thead th{
@@ -39,11 +37,11 @@
 			display:flex;
 			justify-content: space-between;
 			margin-right:1.3em;
+			overflow:hidden;
 		}
 		.statuses{
 			margin: 0 2em 0 2em;
 			display:flex;
-
 		}
 		.container-status .status{
 			padding: 0 0.8em 0 10px;
@@ -61,24 +59,105 @@
 			color: #666666;
 			pointer-events:none;
 		}
+		.rowCount{
+			display:flex; 
+			justify-content:space-between;
+		}
+		.key-show{
+			padding:7px 0 0 1.2em;
+		}
+		@media only screen and (max-width: 1285px) {
+			table{
+				display: block;
+				overflow-x: auto;
+  				white-space: nowrap;
+			}
+		}
+		@media only screen and (max-width: 769px) {
+			.container-status{
+				/* display: block; */
+			}
+			.statuses{
+				margin: 0;
+				display:flex;
+			}
+			.page-content .row {
+				display: block;
+			}
+		}
+		@media only screen and (max-width: 500px) {
+			td:last-child{
+				padding: 0 1.5em;
+				/* margin: 0 1em; */
+			}
+			.container-status{
+				display: block;
+			}
+			.statuses{
+				font-size:11px;
+				margin: 0;
+				display:flex;
+			}
+			.ibox .ibox-head{
+				padding: 1em 0;
+				display:block !important;
+				overflow:hidden;
+				height:100%;
+				text-align:center;
+			}
+			.select2-container {
+				width: 100% !important; /* Mengatur lebar Select2 agar mengikuti lebar elemen lainnya */
+			}
+
+			.select2-selection {
+				height: calc(100% - 2px); /* Mengurangi ukuran border dari tinggi elemen */
+				padding: 0 8px; /* Memberi jarak di dalam elemen Select2 */
+			}
+			.ibox .ibox-head .col-md-5{
+				margin: 1em 0;
+			}
+			.page-content .row {
+				display: block;
+			}
+			.rowCount{
+				display: block;
+				text-align:center;
+			}
+			.rowCount p{
+				font-size:10px;
+			}
+			.key-show{
+				text-align:center;
+			}
+		}
+		@media only screen and (max-width: 426px) {
+			#BarangChart{
+				display: none !important;
+			}
+		}
+		@media only screen and (max-width: 370px){
+			.statuses .status div{
+				display:none !important;
+			}
+		}
 	</style>
 </head>
 
 <body class="fixed-navbar">
     <div class="page-wrapper">
         <!-- START HEADER-->
-        <?php echo $this->load->view('layout/templates/nav_header', [], true); ?>
+        <?= $this->load->view('layout/templates/nav_header', [], true); ?>
         <!-- END HEADER-->
         <!-- START SIDEBAR-->
-        <?php echo $this->load->view('layout/templates/sidebar', [], true); ?>
+        <?= $this->load->view('layout/templates/sidebar', [], true); ?>
         <!-- END SIDEBAR-->
         <div class="content-wrapper">
             <!-- START PAGE CONTENT-->
 			<div class="page-content fade-in-up">
-				<?php echo isset($content) ? $content : ''; ?>
+				<?= isset($content) ? $content : ''; ?>
 			</div>
             <!-- END PAGE CONTENT-->
-			<?php echo $this->load->view('layout/templates/footer', [], true); ?>
+			<?= $this->load->view('layout/templates/footer', [], true); ?>
         </div>
     </div>
     <!-- CORE PLUGINS-->

@@ -38,7 +38,7 @@
 						<div class="mb-3">
 							<label for="invoice" class="form-label">Bukti Invoice Pengajuan</label>
 							<input type="file" class="form-control" size="20" name="invoice" id="invoice">
-							<p style="font-size:13px;">requirement type file upload : <b>jpg, jpeg dan png</b> </p>
+							<p style="font-size:13px;">requirement type file upload : <b>pdf, jpg, jpeg dan png</b> </p>
 						</div>
 					</div>
 				</div>

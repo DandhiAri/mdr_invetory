@@ -20,11 +20,10 @@
             <form action="<?= base_url('Detail_Request/proses_ubah/'.$id) ?>" method="POST">
 				<div class="row">
 					<div class="col-md-6">
-							<div class="mb-3">
-								<label for="id_request" class="form-label">ID Request</label>
-								<input type="hidden" class="form-control" name="id_detail_request" id="id_detail_request" placeholder="ID Request..." value="<?= $Detail_Request['id_detail_request'] ?>" readonly>
-								<input type="text" class="form-control" name="id_request" id="id_request" placeholder="ID Request..." value="<?= $Detail_Request['id_request'] ?>" readonly>
-							</div>
+						<div class="mb-3">
+							<label for="id_request" class="form-label">ID Request</label>
+							<input type="hidden" class="form-control" name="id_detail_request" id="id_detail_request" placeholder="ID Request..." value="<?= $Detail_Request['id_detail_request'] ?>" readonly>
+							<input type="text" class="form-control" name="id_request" id="id_request" placeholder="ID Request..." value="<?= $Detail_Request['id_request'] ?>" readonly>
 						</div>
 					<div class="col-md-6">
 						<div class="mb-3">

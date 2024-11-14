@@ -95,23 +95,25 @@ class Request extends CI_Controller
 		$this->load->view('layout/master_layout',$data);
     }
 
-	private function idNomerSurat($tbl0, $pk0, $prefix, $suffix, $defno) {
+	private function idNomerSurat($tbl0, $pk0, $prefix, $suffix, $defno, $custno = null) {
 		$month = date('n');
 		$roman_month = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"][$month - 1];
 		$year = date('y');
 		$base_id = "{$prefix}-{$suffix}-{$roman_month}-{$year}";
 		$query = $this->db->query("SELECT $pk0 FROM $tbl0 WHERE $pk0 LIKE '{$prefix}-%-{$suffix}-{$roman_month}-{$year}' ORDER BY $pk0 DESC LIMIT 1");
 		
-		if ($query->num_rows() > 0) {
+		if ($query->num_rows() > 0 && $custno === null) {
 			$last_id = $query->row()->$pk0;
 			$last_number = (int) substr($last_id, strlen($prefix) + 1, strlen($last_id) - strlen($base_id) - 1);
 			$next_number = $last_number + 1;
-			$formatted_number = str_pad($next_number, strlen($defno), '0', STR_PAD_LEFT);
-			$new_id = "{$prefix}-{$formatted_number}-{$suffix}-{$roman_month}-{$year}";
+			$formatted_number = str_pad($next_number, 3, '0', STR_PAD_LEFT);
+		} else if ($query->num_rows() > 0 && $custno !== null) {
+			$formatted_number = str_pad($custno, 3, '0', STR_PAD_LEFT);
 		} else {
-			$new_id = "{$prefix}-" . str_pad($defno, strlen($defno), '0', STR_PAD_LEFT) . "-{$suffix}-{$roman_month}-{$year}";
+			$formatted_number = str_pad($defno ?? '001', 3, '0', STR_PAD_LEFT);
 		}
-		return $new_id;
+		
+		return "{$prefix}-{$formatted_number}-{$suffix}-{$roman_month}-{$year}";
 	}
 
 	public function viewSuratJalan($no_surat) {
@@ -121,7 +123,6 @@ class Request extends CI_Controller
 		$data['request'] = $this->db->query('SELECT tgl_request,id_request,nama FROM request WHERE no_surat LIKE "'.$no_surat.'"')->row();
 		$data['detail_request'] = $this->db->query('SELECT detail_request.*, barang.nama_barang FROM detail_request INNER JOIN barang ON barang.id_barang = detail_request.id_barang WHERE detail_request.id_request = "' . $data['request']->id_request . '"')->result();
 		$data['barang'] = $this->db->query('SELECT * FROM barang')->result();
-
 
 		$id = $data['request']->id_request;
 		$data3['status'] = $data2['status'] = "Finished";
@@ -150,7 +151,6 @@ class Request extends CI_Controller
 			$this->Mmain->qUpdpart("detail_request", 'id_detail_request', $sg->id_detail_request, array_keys($data2), array_values($data2));
 			$this->Mmain->qUpdpart("request", 'id_request', $id, array_keys($data3), array_values($data3));
 		}
-
 
         $html = $this->load->view('layout/pdfLayout/suratJalan', $data, true);
         $this->pdfgenerator->generate($html, $data['title']);
@@ -228,8 +228,6 @@ class Request extends CI_Controller
 		}
 
 		redirect('request/index/' . $this->get_page_for_id($id));
-		// redirect("request");
-
 	}
 
 	public function reject($id){
@@ -296,9 +294,15 @@ class Request extends CI_Controller
 				'tgl_request' => $this->input->post('tgl_request'),
 				'no_surat' => $this->input->post('no_surat'),
 			];
-			$data['no_surat'] = $this->idNomerSurat('request', 'no_surat', 'MDR-DN', 'SC', '001');
+			$last_nosurat = $this->db->query('SELECT no_surat FROM Request WHERE id_request LIKE "'.$id.'"')->row()->no_surat;
+			if ( empty($last_nosurat) || $last_nosurat !== $data['no_surat'] && !empty($data['no_surat'])){
+				$data['no_surat'] = $this->idNomerSurat('request', 'no_surat', 'MDR-DN', 'SC', null, $data['no_surat']);
+			} else if (empty($data['no_surat'])){
+				$data['no_surat'] = "";
+			}
 			$dereq = $this->db->query("SELECT * FROM detail_request WHERE id_request = '".$id."'")->row();
 			$query = $this->db->query("SELECT * FROM detail_barang WHERE id_detail_barang = '".$dereq->id_detail_barang."'")->row();
+			
 			if ($query) {
 				if ($dereq->status == "Finished") {
 					$data1["PIC"] = $data['nama'];
@@ -309,8 +313,8 @@ class Request extends CI_Controller
 			} else {
 				$this->session->set_flashdata('failed', 'ID Detail Barang tidak ada!');
 			}
+			
 			redirect('request/index/' . $this->get_page_for_id($id));
-			// redirect("request");
 		}
 	}
 
@@ -340,8 +344,6 @@ class Request extends CI_Controller
 			$this->session->set_flashdata('failed', 'Data Request <strong>Gagal</strong> Dihapus!');
 		}
 		redirect('request/index/' . $this->get_page_for_id($id));
-		// redirect("request");
-
 	}
 
 	public function suratJalan($id){

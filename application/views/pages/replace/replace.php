@@ -16,7 +16,7 @@
 			<div class="col"></div>
 			<div class="col-md-5">
 				<form action="<?= base_url('replace'); ?>" style="display:flex;" method="post">
-					<input type="text" class="form-control" name="keywordRep" placeholder="Nama Barang, Serial Code, ID Pengajuan.....">
+					<input type="text" class="form-control" name="keywordRep" placeholder="Ketik keyword disini . . . . . . . . . . . . . . . . . . .">
 					<button type="submit" name="submit" class="btn btn-primary" style="cursor: pointer;"><i class="ti ti-search"></i></button>
 					<button type="submit" style="cursor: pointer;" class="btn btn-danger" name="reset" value="1"><i class="fa fa-refresh"></i></button>
 				</form>

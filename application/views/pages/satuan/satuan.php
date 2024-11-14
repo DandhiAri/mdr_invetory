@@ -9,7 +9,7 @@
 			</div>
 			<div class="col-md-5">
 				<form action="<?= base_url('satuan'); ?>" style="display:flex;" method="post">
-					<input type="text" class="form-control" name="keywordSAT" placeholder="Nama Satuan Barang. . . . . . .">
+					<input type="text" class="form-control" name="keywordSAT" placeholder="Ketik keyword disini . . . . . . . . . . . . . . . . . . .">
 					<button type="submit" name="submit" class="btn btn-primary" style="cursor: pointer;"><i class="ti ti-search"></i></button>
 					<button type="submit" style="cursor: pointer;" class="btn btn-danger" name="reset" value="1"><i class="fa fa-refresh"></i></button>
 				</form>

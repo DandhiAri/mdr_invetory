@@ -22,4 +22,8 @@ class Welcome extends CI_Controller {
 	{
 		$this->load->view('welcome_message');
 	}
+	public function docum($name){
+		$data['file_name'] = $name;
+		$this->load->view('pages/documentation/DocViewer', $data);
+	}
 }

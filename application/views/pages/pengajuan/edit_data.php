@@ -16,7 +16,7 @@
 			</div>
 		<?php endif; ?>
         <div class="ibox-body">
-            <form action="<?= base_url('Satuan/proses_ubah') ?>" method="POST">
+            <form action="<?= base_url('Pengajuan/proses_edit/'. $id) ?>" enctype="multipart/form-data" method="POST">
 				<div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">

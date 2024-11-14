@@ -31,6 +31,26 @@
                             <input type="date" class="form-control" name="tgl_request" id="tgl_request" value="<?= $Request['tgl_request'] ?>">
                         </div>
                     </div>
+					<div class="col-md-6">
+						<div class="mb-3">
+							<?php
+							if (isset($Request['no_surat'])){
+								$code = $Request['no_surat'];
+								$no_surat = substr($code, 7, 3);
+							} else {
+								$no_surat = null;
+							}
+							?>
+							<label for="tgl_replace_update" class="form-label">Custom ID Nomer Surat</label>
+							<?php if($Request['no_surat'] !== null){ ?>
+								<p style="font-size:12px;">ID Nomer Surat Sekarang = <b><?= $Request['no_surat'] ?></b></p>
+							<?php } else { ?>
+								<p style="font-size:12px;"><b>SURAT JALAN BELUM ADA</b></p>
+							<?php } ?>
+							<input type="text" pattern="[0-9]*" class="form-control" value="<?= $no_surat ?>" name="no_surat" id="no_surat">
+							<p style="font-size:13px;">Contoh ID nomer surat :MDR-DN-<b>XXX</b>-SC-XI-24.</p>
+						</div>
+					</div>
 				</div>
 				<div class="row float-right">
 					<div class="col-md-12">

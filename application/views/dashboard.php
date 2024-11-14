@@ -102,9 +102,6 @@
 	</div>
 </div>
 <div class="row">
-	<!-- <div class="col">
-		<canvas id="DognutChart" width="100%"></canvas>
-	</div> -->
 	<div class="col">
 		<canvas id="RequestChart" width="100%"></canvas>
 	</div>
@@ -112,13 +109,6 @@
 <div class="col">
 	<canvas id="BarangChart" width="100%"></canvas>
 </div>
-<!-- <div class="row">
-	<div class="col">
-		<canvas id="ReplaceChart" width="100%"></canvas>
-		<canvas id="PinjamChart" width="100%"></canvas>
-	</div>
-</div> -->
-
 
 <style>
 	.visitors-table tbody tr td:last-child {

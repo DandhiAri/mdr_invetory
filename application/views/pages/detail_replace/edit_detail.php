@@ -6,9 +6,16 @@
     <div class="ibox">
         <div class="ibox-head">
             <div class="ibox-title">
-                Form Edit Data Detail Replace
+                Form Edit Detail Replace
             </div>
         </div>
+		<?php if ($this->session->flashdata('failed')): ?>
+			<div class="warn err">
+				<div class="msg" onclick="warnError()">
+					<?php echo $this->session->flashdata('failed'); ?>
+				</div>
+			</div>
+		<?php endif; ?>
         <div class="ibox-body">
             <form action="<?= base_url('Detail_Replace/proses_edit_detail/'.$id)?>" method="POST">
 				<div class="row">
@@ -97,4 +104,3 @@
 			</form>
         </div>
     </div>
-</div>
