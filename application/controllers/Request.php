@@ -295,10 +295,12 @@ class Request extends CI_Controller
 				'no_surat' => $this->input->post('no_surat'),
 			];
 			$last_nosurat = $this->db->query('SELECT no_surat FROM Request WHERE id_request LIKE "'.$id.'"')->row()->no_surat;
-			if ( empty($last_nosurat) || $last_nosurat !== $data['no_surat'] && !empty($data['no_surat'])){
-				$data['no_surat'] = $this->idNomerSurat('request', 'no_surat', 'MDR-DN', 'SC', null, $data['no_surat']);
-			} else if (empty($data['no_surat'])){
-				$data['no_surat'] = "";
+			if (!empty($data['no_surat'])){
+				if ( empty($last_nosurat) || $last_nosurat !== $data['no_surat'] && !empty($data['no_surat'])){
+					$data['no_surat'] = $this->idNomerSurat('request', 'no_surat', 'MDR-DN', 'SC', null, $data['no_surat']);
+				}
+			} else {
+				$data['no_surat'] = null;
 			}
 			$dereq = $this->db->query("SELECT * FROM detail_request WHERE id_request = '".$id."'")->row();
 			$query = $this->db->query("SELECT * FROM detail_barang WHERE id_detail_barang = '".$dereq->id_detail_barang."'")->row();
