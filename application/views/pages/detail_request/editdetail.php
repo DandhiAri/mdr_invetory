@@ -83,6 +83,7 @@
 						</div>
 					</div>
 				</div>
+				</div>
 				<div class="row float-right">
 					<div class="col-md-12">
 						<a href="<?= base_url('Request') ?>" class="btn btn-danger" id="barang" style="cursor: pointer;"><i class="ti ti-reload"></i> Kembali</a>

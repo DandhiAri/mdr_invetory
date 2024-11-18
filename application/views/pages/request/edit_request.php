@@ -48,7 +48,7 @@
 								<p style="font-size:12px;"><b>SURAT JALAN BELUM ADA</b></p>
 							<?php } ?>
 							<input type="text" pattern="[0-9]*" class="form-control" value="<?= $no_surat ?>" name="no_surat" id="no_surat">
-							<p style="font-size:13px;">Contoh ID nomer surat :MDR-DN-<b>XXX</b>-SC-XI-24.</p>
+							<p style="font-size:13px;">Contoh ID nomer surat :MDR-DN-<b>XXX</b>-SC-XI-24. (Kosongkan jika ingin menghapus ID)</p>
 						</div>
 					</div>
 				</div>

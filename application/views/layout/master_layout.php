@@ -24,9 +24,7 @@
 			text-align: center;	
 			vertical-align: middle;
 			width: 100%;
-			
 		}
-
 		.table thead th{
 			text-align: center;
 		}
