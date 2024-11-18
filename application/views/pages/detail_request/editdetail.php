@@ -25,6 +25,7 @@
 							<input type="hidden" class="form-control" name="id_detail_request" id="id_detail_request" placeholder="ID Request..." value="<?= $Detail_Request['id_detail_request'] ?>" readonly>
 							<input type="text" class="form-control" name="id_request" id="id_request" placeholder="ID Request..." value="<?= $Detail_Request['id_request'] ?>" readonly>
 						</div>
+					</div>
 					<div class="col-md-6">
 						<div class="mb-3">
 							<label for="lokasi" class="form-label">Lokasi</label>
